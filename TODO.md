@@ -1,0 +1,1 @@
+- Accurate file:line for plain objects

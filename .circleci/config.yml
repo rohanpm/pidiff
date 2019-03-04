@@ -1,0 +1,41 @@
+version: 2.1
+
+orbs:
+  python: rohanpm/python@1.1.0
+
+workflows:
+  version: 2
+  ci-cd:
+    jobs:
+    - python/tox:
+        name: Autotests
+        toxenv: py36
+        executor: python/python36
+        persist_coverage: true
+        filters: &ci_filters
+          branches:
+            ignore: gh-pages
+          tags:
+            only: /^v.*/
+    - python/tox:
+        name: Static checks
+        toxenv: static
+        filters:
+          <<: *ci_filters
+    - python/codeclimate-upload-coverage:
+        name: Submit coverage results to codeclimate
+        test_reporter_id: 4cc8fce1481013dcb46cf6cdcba172d19dd51e925d1aad4b2e8aa2c961fdc30c
+        requires:
+        - Autotests
+        filters:
+          <<: *ci_filters
+    - python/release:
+        name: Release to PyPI
+        # For twine credentials
+        context: secrets
+        # Only release if all tests passed
+        requires:
+        - Autotests
+        - Static checks
+        filters:
+          <<: *ci_filters
