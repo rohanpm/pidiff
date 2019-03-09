@@ -5,61 +5,122 @@ param_kind_schema = {
              'KEYWORD_ONLY', 'VAR_KEYWORD'],
 }
 
-api_schema = {
-    "$id": "pidiff-schema",
+children_schema = {
+    "type": "array",
+    "items": {
+        "type": "object",
+        "properties": {
+            "name": {"type": "string"},
+            "ref": {
+                "type": "string",
+                "regex": "^[0-9]+$",
+            },
+        },
+        "required": ["name", "ref"],
+        "additionalProperties": False,
+    },
+}
+
+object_schema = {
     "type": "object",
     "properties": {
-        # name of symbol within current namespace - e.g. module name,
-        # class or function name.
-        "name": {"type": "string"},
-
-        # version of symbol, if available (e.g. from __version__ or
-        # from egg metadata)
-        "version": {"type": "string"},
-
-        # file containing symbol, if known
+        # file where object is declared, if known
+        # (note: this concept is sort of broken,
+        # this should be moved to the symbol)
         "file": {"type": "string"},
 
-        # line number where symbol was declared, if known
+        # line number where object was declared, if known
         "lineno": {"type": "integer"},
 
-        # true if this is outside of any tested roots
+        # true if object lives outside of any tested roots
         "is_external": {"type": "boolean"},
 
-        # true if this symbol is callable
+        # true if object is callable
         "is_callable": {"type": "boolean"},
 
         # signature of callable - all parameters, in defined order
         "signature": {
             "type": "array",
-            "items": [
-                {
-                    "type": "object",
-                    "properties": {
-                        "name": {"type": "string"},
-                        "kind": param_kind_schema,
-                        "has_default": {"type": "boolean"},
-                    },
-                    "required": ["name", "kind", "has_default"],
-                }
-            ]
+            "items": {
+                "type": "object",
+                "properties": {
+                    "name": {"type": "string"},
+                    "kind": param_kind_schema,
+                    "has_default": {"type": "boolean"},
+                },
+                "required": ["name", "kind", "has_default"],
+                "additionalProperties": False,
+            }
         },
 
         # For display purposes only
-        "symbol_type": {
+        "object_type": {
             "enum": ["function", "class", "module", "object"],
         },
 
-        # children of this symbol (e.g. classes within a module,
+        # children of this object (e.g. classes within a module,
         # functions within a class, properties within an object)
-        "children": {
-            "type": "array",
-            "items": {"$ref": "pidiff-schema"},
-        }
+        "children": children_schema,
     },
-    "required": ["name", "is_external", "is_callable", "symbol_type"]
+    "required": ["is_external", "is_callable", "object_type"],
+    "additionalProperties": False,
+}
+
+object_db_schema = {
+    "type": "object",
+    "patternProperties": {
+        "^[0-9]+$": object_schema,
+    },
+    "additionalProperties": False,
+}
+
+root_schema = {
+    "type": "object",
+    "properties": {
+        # name of root
+        "name": {"type": "string"},
+
+        # version of object, if available (e.g. from __version__ or
+        # from egg metadata)
+        "version": {"type": "string"},
+
+        # reference to the module object
+        "ref": {
+            "type": "string",
+            "regex": "^[0-9]+$",
+        },
+    },
+    "required": ["name", "ref"],
+    "additionalProperties": False,
+}
+
+dump_schema = {
+    "type": "object",
+    "properties": {
+        "root": root_schema,
+        "objects": object_db_schema,
+    },
+    "required": ["root", "objects"],
+    "additionalProperties": False,
 }
 
 
-def validate(instance):
-    return jsonschema.validate(instance, api_schema)
+class BadRefException(ValueError):
+    pass
+
+
+def validate(instance) -> None:
+    # jsonschema validation
+    jsonschema.validate(instance, dump_schema)
+
+    # now ensure all object refs are OK
+    object_db = instance['objects']
+    root_ref = instance['root']['ref']
+    if root_ref not in object_db:
+        raise BadRefException("Missing object for root ref %s" % root_ref)
+
+    for ob_data in object_db.values():
+        refs = [child['ref'] for child in ob_data.get('children', [])]
+        for ref in refs:
+            if ref not in object_db:
+                raise BadRefException("Missing object for ref %s" % ref)

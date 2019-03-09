@@ -1,1 +1,6 @@
 - Accurate file:line for plain objects
+- file:line should be based on the symbols and not the objects (i.e. use AST)
+- Proper exit code according to diff result
+- Log also prior location of symbol
+- Make all output filenames relative to root
+- display\_name option, switch between name or full\_name

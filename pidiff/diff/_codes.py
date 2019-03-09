@@ -50,16 +50,16 @@ class MinorCode(ErrorCode):
 class Codes:
     RemovedSym = MajorCode(
         "D100",
-        "{sym_old.symbol_type} removed: {sym_old.name}",
+        "{sym_old.ob.object_type} removed: {sym_old.display_name}",
     )
     RemovedArg = MajorCode(
         "D101",
-        "argument removed from {sym_new.name}: {extra[arg_name]}"
+        "argument removed from {sym_new.display_name}: {extra[arg_name]}"
     )
     AddedSym = MinorCode(
         "D200",
-        "{sym_new.symbol_type} added: {sym_new.name}")
+        "{sym_new.ob.object_type} added: {sym_new.display_name}")
 
     NoLongerCallable = MajorCode(
         "D300",
-        "no longer callable: {sym_new.name}")
+        "no longer callable: {sym_new.display_name}")

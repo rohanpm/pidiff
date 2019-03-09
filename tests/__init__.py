@@ -7,8 +7,8 @@ def data_path(*args):
 
 
 def enforce_match():
-    ci = os.environ.get('CI', '')
-    return ci not in ('false', '0', '')
+    value = os.environ.get('UPDATE_BASELINES', '0')
+    return value not in ('true', '1')
 
 
 def assert_logs_equal(caplog, filename):

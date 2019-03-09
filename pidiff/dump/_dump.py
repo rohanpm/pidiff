@@ -2,6 +2,7 @@ import argparse
 import importlib
 import inspect
 import logging
+from random import shuffle
 from typing import Optional, Any, Dict
 import os.path
 import pkg_resources
@@ -9,7 +10,88 @@ import pkg_resources
 from .. import _schema as schema
 
 
-Dump = Dict[str, Any]
+class Dumper:
+    def __init__(self, root_name, module):
+        self.module = module
+        self.root_name = root_name
+        self.raw = {
+            "root": {},
+            "objects": {}
+        }
+        self.object_refs = []
+
+    @property
+    def module_dir(self):
+        return os.path.dirname(self.module.__file__)
+
+    def run(self):
+        self.raw['root']['name'] = self.root_name
+
+        version = get_version(self.root_name, self.module)
+        if version:
+            self.raw['root']['version'] = version
+
+        self.dump_object(ref=self.raw['root'], name=self.raw['root']['name'], ob=self.module)
+
+    def dump_object(self, ref, name, ob):
+        ref_str = str(id(ob))
+        ref['name'] = name
+        ref['ref'] = ref_str
+
+        if ref_str in self.raw['objects']:
+            # object itself is already known, nothing to store
+            return
+
+        # OK, object needs to be filled in.
+
+        # We hold a reference to the object just to ensure it stays alive
+        # for entire duration of the dump (otherwise cases could
+        # arise where id() is reused)
+        self.object_refs.append(ob)
+
+        ob_data = {}
+        self.raw['objects'][ref_str] = ob_data
+
+        ob_data['object_type'] = get_object_type(ob)
+        ob_data['is_callable'] = callable(ob)
+
+        set_location(ob_data, ob)
+
+        if not ob_data.get('file') or not ob_data.get('file').startswith(self.module_dir + '/'):
+            ob_data['is_external'] = True
+            return
+
+        ob_data['is_external'] = False
+
+        if ob_data['is_callable']:
+            dump_signature(ob_data.setdefault('signature', []), ob)
+
+        # Don't bother to look at children of magic methods
+        # since the methods are not to be accessed directly
+        if name.startswith('__') and ob_data['is_callable']:
+            return
+
+        child_names = [attr for attr in dir(ob) if is_public(attr)]
+
+        # The idea here is to improve robustness:
+        # it seems like dir() returns attrs in sorted order.
+        # That could lead to fragile dump/diff code which only happens to work
+        # if children are always processed in the same order.
+        # Let's randomize to ensure we can't write code relying on the order.
+        shuffle(child_names)
+
+        for child_name in child_names:
+            try:
+                child = getattr(ob, child_name)
+            except Exception:
+                LOG.debug("Can't getattr %s %s", ob, child_name, exc_info=True)
+                continue
+
+            child_ref = {}
+            ob_data.setdefault('children', []).append(child_ref)
+
+            LOG.debug("Descending to %s.%s %s", name, child_name, id(child))
+            self.dump_object(ref=child_ref, name=child_name, ob=child)
 
 
 LOG = logging.getLogger('pidiff')
@@ -64,14 +146,14 @@ def dump_signature(out, subject) -> None:
     sig = inspect.signature(subject)
 
     for param in sig.parameters.values():
-        elem: Dump = {}
+        elem: Dict[str, Any] = {}
         elem['name'] = param.name
         elem['has_default'] = (param.default is not param.empty)
         elem['kind'] = str(param.kind)
         out.append(elem)
 
 
-def get_symbol_type(value) -> str:
+def get_object_type(value) -> str:
     class Klass:
         pass
 
@@ -100,50 +182,6 @@ def set_location(out, subject) -> None:
             pass
         except TypeError:
             pass
-
-
-def dump_interface(out, name, subject, include_dirs, seen=None):
-    if seen is None:
-        seen = set()
-
-    out['name'] = name
-    out['symbol_type'] = get_symbol_type(subject)
-    out['is_callable'] = callable(subject)
-
-    set_location(out, subject)
-
-    if not out.get('file') or not out.get('file').startswith(include_dirs + '/'):
-        out['is_external'] = True
-        return
-
-    out['is_external'] = False
-
-    if out['is_callable']:
-        dump_signature(out.setdefault('signature', []), subject)
-
-    # Don't bother to look at children of magic methods
-    # since the methods are not to be accessed directly
-    if name.startswith('__') and out['is_callable']:
-        return
-
-    if id(subject) in seen:
-        # TODO: make some kind of ref here?
-        return
-
-    seen = seen | set([id(subject)])
-
-    child_names = [attr for attr in dir(subject) if is_public(attr)]
-
-    for child_name in child_names:
-        try:
-            child = getattr(subject, child_name)
-        except Exception:
-            LOG.debug("Can't getattr %s %s", subject, child_name, exc_info=True)
-            continue
-
-        child_out = {}
-        dump_interface(child_out, child_name, child, include_dirs, seen)
-        out.setdefault('children', []).append(child_out)
 
 
 def import_recurse(module_name: str):
@@ -175,28 +213,27 @@ def egg_for_root(root_name: str):
             LOG.debug("Can't check %s", egg_info, exc_info=True)
 
 
-def dump_version(out: Dump, root_name: str, module) -> None:
+def get_version(root_name: str, module) -> Optional[str]:
     # PEP 396
     from_module = getattr(module, '__version__', None)
     if from_module:
-        out['version'] = from_module
-        return
+        return from_module
 
     # OK then, try to find a relevant egg
     egg = egg_for_root(root_name)
     if egg:
-        out['version'] = egg.version
+        return egg.version
+
+    return None
 
 
-def dump_module(root_name: str) -> Dump:
-    out: Dump = {}
+def dump_module(root_name: str) -> dict:
     module = import_recurse(root_name)
-    module_dir = os.path.dirname(module.__file__)
 
-    # We only look at top-level versions
-    dump_version(out, root_name, module)
-    dump_interface(out, root_name, module, include_dirs=module_dir)
+    dumper = Dumper(root_name, module)
+    dumper.run()
 
+    out = dumper.raw
     schema.validate(out)
 
     return out

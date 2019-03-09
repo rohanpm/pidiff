@@ -4,7 +4,7 @@ import semver  # type: ignore
 
 from .. import _schema as schema
 from ._codes import Codes, ChangeType
-from ._api import Api
+from ._api import Symbol
 
 
 LOG = logging.getLogger('pidiff')
@@ -63,7 +63,7 @@ def semver_parse_tolerant(version: str):
         return semver.parse_version_info(version)
 
 
-def _summarize(ctx, log):
+def summarize(ctx, log):
     LOG.info("\n---------------------------------------------------------------------")
 
     if log.max_change_type is None:
@@ -96,10 +96,11 @@ def _summarize(ctx, log):
                   bump_version(str(ctx.old_version_info)))
 
 
-class DiffContext:
+class Differ:
     def __init__(self, api_old, api_new):
         self.api_old = api_old
         self.api_new = api_new
+        self.diffed_children = set()
 
     @property
     def old_version_info(self):
@@ -143,69 +144,70 @@ class DiffContext:
             # not a version we can understand
             LOG.debug("Can't get package version(s)", exc_info=True)
 
+    def diff_root(self):
+        self.diffed_children = set()
+        self.diff(self.api_old, self.api_new)
+
+    def diff(self, sym_old, sym_new):
+        try:
+            self.diff_changed_callable(sym_old, sym_new)
+
+            if sym_old.ob.is_callable and sym_new.ob.is_callable:
+                self.diff_signature(sym_old, sym_new)
+
+            if sym_old.object_ref not in self.diffed_children:
+                self.diffed_children.add(sym_old.object_ref)
+                self.diff_children(sym_old, sym_new)
+        except StopDiff:
+            pass
+
+    def diff_changed_callable(self, sym_old, sym_new):
+        if sym_old.ob.is_callable and not sym_new.ob.is_callable:
+            Codes.NoLongerCallable.log(sym_old, sym_new)
+            raise StopDiff
+
+    def diff_signature(self, sym_old, sym_new):
+        if sym_old.ob.is_external or sym_new.ob.is_external:
+            return
+        sig_old = sym_old.ob.signature
+        sig_new = sym_new.ob.signature
+        old_arg_names = sig_old.named_kwargs
+        new_arg_names = sig_new.named_kwargs
+
+        removed_args = ','.join(sorted(list(old_arg_names - new_arg_names)))
+        if removed_args and not sig_new.has_var_keyword:
+            Codes.RemovedArg.log(sym_old, sym_new, arg_name=removed_args)
+            raise StopDiff
+
+    def diff_children(self, sym_old, sym_new):
+        old_children = sym_old.children_by_name
+        new_children = sym_new.children_by_name
+        old_child_names = old_children.keys()
+        new_child_names = new_children.keys()
+
+        removed_names = old_child_names - new_child_names
+        added_names = new_child_names - old_child_names
+        common_names = old_child_names & new_child_names
+
+        for name in sorted(list(removed_names)):
+            Codes.RemovedSym.log(old_children[name], sym_new)
+
+        for name in sorted(list(added_names)):
+            Codes.AddedSym.log(sym_old, new_children[name])
+
+        for name in sorted(list(common_names)):
+            self.diff(old_children[name], new_children[name])
+
 
 def diff(api_old, api_new):
     schema.validate(api_old)
     schema.validate(api_new)
 
-    api_old = Api(api_old)
-    api_new = Api(api_new)
-    context = DiffContext(api_old, api_new)
+    api_old = Symbol.from_root(api_old)
+    api_new = Symbol.from_root(api_new)
+    differ = Differ(api_old, api_new)
 
     with CapturedLog() as log:
-        _diff(api_old, api_new, toplevel=True)
+        differ.diff_root()
 
-    _summarize(context, log)
-
-
-def _diff_changed_callable(sym_old, sym_new):
-    if sym_old.is_callable and not sym_new.is_callable:
-        Codes.NoLongerCallable.log(sym_old, sym_new)
-        raise StopDiff
-
-
-def _diff_signature(sym_old, sym_new):
-    if sym_old.is_external or sym_new.is_external:
-        return
-    sig_old = sym_old.signature
-    sig_new = sym_new.signature
-    old_arg_names = sig_old.named_kwargs
-    new_arg_names = sig_new.named_kwargs
-
-    removed_args = ','.join(sorted(list(old_arg_names - new_arg_names)))
-    if removed_args and not sig_new.has_var_keyword:
-        Codes.RemovedArg.log(sym_old, sym_new, arg_name=removed_args)
-        raise StopDiff
-
-
-def _diff(sym_old, sym_new, toplevel=False):
-    try:
-        if not toplevel:
-            _diff_changed_callable(sym_old, sym_new)
-
-        if sym_old.is_callable and sym_new.is_callable:
-            _diff_signature(sym_old, sym_new)
-
-        _diff_children(sym_old, sym_new)
-    except StopDiff:
-        pass
-
-
-def _diff_children(sym_old, sym_new):
-    old_children = sym_old.children_by_name
-    new_children = sym_new.children_by_name
-    old_child_names = old_children.keys()
-    new_child_names = new_children.keys()
-
-    removed_names = old_child_names - new_child_names
-    added_names = new_child_names - old_child_names
-    common_names = old_child_names & new_child_names
-
-    for name in sorted(list(removed_names)):
-        Codes.RemovedSym.log(old_children[name], sym_new)
-
-    for name in sorted(list(added_names)):
-        Codes.AddedSym.log(sym_old, new_children[name])
-
-    for name in sorted(list(common_names)):
-        _diff(old_children[name], new_children[name])
+    summarize(differ, log)
