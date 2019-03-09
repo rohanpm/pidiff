@@ -5,3 +5,4 @@ tests/test_api/api1/__init__.py:0: D300 no longer callable: do_this
 tests/test_api/api2/__init__.py:17: D101 argument removed from mult: c
 tests/test_api/api2/sub1.py:1: D100 function removed: bar
 tests/test_api/api2/sub1.py:5: D200 function added: baz
+Major API changes were found; inappropriate for unknown versions

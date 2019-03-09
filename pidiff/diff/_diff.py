@@ -1,7 +1,9 @@
 import logging
 
+import semver  # type: ignore
+
 from .. import _schema as schema
-from ._codes import Codes
+from ._codes import Codes, ChangeType
 from ._api import Api
 
 
@@ -15,10 +17,145 @@ class StopDiff(Exception):
     """
 
 
+class Interceptor(logging.NullHandler):
+    def __init__(self):
+        super().__init__()
+        self.max_change_type = None
+
+    def handle(self, record):
+        change_type = getattr(record, 'change_type', None)
+        if self.max_change_type is None:
+            self.max_change_type = change_type
+        elif change_type is not None:
+            self.max_change_type = max(change_type, self.max_change_type)
+
+
+class CapturedLog:
+    def __init__(self):
+        self._handler = None
+
+    def __enter__(self):
+        self._handler = Interceptor()
+        logging.getLogger('pidiff.diff').addHandler(self._handler)
+        return self
+
+    def __exit__(self, *args, **kwargs):
+        assert self._handler
+        logging.getLogger('pidiff.diff').removeHandler(self._handler)
+
+    @property
+    def max_change_type(self):
+        return self._handler.max_change_type
+
+
+def semver_parse_tolerant(version: str):
+    if not version:
+        return None
+
+    try:
+        return semver.parse_version_info(version)
+    except ValueError:
+        # Try again with only the first three components.
+        # This is due to annoying mismatch between semver
+        # and PEP440 for dealing with dev/pre-release
+        # suffixes and so on.
+        version = '.'.join(version.split('.')[:3])
+        return semver.parse_version_info(version)
+
+
+def _summarize(ctx, log):
+    LOG.info("\n---------------------------------------------------------------------")
+
+    if log.max_change_type is None:
+        LOG.info("No API changes were found")
+        return
+
+    if log.max_change_type == ChangeType.INFO:
+        LOG.info("No minor or major API changes were found")
+        return
+
+    if log.max_change_type == ChangeType.MAJOR:
+        change_type_str = 'Major'
+        bump_version = semver.bump_major
+    else:
+        change_type_str = 'Minor'
+        bump_version = semver.bump_minor
+
+    if ctx.new_version_info and ctx.old_version_info \
+            and ctx.new_version_info < ctx.old_version_info:
+        LOG.warning("Warning: 'old' version %s appears newer than 'new' version %s",
+                    ctx.api_old.version, ctx.api_new.version)
+
+    if log.max_change_type <= ctx.max_change_allowed:
+        LOG.info("%s API changes were found; appropriate for %s", change_type_str, ctx.upgrade_str)
+        return
+
+    LOG.error("%s API changes were found; inappropriate for %s", change_type_str, ctx.upgrade_str)
+    if ctx.old_version_info:
+        LOG.error("New version should be equal or greater than %s",
+                  bump_version(str(ctx.old_version_info)))
+
+
+class DiffContext:
+    def __init__(self, api_old, api_new):
+        self.api_old = api_old
+        self.api_new = api_new
+
+    @property
+    def old_version_info(self):
+        return self._version_info(self.api_old)
+
+    @property
+    def new_version_info(self):
+        return self._version_info(self.api_new)
+
+    @property
+    def max_change_allowed(self):
+        old_vinfo = self.old_version_info
+        new_vinfo = self.new_version_info
+
+        # default applies if any version is unavailable/incomparable
+        out = ChangeType.INFO
+
+        if new_vinfo and old_vinfo:
+            if new_vinfo.major > old_vinfo.major:
+                out = ChangeType.MAJOR
+            elif new_vinfo.major == old_vinfo.major and new_vinfo.minor > old_vinfo.minor:
+                out = ChangeType.MINOR
+
+        return out
+
+    @property
+    def upgrade_str(self) -> str:
+        if not self.api_old.version and not self.api_new.version:
+            return 'unknown versions'
+
+        versions = []
+        for api in (self.api_old, self.api_new):
+            versions.append(api.version or '<unknown version>')
+
+        return ' => '.join(versions)
+
+    def _version_info(self, api):
+        try:
+            return semver_parse_tolerant(api.version)
+        except Exception:
+            # not a version we can understand
+            LOG.debug("Can't get package version(s)", exc_info=True)
+
+
 def diff(api_old, api_new):
     schema.validate(api_old)
     schema.validate(api_new)
-    _diff(Api(api_old), Api(api_new), toplevel=True)
+
+    api_old = Api(api_old)
+    api_new = Api(api_new)
+    context = DiffContext(api_old, api_new)
+
+    with CapturedLog() as log:
+        _diff(api_old, api_new, toplevel=True)
+
+    _summarize(context, log)
 
 
 def _diff_changed_callable(sym_old, sym_new):

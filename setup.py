@@ -31,9 +31,7 @@ setup(
     install_requires=get_install_requires(),
     entry_points={
         'console_scripts': [
-            # not ready yet
-            # 'pidiff=pidiff.main:main',
-            # 'pidiff-dump=pidiff.dump:main',
+            'pidiff=pidiff._command:main',
         ]
     }
 )

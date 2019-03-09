@@ -65,6 +65,10 @@ class Api:
         return self._raw['name']
 
     @property
+    def version(self):
+        return self._raw.get('version')
+
+    @property
     def children(self):
         children_raw = self._raw.get('children') or []
         return [Api(x, self) for x in children_raw]

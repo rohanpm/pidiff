@@ -1,13 +1,18 @@
 import argparse
 import importlib
 import inspect
+import logging
 from typing import Optional, Any, Dict
 import os.path
+import pkg_resources
 
 from .. import _schema as schema
 
 
 Dump = Dict[str, Any]
+
+
+LOG = logging.getLogger('pidiff')
 
 
 def is_public(name) -> bool:
@@ -93,6 +98,8 @@ def set_location(out, subject) -> None:
                 out['lineno'] = lineno
         except OSError:
             pass
+        except TypeError:
+            pass
 
 
 def dump_interface(out, name, subject, include_dirs, seen=None):
@@ -128,11 +135,15 @@ def dump_interface(out, name, subject, include_dirs, seen=None):
     child_names = [attr for attr in dir(subject) if is_public(attr)]
 
     for child_name in child_names:
-        child_out = {}
-        out.setdefault('children', []).append(child_out)
+        try:
+            child = getattr(subject, child_name)
+        except Exception:
+            LOG.debug("Can't getattr %s %s", subject, child_name, exc_info=True)
+            continue
 
-        child = getattr(subject, child_name)
+        child_out = {}
         dump_interface(child_out, child_name, child, include_dirs, seen)
+        out.setdefault('children', []).append(child_out)
 
 
 def import_recurse(module_name: str):
@@ -148,11 +159,42 @@ def import_recurse(module_name: str):
     return module
 
 
+def egg_for_root(root_name: str):
+    # FIXME: why are both mypy and pylint getting things wrong here
+    # for pkg_resources? Something wrong with the setup?
+    for dist in pkg_resources.working_set:  # pylint: disable=not-an-iterable
+        egg_info = dist.egg_info  # type: ignore
+        if not egg_info:
+            continue
+        try:
+            with open(os.path.join(egg_info, 'top_level.txt')) as f:
+                lines = [line.strip() for line in f.readlines()]
+                if root_name in lines:
+                    return dist
+        except OSError:
+            LOG.debug("Can't check %s", egg_info, exc_info=True)
+
+
+def dump_version(out: Dump, root_name: str, module) -> None:
+    # PEP 396
+    from_module = getattr(module, '__version__', None)
+    if from_module:
+        out['version'] = from_module
+        return
+
+    # OK then, try to find a relevant egg
+    egg = egg_for_root(root_name)
+    if egg:
+        out['version'] = egg.version
+
+
 def dump_module(root_name: str) -> Dump:
     out: Dump = {}
     module = import_recurse(root_name)
     module_dir = os.path.dirname(module.__file__)
 
+    # We only look at top-level versions
+    dump_version(out, root_name, module)
     dump_interface(out, root_name, module, include_dirs=module_dir)
 
     schema.validate(out)

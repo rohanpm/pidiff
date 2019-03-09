@@ -5,3 +5,5 @@
 .vscode/
 htmlcov/
 test-results/
+.mypy_cache/
+.pidiff/

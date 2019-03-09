@@ -13,6 +13,10 @@ api_schema = {
         # class or function name.
         "name": {"type": "string"},
 
+        # version of symbol, if available (e.g. from __version__ or
+        # from egg metadata)
+        "version": {"type": "string"},
+
         # file containing symbol, if known
         "file": {"type": "string"},
 
