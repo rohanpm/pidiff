@@ -3,8 +3,8 @@
 Python interface diff tool
 
 [![Build Status](https://circleci.com/gh/rohanpm/pidiff/tree/master.svg?style=svg)](https://circleci.com/gh/rohanpm/pidiff/tree/master)
-[![Test Coverage](https://api.codeclimate.com/v1/badges/cb551cc2340aa649dc10/test_coverage)](https://codeclimate.com/github/rohanpm/pidiff/test_coverage)
-[![Maintainability](https://api.codeclimate.com/v1/badges/cb551cc2340aa649dc10/maintainability)](https://codeclimate.com/github/rohanpm/pidiff/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/64347682bb124ea1e1fb/test_coverage)](https://codeclimate.com/github/rohanpm/pidiff/test_coverage)
+[![Maintainability](https://api.codeclimate.com/v1/badges/64347682bb124ea1e1fb/maintainability)](https://codeclimate.com/github/rohanpm/pidiff/maintainability)
 
 This project is not yet documented or ready for use.
 
