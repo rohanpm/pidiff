@@ -1,5 +1,5 @@
 import functools
-import pytest
+import pytest  # type: ignore
 
 from . import checklogs
 

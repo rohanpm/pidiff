@@ -1,4 +1,4 @@
-import jsonschema
+import jsonschema  # type: ignore
 
 param_kind_schema = {
     'enum': ['POSITIONAL_OR_KEYWORD', 'VAR_POSITIONAL',

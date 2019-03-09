@@ -1,12 +1,16 @@
 import argparse
 import importlib
 import inspect
+from typing import Optional, Any, Dict
 import os.path
 
 from .. import _schema as schema
 
 
-def is_public(name):
+Dump = Dict[str, Any]
+
+
+def is_public(name) -> bool:
     if name in [
             '__new__',
             '__init__',
@@ -34,7 +38,7 @@ def is_public(name):
     return not name.startswith('_')
 
 
-def get_file(value):
+def get_file(value) -> Optional[str]:
     try:
         return inspect.getsourcefile(value)
     except TypeError:
@@ -51,18 +55,18 @@ def get_file(value):
     return None
 
 
-def dump_signature(out, subject):
+def dump_signature(out, subject) -> None:
     sig = inspect.signature(subject)
 
     for param in sig.parameters.values():
-        elem = {}
+        elem: Dump = {}
         elem['name'] = param.name
         elem['has_default'] = (param.default is not param.empty)
         elem['kind'] = str(param.kind)
         out.append(elem)
 
 
-def get_symbol_type(value):
+def get_symbol_type(value) -> str:
     class Klass:
         pass
 
@@ -78,7 +82,7 @@ def get_symbol_type(value):
     return 'object'
 
 
-def set_location(out, subject):
+def set_location(out, subject) -> None:
     subject_file = get_file(subject)
 
     if subject_file:
@@ -131,7 +135,7 @@ def dump_interface(out, name, subject, include_dirs, seen=None):
         dump_interface(child_out, child_name, child, include_dirs, seen)
 
 
-def import_recurse(module_name):
+def import_recurse(module_name: str):
     module = importlib.import_module(module_name)
 
     module_all = getattr(module, '__all__', [])
@@ -144,8 +148,8 @@ def import_recurse(module_name):
     return module
 
 
-def dump_module(root_name):
-    out = {}
+def dump_module(root_name: str) -> Dump:
+    out: Dump = {}
     module = import_recurse(root_name)
     module_dir = os.path.dirname(module.__file__)
 
