@@ -24,7 +24,7 @@ workflows:
           <<: *ci_filters
     - python/codeclimate-upload-coverage:
         name: Submit coverage results to codeclimate
-        test_reporter_id: 4cc8fce1481013dcb46cf6cdcba172d19dd51e925d1aad4b2e8aa2c961fdc30c
+        test_reporter_id: b5167e87a147f386af54fb218c710b65bafa6391ceeb2f37f82525f16eb32fc2
         requires:
         - Autotests
         filters:
