@@ -1,7 +1,0 @@
-tests/test_api/api2/__init__.py:0: D100 function removed: do_other
-tests/test_api/api2/__init__.py:0: D100 module removed: re
-tests/test_api/api2/__init__.py:12: D200 class added: DoOther
-tests/test_api/api1/__init__.py:0: D300 no longer callable: do_this
-tests/test_api/api2/__init__.py:17: D101 argument removed from mult: c
-tests/test_api/api2/sub1.py:1: D100 function removed: bar
-tests/test_api/api2/sub1.py:5: D200 function added: baz
