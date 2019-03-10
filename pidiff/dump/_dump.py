@@ -98,30 +98,9 @@ LOG = logging.getLogger('pidiff')
 
 
 def is_public(name) -> bool:
-    if name in [
-            '__new__',
-            '__init__',
-            '__del__',
-            '__getitem__',
-            '__repr__',
-            '__str__',
-            '__bytes__',
-            '__format__',
-            '__lt__',
-            '__le__',
-            '__eq__',
-            '__ne__',
-            '__gt__',
-            '__ge__',
-            '__hash__',
-            '__bool__',
-            '__getattr__',
-            '__getattribute__',
-            '__setattr__',
-            '__delattr__',
-            '__dir__',
-    ]:
-        return True
+    # Note: don't think we need to include e.g. __init__ here,
+    # because classes themselves fall into callable() case
+    # and inspect.signature gives the signature of init
     return not name.startswith('_')
 
 
@@ -163,8 +142,8 @@ def get_object_type(value) -> str:
 
     type_to_string = [
         (type(Klass), 'class'),
-        (types.FunctionType, 'function'),
-        (types.MethodType, 'method'),
+        ((types.FunctionType, types.BuiltinFunctionType), 'function'),
+        ((types.MethodType, types.BuiltinMethodType), 'method'),
         (types.ModuleType, 'module'),
     ]
 

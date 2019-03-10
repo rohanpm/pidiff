@@ -1,2 +1,2 @@
-test_api/multiname2.py:5: D100 function removed: tests.test_api.multiname1.Outer1.Inner1.will_be_removed
+test_api/multiname2.py:5: B120 function removed: tests.test_api.multiname1.Outer1.Inner1.will_be_removed
 Major API changes were found; inappropriate for unknown versions

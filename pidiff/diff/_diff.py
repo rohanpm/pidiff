@@ -1,5 +1,6 @@
 import logging
 import functools
+from typing import Optional
 
 import semver  # type: ignore
 
@@ -45,6 +46,12 @@ class CapturedLog:
     @property
     def max_change_type(self):
         return self._handler.max_change_type
+
+
+class DiffOptions:
+    def __init__(self):
+        self.summarize = True
+        self.full_symbol_names = False
 
 
 def semver_parse_tolerant(version: str):
@@ -125,9 +132,10 @@ class Location:
 
 
 class Differ:
-    def __init__(self, api_old, api_new):
+    def __init__(self, api_old, api_new, options):
         self.api_old = api_old
         self.api_new = api_new
+        self.options = options
         self.diffed_children = set()
         self.location_stack_old = []
         self.location_stack_new = []
@@ -202,9 +210,62 @@ class Differ:
 
     def diff_signature(self, sym_old, sym_new):
         if sym_old.ob.is_external or sym_new.ob.is_external:
+            # TODO: we could still do something here in some cases
             return
+
+        self.diff_var_args(sym_old, sym_new)
+        self.diff_named_args(sym_old, sym_new)
+        self.diff_positional_args(sym_old, sym_new)
+
+    def diff_var_args(self, sym_old, sym_new):
         sig_old = sym_old.ob.signature
         sig_new = sym_new.ob.signature
+
+        if sig_old.has_var_positional and not sig_new.has_var_positional:
+            self.RemovedVarArgs(sym_old, sym_new)
+            raise StopDiff
+
+        if sig_old.has_var_keyword and not sig_new.has_var_keyword:
+            self.RemovedVarKeywordArgs(sym_old, sym_new)
+            raise StopDiff
+
+        if not sig_old.has_var_positional and sig_new.has_var_positional:
+            self.AddedVarArgs(sym_old, sym_new)
+
+        if not sig_old.has_var_keyword and sig_new.has_var_keyword:
+            self.AddedVarKeywordArgs(sym_old, sym_new)
+
+    def diff_positional_args(self, sym_old, sym_new):
+        sig_old = sym_old.ob.signature
+        sig_new = sym_new.ob.signature
+
+        old_arg_names = sig_old.positional_args
+        new_arg_names = sig_new.positional_args
+
+        for (idx, old_arg) in enumerate(old_arg_names):
+            old_arg = old_arg_names[idx]
+            if idx >= len(new_arg_names) and sig_new.has_var_positional:
+                # OK, this arg can be accepted by the var positional
+                continue
+
+            if old_arg not in new_arg_names:
+                self.UnpositionalArg(sym_old, sym_new,
+                                     arg_name=old_arg,
+                                     old_position=idx)
+                raise StopDiff
+
+            new_arg_idx = new_arg_names.index(old_arg)
+            if idx != new_arg_idx:
+                self.MovedArg(sym_old, sym_new,
+                              arg_name=old_arg,
+                              old_position=idx,
+                              new_position=new_arg_idx)
+                raise StopDiff
+
+    def diff_named_args(self, sym_old, sym_new):
+        sig_old = sym_old.ob.signature
+        sig_new = sym_new.ob.signature
+
         old_arg_names = sig_old.named_kwargs
         new_arg_names = sig_new.named_kwargs
 
@@ -212,6 +273,22 @@ class Differ:
         if removed_args and not sig_new.has_var_keyword:
             self.RemovedArg(sym_old, sym_new, arg_name=removed_args)
             raise StopDiff
+
+        added_args = sorted(list(new_arg_names - old_arg_names))
+        added_optional = []
+        added_mandatory = []
+        for added in added_args:
+            if sig_new.has_default_for(added):
+                added_optional.append(added)
+                continue
+            added_mandatory.append(added)
+
+        if added_mandatory:
+            self.AddedArg(sym_old, sym_new, arg_name=', '.join(added_mandatory))
+            raise StopDiff
+
+        if added_optional:
+            self.AddedOptionalArg(sym_old, sym_new, arg_name=', '.join(added_optional))
 
     def diff_children(self, sym_old, sym_new):
         old_children = sym_old.children_by_name
@@ -224,13 +301,39 @@ class Differ:
         common_names = old_child_names & new_child_names
 
         for name in sorted(list(removed_names)):
-            self.RemovedSym(old_children[name], sym_new)
+            self.removed_child(old_children[name], sym_new)
 
         for name in sorted(list(added_names)):
-            self.AddedSym(sym_old, new_children[name])
+            self.added_child(sym_old, new_children[name])
 
         for name in sorted(list(common_names)):
             self.diff(old_children[name], new_children[name])
+
+    def removed_child(self, child_old, sym_new):
+        ob_type = child_old.ob.object_type
+
+        if ob_type == 'module' and child_old.ob.is_external:
+            fn = self.RemovedExternalModule
+        else:
+            fns = {'function': self.RemovedFunction,
+                   'module': self.RemovedModule,
+                   'method': self.RemovedMethod,
+                   'class': self.RemovedClass}
+            fn = fns.get(ob_type, self.RemovedSym)
+        return fn(child_old, sym_new)
+
+    def added_child(self, sym_old, child_new):
+        ob_type = child_new.ob.object_type
+
+        if ob_type == 'module' and child_new.ob.is_external:
+            fn = self.AddedExternalModule
+        else:
+            fns = {'function': self.AddedFunction,
+                   'module': self.AddedModule,
+                   'method': self.AddedMethod,
+                   'class': self.AddedClass}
+            fn = fns.get(ob_type, self.AddedSym)
+        return fn(sym_old, child_new)
 
     def __getattr__(self, name):
         code_instance = getattr(Codes, name, None)
@@ -251,17 +354,20 @@ class DiffResult:
         return self.max_change_type > self.max_change_allowed
 
 
-def diff(api_old, api_new):
+def diff(api_old, api_new, options: Optional[DiffOptions] = None):
+    options = options or DiffOptions()
+
     schema.validate(api_old)
     schema.validate(api_new)
 
-    api_old = Symbol.from_root(api_old)
-    api_new = Symbol.from_root(api_new)
-    differ = Differ(api_old, api_new)
+    api_old = Symbol.from_root(api_old, options)
+    api_new = Symbol.from_root(api_new, options)
+    differ = Differ(api_old, api_new, options)
 
     with CapturedLog() as log:
         differ.diff_root()
 
-    summarize(differ, log)
+    if options.summarize:
+        summarize(differ, log)
 
     return DiffResult(log.max_change_type, differ.max_change_allowed)

@@ -1,2 +1,13 @@
-test_api/signatures2.py:1: D101 argument removed from tests.test_api.signatures2.mult: x, y
+test_api/signatures2.py:43: B350 tests.test_api.signatures2.do_anything no longer accepts unlimited keyword arguments
+test_api/signatures2.py:34: B310 argument(s) added to tests.test_api.signatures2.do_foo: z
+test_api/signatures2.py:24: B320 argument position changed in tests.test_api.signatures2.do_lots: someopt (1 => 2)
+test_api/signatures2.py:30: N400 optional argument(s) added to tests.test_api.signatures2.do_lots_minor1: opt2
+test_api/signatures2.py:1: N440 tests.test_api.signatures2.mult1 now accepts unlimited positional arguments
+test_api/signatures2.py:1: B300 argument(s) removed from tests.test_api.signatures2.mult1: x, y
+test_api/signatures2.py:7: N450 tests.test_api.signatures2.mult2 now accepts unlimited keyword arguments
+test_api/signatures2.py:7: B330 argument in tests.test_api.signatures2.mult2 can no longer be passed positionally: y (was position 1)
+test_api/signatures2.py:38: B340 tests.test_api.signatures2.mult_any no longer accepts unlimited positional arguments
+test_api/signatures2.py:13: N440 tests.test_api.signatures2.mult_minor1 now accepts unlimited positional arguments
+test_api/signatures2.py:18: N440 tests.test_api.signatures2.mult_minor2 now accepts unlimited positional arguments
+test_api/signatures2.py:18: N450 tests.test_api.signatures2.mult_minor2 now accepts unlimited keyword arguments
 Major API changes were found; inappropriate for unknown versions
