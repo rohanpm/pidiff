@@ -6,7 +6,7 @@ from .dump import dump_module
 EXIT_NO_MODULE = 32
 
 
-if __name__ == '__main__':
+def main():
     # Entry point for internal use only
     root_name = sys.argv[1]
 
@@ -16,3 +16,7 @@ if __name__ == '__main__':
     except ModuleNotFoundError as error:
         print(error, file=sys.stderr)
         sys.exit(EXIT_NO_MODULE)
+
+
+if __name__ == '__main__':
+    main()  # pragma: no cover

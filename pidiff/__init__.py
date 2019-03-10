@@ -2,7 +2,7 @@ try:
     from ._impl.diff.codes import ChangeType
     from ._impl.diff.diff import diff, DiffOptions
     from ._impl.dump.dump import dump_module
-except ModuleNotFoundError:
+except ModuleNotFoundError:  # pragma: no cover
     # Why: because we're imported by the dump command
     # within the virtualenvs used for test, and we don't
     # want to insist on all our own dependencies being available

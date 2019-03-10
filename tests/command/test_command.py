@@ -2,7 +2,7 @@ import sys
 import logging
 from unittest import mock
 import json
-from subprocess import Popen as real_popen
+from subprocess import Popen as real_popen, CalledProcessError
 
 from pytest import fixture, raises, mark
 
@@ -10,14 +10,6 @@ from pidiff._impl import command
 from pidiff import dump_module
 
 from tests import checklogs
-
-
-@fixture(autouse=True)
-def restore_argv():
-    orig_argv = sys.argv
-    sys.argv = sys.argv[:]
-    yield
-    sys.argv = orig_argv
 
 
 @fixture(scope='session')
@@ -36,6 +28,9 @@ def test_help():
 
 
 def mock_popen_from_dump(root_name, *args, **kwargs):
+    if 'force_error' in root_name:
+        raise CalledProcessError(27, args[0])
+
     dumped = dump_module(root_name)
 
     assert 'stdout' in kwargs
@@ -78,15 +73,17 @@ def fake_popen(*args, **kwargs):
     raise AssertionError("Don't know what to do with command %s" % cmd)
 
 
-@mark.parametrize('testapi,exitcode', [
-    ('nochange', 0),
-    ('minorbad', 88),
-    ('minorgood', 0),
-    ('major', 99),
+@mark.parametrize('testapi,exitcode,extra_args', [
+    ('nochange', 0, []),
+    ('minorbad', 88, ['-v']),
+    ('minorgood', 0, []),
+    ('major', 99, ['--full-symbol-names']),
+    ('force_error', 64, []),
 ])
-def test_typical_diff(workdir, testapi, exitcode, caplog):
+def test_typical_diff(workdir, testapi, exitcode, extra_args, caplog):
     sys.argv = ['pidiff', '--workdir', workdir,
                 'foopkg==1.0.0', 'foopkg==1.1.0', 'tests.test_api.%s' % testapi]
+    sys.argv.extend(extra_args)
 
     caplog.set_level(logging.INFO)
 
@@ -95,6 +92,6 @@ def test_typical_diff(workdir, testapi, exitcode, caplog):
         with raises(SystemExit) as exc:
             command.main()
 
-    checklogs('typical_diff_%s' % testapi, caplog)
+    checklogs('typical_diff_%s' % testapi, caplog, workdir)
 
     assert exc.value.code == exitcode

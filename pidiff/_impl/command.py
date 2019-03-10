@@ -8,15 +8,15 @@ import shutil
 from typing import Union
 from tempfile import TemporaryDirectory
 
-from virtualenvapi.manage import VirtualEnvironment  # type: ignore
-from virtualenvapi.exceptions import PackageInstallationException  # type: ignore
+from virtualenvapi.manage import VirtualEnvironment
+from virtualenvapi.exceptions import PackageInstallationException
 
 import pidiff
 from pidiff import diff, DiffOptions, ChangeType
 
 from .schema import validate
 
-LOG = logging.getLogger('pidiff')
+LOG = logging.getLogger('pidiff.command')
 
 
 class Directory:
@@ -187,7 +187,6 @@ def main() -> None:
     p = parser.parse_args()
 
     logging.basicConfig(level=logging.INFO, format='%(message)s')
-    if p.verbose:
-        LOG.setLevel(logging.DEBUG)
+    LOG.setLevel(logging.DEBUG if p.verbose else logging.INFO)
 
     return run_diff(p)

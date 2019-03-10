@@ -1,5 +1,6 @@
 import functools
-import pytest  # type: ignore
+import sys
+import pytest
 
 from pidiff import dump_module, diff, DiffOptions
 
@@ -7,8 +8,8 @@ from . import checklogs
 
 
 @pytest.fixture
-def assert_logs_ok(request, caplog):
-    yield functools.partial(checklogs, request.node.name, caplog)
+def assert_logs_ok(request, caplog, tmpdir):
+    yield functools.partial(checklogs, request.node.name, caplog, str(tmpdir))
 
 
 @pytest.fixture
@@ -24,3 +25,11 @@ def diff_report_tester(assert_logs_ok):
         assert_logs_ok()
 
     yield fn
+
+
+@pytest.fixture(autouse=True)
+def restore_argv():
+    orig_argv = sys.argv
+    sys.argv = sys.argv[:]
+    yield
+    sys.argv = orig_argv

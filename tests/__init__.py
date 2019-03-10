@@ -11,10 +11,10 @@ def enforce_match():
     return value not in ('true', '1')
 
 
-def assert_logs_equal(caplog, filename):
+def assert_logs_equal(caplog, filename, tmppath):
     messages = []
     for rec in caplog.records:
-        messages.append(rec.message + '\n')
+        messages.append(rec.message.replace(tmppath, '<tmpdir>') + '\n')
 
     with open(filename) as f:
         lines = f.readlines()
@@ -25,19 +25,19 @@ def assert_logs_equal(caplog, filename):
         raise AssertionError("Output differs from expected\n%s" % diff)
 
 
-def write_logs(caplog, filename):
+def write_logs(caplog, filename, tmppath):
     messages = []
     for rec in caplog.records:
-        messages.append(rec.message + '\n')
+        messages.append(rec.message.replace(tmppath, '<tmpdir>') + '\n')
 
     with open(filename, 'w') as f:
         f.writelines(messages)
 
 
-def checklogs(name, caplog):
+def checklogs(name, caplog, tmpdir):
     logs_path = data_path(name + '_logs.txt')
 
     if enforce_match():
-        assert_logs_equal(caplog, logs_path)
+        assert_logs_equal(caplog, logs_path, str(tmpdir))
     else:
-        write_logs(caplog, logs_path)
+        write_logs(caplog, logs_path, str(tmpdir))

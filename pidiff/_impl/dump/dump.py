@@ -10,6 +10,9 @@ import pkg_resources
 from .. import schema
 
 
+LOG = logging.getLogger('pidiff.dump')
+
+
 class Dumper:
     def __init__(self, root_name, module):
         self.module = module
@@ -66,11 +69,6 @@ class Dumper:
         if ob_data['is_callable']:
             dump_signature(ob_data.setdefault('signature', []), ob)
 
-        # Don't bother to look at children of magic methods
-        # since the methods are not to be accessed directly
-        if name.startswith('__') and ob_data['is_callable']:
-            return
-
         child_names = [attr for attr in dir(ob) if is_public(attr)]
 
         # The idea here is to improve robustness:
@@ -92,9 +90,6 @@ class Dumper:
 
             LOG.debug("Descending to %s.%s %s", name, child_name, id(child))
             self.dump_object(ref=child_ref, name=child_name, ob=child)
-
-
-LOG = logging.getLogger('pidiff')
 
 
 def is_public(name) -> bool:
