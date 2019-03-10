@@ -16,23 +16,28 @@ class ErrorCode:
     LEVEL = logging.INFO
     CHANGE_TYPE = ChangeType.INFO
 
-    def __init__(self, errcode, template, force_lineno=None):
+    def __init__(self, errcode, template):
         self.errcode = errcode
         self.template = template
-        self.force_lineno = force_lineno
 
-    def lineno(self, api, parent):
-        if self.force_lineno is not None:
-            return self.force_lineno
-        return api.lineno
-
-    def log(self, sym_old, sym_new, **kwargs):
+    def log(self, sym_old, sym_new, old_location, new_location, **kwargs):
         message = self.template.format(
             sym_old=sym_old, sym_new=sym_new, extra=kwargs)
+
+        new_filename = sym_new.display_file
+        new_lineno = sym_new.lineno
+        if (not new_filename) or new_filename.startswith(('.', '/')):
+            (new_filename, new_lineno) = new_location
+
+        # old_filename = sym_old.display_file
+        # old_lineno = sym_old.lineno
+        # if (not old_filename) or old_filename.startswith(('.', '/')):
+        #     (old_filename, old_lineno) = old_location
+
         DIFFLOG.log(self.LEVEL,
                     "%s:%s: %s %s",
-                    (sym_new.display_file or sym_old.display_file),
-                    sym_new.lineno,
+                    new_filename,
+                    new_lineno,
                     self.errcode,
                     message,
                     extra=dict(change_type=self.CHANGE_TYPE))

@@ -169,7 +169,7 @@ def get_object_type(value) -> str:
     ]
 
     for (type_instance, name) in type_to_string:
-        if isinstance(value, type_instance):
+        if isinstance(value, type_instance):  # type: ignore
             return name
 
     return 'object'

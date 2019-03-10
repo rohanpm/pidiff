@@ -1,4 +1,5 @@
 import logging
+import functools
 
 import semver  # type: ignore
 
@@ -94,11 +95,45 @@ def summarize(ctx, log):
                   bump_version(str(ctx.old_version_info)))
 
 
+class Location:
+    def __init__(self, differ, sym_old, sym_new):
+        self.differ = differ
+        self.sym_old = sym_old
+        self.sym_new = sym_new
+        self.pushed_old = False
+        self.pushed_new = False
+
+    def __enter__(self):
+        old_file = self.sym_old.display_file
+        old_lineno = self.sym_old.lineno
+        new_file = self.sym_new.display_file
+        new_lineno = self.sym_new.lineno
+
+        if old_file and not old_file.startswith(('.', '/')):
+            self.differ.location_stack_old.append((old_file, old_lineno))
+            self.pushed_old = True
+
+        if new_file and not new_file.startswith(('.', '/')):
+            self.differ.location_stack_new.append((new_file, new_lineno))
+            self.pushed_new = True
+
+    def __exit__(self, *args, **kwargs):
+        if self.pushed_old:
+            self.differ.location_stack_old.pop()
+        if self.pushed_new:
+            self.differ.location_stack_new.pop()
+
+
 class Differ:
     def __init__(self, api_old, api_new):
         self.api_old = api_old
         self.api_new = api_new
         self.diffed_children = set()
+        self.location_stack_old = []
+        self.location_stack_new = []
+
+    def location(self, sym_old, sym_new):
+        return Location(self, sym_old, sym_new)
 
     @property
     def old_version_info(self):
@@ -148,20 +183,21 @@ class Differ:
 
     def diff(self, sym_old, sym_new):
         try:
-            self.diff_changed_callable(sym_old, sym_new)
+            with self.location(sym_old, sym_new):
+                self.diff_changed_callable(sym_old, sym_new)
 
-            if sym_old.ob.is_callable and sym_new.ob.is_callable:
-                self.diff_signature(sym_old, sym_new)
+                if sym_old.ob.is_callable and sym_new.ob.is_callable:
+                    self.diff_signature(sym_old, sym_new)
 
-            if sym_old.object_ref not in self.diffed_children:
-                self.diffed_children.add(sym_old.object_ref)
-                self.diff_children(sym_old, sym_new)
+                if sym_old.object_ref not in self.diffed_children:
+                    self.diffed_children.add(sym_old.object_ref)
+                    self.diff_children(sym_old, sym_new)
         except StopDiff:
             pass
 
     def diff_changed_callable(self, sym_old, sym_new):
         if sym_old.ob.is_callable and not sym_new.ob.is_callable:
-            Codes.NoLongerCallable.log(sym_old, sym_new)
+            self.NoLongerCallable(sym_old, sym_new)
             raise StopDiff
 
     def diff_signature(self, sym_old, sym_new):
@@ -174,7 +210,7 @@ class Differ:
 
         removed_args = ', '.join(sorted(list(old_arg_names - new_arg_names)))
         if removed_args and not sig_new.has_var_keyword:
-            Codes.RemovedArg.log(sym_old, sym_new, arg_name=removed_args)
+            self.RemovedArg(sym_old, sym_new, arg_name=removed_args)
             raise StopDiff
 
     def diff_children(self, sym_old, sym_new):
@@ -188,13 +224,21 @@ class Differ:
         common_names = old_child_names & new_child_names
 
         for name in sorted(list(removed_names)):
-            Codes.RemovedSym.log(old_children[name], sym_new)
+            self.RemovedSym(old_children[name], sym_new)
 
         for name in sorted(list(added_names)):
-            Codes.AddedSym.log(sym_old, new_children[name])
+            self.AddedSym(sym_old, new_children[name])
 
         for name in sorted(list(common_names)):
             self.diff(old_children[name], new_children[name])
+
+    def __getattr__(self, name):
+        code_instance = getattr(Codes, name, None)
+        if not code_instance:
+            raise AttributeError()
+        return functools.partial(code_instance.log,
+                                 old_location=self.location_stack_old[-1],
+                                 new_location=self.location_stack_new[-1])
 
 
 class DiffResult:
