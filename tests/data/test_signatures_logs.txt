@@ -1,2 +1,3 @@
+test_api/signatures2.py:18: D400 optional argument(s) added to tests.test_api.signatures2.do_lots: newopt
 test_api/signatures2.py:1: D300 argument(s) removed from tests.test_api.signatures2.mult: x, y
 Major API changes were found; inappropriate for unknown versions

@@ -5,11 +5,11 @@ def mult(x, y):
     pass
 
 
-def mult_safe1(x, y):
+def mult_minor1(x, y):
     pass
 
 
-def mult_safe2(x, y):
+def mult_minor2(x, y):
     pass
 
 

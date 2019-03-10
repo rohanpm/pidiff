@@ -210,7 +210,9 @@ class Differ:
 
     def diff_signature(self, sym_old, sym_new):
         if sym_old.ob.is_external or sym_new.ob.is_external:
+            # TODO: we could still do something here in some cases
             return
+
         sig_old = sym_old.ob.signature
         sig_new = sym_new.ob.signature
         old_arg_names = sig_old.named_kwargs
@@ -220,6 +222,16 @@ class Differ:
         if removed_args and not sig_new.has_var_keyword:
             self.RemovedArg(sym_old, sym_new, arg_name=removed_args)
             raise StopDiff
+
+        added_args = sorted(list(new_arg_names - old_arg_names))
+        added_optional = []
+        for added in added_args:
+            if sig_new.has_default_for(added):
+                added_optional.append(added)
+                continue
+
+        if added_optional:
+            self.AddedOptionalArg(sym_old, sym_new, arg_name=', '.join(added_optional))
 
     def diff_children(self, sym_old, sym_new):
         old_children = sym_old.children_by_name

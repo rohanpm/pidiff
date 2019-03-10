@@ -120,8 +120,15 @@ class Codes:
         "argument(s) removed from {sym_new.display_name}: {extra[arg_name]}"
     )
 
+    # Backwards-compatible signature changes
+    AddedOptionalArg = MinorCode(
+        "D400",
+        "added-optional-argument",
+        "optional argument(s) added to {sym_new.display_name}: {extra[arg_name]}"
+    )
+
     # Other
     NoLongerCallable = MajorCode(
-        "D400",
+        "D800",
         "uncallable",
         "no longer callable: {sym_new.display_name}")

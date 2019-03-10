@@ -1,16 +1,16 @@
 def mult(*args):
-    # This change is broken because passing named x, y
+    # This change is major because passing named x, y
     # would no longer work
     pass
 
 
-def mult_safe1(x, y, *args):
-    # This change is OK since x, y are still accepted
+def mult_minor1(x, y, *args):
+    # This change is minor since x, y are still accepted
     pass
 
 
-def mult_safe2(x, *args, **kwargs):
-    # This change is also OK since y can still be accepted
+def mult_minor2(x, *args, **kwargs):
+    # This change is also minor since y can still be accepted
     # whether it was given positionally or by keywords
     pass
 
