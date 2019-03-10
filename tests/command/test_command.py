@@ -2,7 +2,7 @@ import sys
 import logging
 from unittest import mock
 import json
-from subprocess import Popen as real_popen
+from subprocess import Popen as real_popen, CalledProcessError
 
 from pytest import fixture, raises, mark
 
@@ -28,6 +28,9 @@ def test_help():
 
 
 def mock_popen_from_dump(root_name, *args, **kwargs):
+    if 'force_error' in root_name:
+        raise CalledProcessError(27, args[0])
+
     dumped = dump_module(root_name)
 
     assert 'stdout' in kwargs
@@ -75,6 +78,7 @@ def fake_popen(*args, **kwargs):
     ('minorbad', 88),
     ('minorgood', 0),
     ('major', 99),
+    ('force_error', 64),
 ])
 def test_typical_diff(workdir, testapi, exitcode, caplog):
     sys.argv = ['pidiff', '--workdir', workdir,

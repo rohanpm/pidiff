@@ -8,8 +8,8 @@ import shutil
 from typing import Union
 from tempfile import TemporaryDirectory
 
-from virtualenvapi.manage import VirtualEnvironment  # type: ignore
-from virtualenvapi.exceptions import PackageInstallationException  # type: ignore
+from virtualenvapi.manage import VirtualEnvironment
+from virtualenvapi.exceptions import PackageInstallationException
 
 import pidiff
 from pidiff import diff, DiffOptions, ChangeType
