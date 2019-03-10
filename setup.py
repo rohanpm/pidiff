@@ -23,6 +23,7 @@ setup(
     version='0.1.0',
     author='Rohan McGovern',
     author_email='rohan@mcgovern.id.au',
+    url='https://github.com/rohanpm/pidiff',
     packages=find_packages(exclude=['tests', 'tests.*']),
     license='GNU General Public License',
     description=get_description(),
