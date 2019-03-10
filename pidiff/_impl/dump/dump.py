@@ -69,11 +69,6 @@ class Dumper:
         if ob_data['is_callable']:
             dump_signature(ob_data.setdefault('signature', []), ob)
 
-        # Don't bother to look at children of magic methods
-        # since the methods are not to be accessed directly
-        if name.startswith('__') and ob_data['is_callable']:
-            return
-
         child_names = [attr for attr in dir(ob) if is_public(attr)]
 
         # The idea here is to improve robustness:
