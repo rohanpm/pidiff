@@ -1,3 +1,3 @@
-test_api/builtin2.py:0: D100 function removed: tests.test_api.builtin1.other_print
-test_api/builtin2.py:0: D200 function added: tests.test_api.builtin2.new_print
+test_api/builtin2.py:0: D120 function removed: tests.test_api.builtin1.other_print
+test_api/builtin2.py:0: D220 function added: tests.test_api.builtin2.new_print
 Major API changes were found; inappropriate for unknown versions

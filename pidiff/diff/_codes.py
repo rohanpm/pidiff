@@ -16,8 +16,9 @@ class ErrorCode:
     LEVEL = logging.INFO
     CHANGE_TYPE = ChangeType.INFO
 
-    def __init__(self, errcode, template):
+    def __init__(self, errcode, errname, template):
         self.errcode = errcode
+        self.errname = errname
         self.template = template
 
     def log(self, sym_old, sym_new, old_location, new_location, **kwargs):
@@ -54,18 +55,73 @@ class MinorCode(ErrorCode):
 
 
 class Codes:
+    # Removals of symbols from API
     RemovedSym = MajorCode(
         "D100",
+        "removed-object",
         "{sym_old.ob.object_type} removed: {sym_old.display_name}",
     )
-    RemovedArg = MajorCode(
-        "D101",
-        "argument removed from {sym_new.display_name}: {extra[arg_name]}"
+    RemovedModule = MajorCode(
+        "D110",
+        "removed-module",
+        "module removed: {sym_old.display_name}",
     )
+    RemovedExternalModule = MajorCode(
+        "D111",
+        "removed-external-module",
+        "external module removed: {sym_old.display_name}",
+    )
+    RemovedFunction = MajorCode(
+        "D120",
+        "removed-function",
+        "function removed: {sym_old.display_name}",
+    )
+    RemovedMethod = MajorCode(
+        "D130",
+        "removed-method",
+        "method removed: {sym_old.display_name}",
+    )
+    RemovedClass = MajorCode(
+        "D140",
+        "removed-class",
+        "class removed: {sym_old.display_name}",
+    )
+
+    # Additions of symbols to API
     AddedSym = MinorCode(
         "D200",
+        "added-object",
         "{sym_new.ob.object_type} added: {sym_new.display_name}")
+    AddedModule = MinorCode(
+        "D210",
+        "added-module",
+        "module added: {sym_new.display_name}")
+    AddedExternalModule = MinorCode(
+        "D211",
+        "added-external-module",
+        "external module added: {sym_new.display_name}")
+    AddedFunction = MinorCode(
+        "D220",
+        "added-function",
+        "function added: {sym_new.display_name}")
+    AddedMethod = MinorCode(
+        "D230",
+        "added-method",
+        "method added: {sym_new.display_name}")
+    AddedClass = MinorCode(
+        "D240",
+        "added-class",
+        "class added: {sym_new.display_name}")
 
-    NoLongerCallable = MajorCode(
+    # Backwards-incompatible signature changes
+    RemovedArg = MajorCode(
         "D300",
+        "removed-argument",
+        "argument(s) removed from {sym_new.display_name}: {extra[arg_name]}"
+    )
+
+    # Other
+    NoLongerCallable = MajorCode(
+        "D400",
+        "uncallable",
         "no longer callable: {sym_new.display_name}")

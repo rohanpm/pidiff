@@ -232,13 +232,39 @@ class Differ:
         common_names = old_child_names & new_child_names
 
         for name in sorted(list(removed_names)):
-            self.RemovedSym(old_children[name], sym_new)
+            self.removed_child(old_children[name], sym_new)
 
         for name in sorted(list(added_names)):
-            self.AddedSym(sym_old, new_children[name])
+            self.added_child(sym_old, new_children[name])
 
         for name in sorted(list(common_names)):
             self.diff(old_children[name], new_children[name])
+
+    def removed_child(self, child_old, sym_new):
+        ob_type = child_old.ob.object_type
+
+        if ob_type == 'module' and child_old.ob.is_external:
+            fn = self.RemovedExternalModule
+        else:
+            fns = {'function': self.RemovedFunction,
+                   'module': self.RemovedModule,
+                   'method': self.RemovedMethod,
+                   'class': self.RemovedClass}
+            fn = fns.get(ob_type, self.RemovedSym)
+        return fn(child_old, sym_new)
+
+    def added_child(self, sym_old, child_new):
+        ob_type = child_new.ob.object_type
+
+        if ob_type == 'module' and child_new.ob.is_external:
+            fn = self.AddedExternalModule
+        else:
+            fns = {'function': self.AddedFunction,
+                   'module': self.AddedModule,
+                   'method': self.AddedMethod,
+                   'class': self.AddedClass}
+            fn = fns.get(ob_type, self.AddedSym)
+        return fn(sym_old, child_new)
 
     def __getattr__(self, name):
         code_instance = getattr(Codes, name, None)

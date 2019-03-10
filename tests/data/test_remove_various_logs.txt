@@ -1,8 +1,8 @@
-api2/__init__.py:0: D100 function removed: tests.test_api.api1.do_other
-api2/__init__.py:0: D100 module removed: tests.test_api.api1.re
-api2/__init__.py:12: D200 class added: tests.test_api.api2.DoOther
-api2/__init__.py:0: D300 no longer callable: tests.test_api.api2.do_this
-api2/__init__.py:17: D101 argument removed from tests.test_api.api2.mult: c
-api2/sub1.py:1: D100 function removed: tests.test_api.api1.sub1.SomeClass.bar
-api2/sub1.py:5: D200 function added: tests.test_api.api2.sub1.SomeClass.baz
+api2/__init__.py:0: D120 function removed: tests.test_api.api1.do_other
+api2/__init__.py:0: D111 external module removed: tests.test_api.api1.re
+api2/__init__.py:12: D240 class added: tests.test_api.api2.DoOther
+api2/__init__.py:0: D400 no longer callable: tests.test_api.api2.do_this
+api2/__init__.py:17: D300 argument(s) removed from tests.test_api.api2.mult: c
+api2/sub1.py:1: D120 function removed: tests.test_api.api1.sub1.SomeClass.bar
+api2/sub1.py:5: D220 function added: tests.test_api.api2.sub1.SomeClass.baz
 Major API changes were found; inappropriate for unknown versions

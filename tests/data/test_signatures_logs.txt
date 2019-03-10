@@ -1,2 +1,2 @@
-test_api/signatures2.py:1: D101 argument removed from tests.test_api.signatures2.mult: x, y
+test_api/signatures2.py:1: D300 argument(s) removed from tests.test_api.signatures2.mult: x, y
 Major API changes were found; inappropriate for unknown versions
