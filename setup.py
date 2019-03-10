@@ -32,7 +32,7 @@ setup(
     install_requires=get_install_requires(),
     entry_points={
         'console_scripts': [
-            'pidiff=pidiff._command:main',
+            'pidiff=pidiff._impl.command:main',
         ]
     }
 )

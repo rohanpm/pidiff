@@ -4,9 +4,9 @@ from typing import Optional
 
 import semver  # type: ignore
 
-from .. import _schema as schema
-from ._codes import Codes, ChangeType
-from ._api import Symbol
+from .. import schema
+from .codes import Codes, ChangeType
+from .api import Symbol
 
 
 LOG = logging.getLogger('pidiff')

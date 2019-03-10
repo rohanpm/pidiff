@@ -14,7 +14,7 @@ from virtualenvapi.exceptions import PackageInstallationException  # type: ignor
 import pidiff
 from pidiff import diff, DiffOptions, ChangeType
 
-from ._schema import validate
+from .schema import validate
 
 LOG = logging.getLogger('pidiff')
 
@@ -84,7 +84,7 @@ class VirtualEnvironmentExt(VirtualEnvironment):
 
     def dump(self, root):
         python = os.path.join(self.path, 'bin/python')
-        command = [python, '-m', 'pidiff.dump._command', root]
+        command = [python, '-m', 'pidiff._impl.dump.command', root]
         output_filename = os.path.join(self.path, 'dump.json')
 
         with open(output_filename, 'w') as f:

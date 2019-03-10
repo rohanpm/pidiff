@@ -1,7 +1,7 @@
 try:
-    from .diff._codes import ChangeType
-    from .diff._diff import diff, DiffOptions
-    from .dump._dump import dump_module
+    from ._impl.diff.codes import ChangeType
+    from ._impl.diff.diff import diff, DiffOptions
+    from ._impl.dump.dump import dump_module
 except ModuleNotFoundError:
     # Why: because we're imported by the dump command
     # within the virtualenvs used for test, and we don't

@@ -7,7 +7,7 @@ import types
 import os.path
 import pkg_resources
 
-from .. import _schema as schema
+from .. import schema
 
 
 class Dumper:
