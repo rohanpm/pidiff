@@ -1,4 +1,6 @@
-test_api/signatures2.py:24: D310 argument(s) added to tests.test_api.signatures2.do_foo: z
-test_api/signatures2.py:18: D400 optional argument(s) added to tests.test_api.signatures2.do_lots: newopt
-test_api/signatures2.py:1: D300 argument(s) removed from tests.test_api.signatures2.mult: x, y
+test_api/signatures2.py:34: D310 argument(s) added to tests.test_api.signatures2.do_foo: z
+test_api/signatures2.py:24: D320 argument position changed in tests.test_api.signatures2.do_lots: someopt (1 => 2)
+test_api/signatures2.py:30: D400 optional argument(s) added to tests.test_api.signatures2.do_lots_minor1: opt2
+test_api/signatures2.py:1: D300 argument(s) removed from tests.test_api.signatures2.mult1: x, y
+test_api/signatures2.py:7: D330 argument in tests.test_api.signatures2.mult2 can no longer be passed positionally: y (was position 1)
 Major API changes were found; inappropriate for unknown versions

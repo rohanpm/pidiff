@@ -213,8 +213,40 @@ class Differ:
             # TODO: we could still do something here in some cases
             return
 
+        self.diff_named_args(sym_old, sym_new)
+        self.diff_positional_args(sym_old, sym_new)
+
+    def diff_positional_args(self, sym_old, sym_new):
         sig_old = sym_old.ob.signature
         sig_new = sym_new.ob.signature
+
+        old_arg_names = sig_old.positional_args
+        new_arg_names = sig_new.positional_args
+
+        for (idx, old_arg) in enumerate(old_arg_names):
+            old_arg = old_arg_names[idx]
+            if idx >= len(new_arg_names) and sig_new.has_var_positional:
+                # OK, this arg can be accepted by the var positional
+                continue
+
+            if old_arg not in new_arg_names:
+                self.UnpositionalArg(sym_old, sym_new,
+                                     arg_name=old_arg,
+                                     old_position=idx)
+                raise StopDiff
+
+            new_arg_idx = new_arg_names.index(old_arg)
+            if idx != new_arg_idx:
+                self.MovedArg(sym_old, sym_new,
+                              arg_name=old_arg,
+                              old_position=idx,
+                              new_position=new_arg_idx)
+                raise StopDiff
+
+    def diff_named_args(self, sym_old, sym_new):
+        sig_old = sym_old.ob.signature
+        sig_new = sym_new.ob.signature
+
         old_arg_names = sig_old.named_kwargs
         new_arg_names = sig_new.named_kwargs
 

@@ -1,4 +1,4 @@
-from typing import List
+from typing import Set, List
 import os
 
 
@@ -11,7 +11,7 @@ class Signature:
         self._raw = raw
 
     @property
-    def named_kwargs(self) -> List[str]:
+    def named_kwargs(self) -> Set[str]:
         out = set()
         for param in self._raw:
             if param['kind'] in ['POSITIONAL_OR_KEYWORD', 'KEYWORD_ONLY']:
@@ -19,8 +19,18 @@ class Signature:
         return out
 
     @property
+    def positional_args(self) -> List[str]:
+        return [p['name']
+                for p in self._raw
+                if p['kind'] == 'POSITIONAL_OR_KEYWORD']
+
+    @property
     def has_var_keyword(self) -> bool:
         return any([param['kind'] == 'VAR_KEYWORD' for param in self._raw])
+
+    @property
+    def has_var_positional(self) -> bool:
+        return any([param['kind'] == 'VAR_POSITIONAL' for param in self._raw])
 
     def has_default_for(self, name) -> bool:
         for param in self._raw:

@@ -1,5 +1,11 @@
-def mult(*args):
+def mult1(*args):
     # This change is major because passing named x, y
+    # would no longer work
+    pass
+
+
+def mult2(x, **kwargs):
+    # This change is major because passing positional y
     # would no longer work
     pass
 
@@ -15,9 +21,13 @@ def mult_minor2(x, *args, **kwargs):
     pass
 
 
-def do_lots(data, someopt=True, newopt=None, otheropt=False, thisopt=None):
-    # This change is broken since index of otheropt
-    # and thisopt have changed
+def do_lots(data, otheropt=False, someopt=False, thisopt=None):
+    # This change is major since index of otheropt
+    # and someopt have changed
+    pass
+
+
+def do_lots_minor1(data, opt1=None, opt2=None):
     pass
 
 

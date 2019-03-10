@@ -124,6 +124,18 @@ class Codes:
         "added-argument",
         "argument(s) added to {sym_new.display_name}: {extra[arg_name]}"
     )
+    MovedArg = MajorCode(
+        "D320",
+        "moved-argument",
+        ("argument position changed in {sym_new.display_name}: "
+         "{extra[arg_name]} ({extra[old_position]} => {extra[new_position]})")
+    )
+    UnpositionalArg = MajorCode(
+        "D330",
+        "unpositional-argument",
+        ("argument in {sym_new.display_name} can no longer be passed positionally: "
+         "{extra[arg_name]} (was position {extra[old_position]})")
+    )
 
     # Backwards-compatible signature changes
     AddedOptionalArg = MinorCode(
