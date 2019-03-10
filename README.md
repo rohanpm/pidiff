@@ -3,7 +3,7 @@
 `pidiff` - the Python interface diffing tool
 
 [![Build Status](https://circleci.com/gh/rohanpm/pidiff/tree/master.svg?style=svg)](https://circleci.com/gh/rohanpm/pidiff/tree/master)
-[![Test Coverage](https://api.codeclimate.com/v1/badges/64347682bb124ea1e1fb/test_coverage)](https://codeclimate.com/github/rohanpm/pidiff/test_coverage)
+[![Coverage Status](https://coveralls.io/repos/github/rohanpm/pidiff/badge.svg?branch=master)](https://coveralls.io/github/rohanpm/pidiff?branch=master)
 [![Maintainability](https://api.codeclimate.com/v1/badges/64347682bb124ea1e1fb/maintainability)](https://codeclimate.com/github/rohanpm/pidiff/maintainability)
 
 **This project is alpha quality and is not yet recommended for use**

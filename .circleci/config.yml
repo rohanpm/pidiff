@@ -22,6 +22,13 @@ workflows:
         toxenv: static
         filters:
           <<: *ci_filters
+    - python/coveralls:
+        name: Submit coverage results to coveralls
+        requires:
+        - Autotests
+        context: pidiff-secrets
+        filters:
+          <<: *ci_filters
     - python/codeclimate-upload-coverage:
         name: Submit coverage results to codeclimate
         test_reporter_id: b5167e87a147f386af54fb218c710b65bafa6391ceeb2f37f82525f16eb32fc2
@@ -32,7 +39,7 @@ workflows:
     - python/release:
         name: Release to PyPI
         # For twine credentials
-        context: secrets
+        context: pidiff-secrets
         # Only release if all tests passed
         requires:
         - Autotests
