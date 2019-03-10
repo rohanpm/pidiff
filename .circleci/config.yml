@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  python: rohanpm/python@1.1.0
+  python: rohanpm/python@1.1.1
 
 workflows:
   version: 2
