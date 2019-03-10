@@ -70,7 +70,8 @@ def semver_parse_tolerant(version: str):
 
 
 def summarize(ctx, log):
-    LOG.info("\n---------------------------------------------------------------------")
+    LOG.info('')
+    LOG.info("---------------------------------------------------------------------")
 
     if log.max_change_type == ChangeType.NONE:
         LOG.info("No API changes were found")
