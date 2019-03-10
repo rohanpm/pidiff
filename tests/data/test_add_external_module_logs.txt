@@ -1,2 +1,2 @@
-test_api/externalmod2.py:0: D211 external module added: tests.test_api.externalmod2.weakref
+test_api/externalmod2.py:0: N211 external module added: tests.test_api.externalmod2.weakref
 Minor API changes were found; inappropriate for unknown versions

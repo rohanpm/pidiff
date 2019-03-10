@@ -33,3 +33,13 @@ def do_lots_minor1(data, opt1=None, opt2=None):
 
 def do_foo(x, y, z):
     pass
+
+
+def mult_any(x, y, z, **kwargs):
+    # Major break: *args was dropped
+    pass
+
+
+def do_anything(x, y, z, *args):
+    # Major break: **kwargs was dropped
+    pass

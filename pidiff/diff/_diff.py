@@ -213,8 +213,27 @@ class Differ:
             # TODO: we could still do something here in some cases
             return
 
+        self.diff_var_args(sym_old, sym_new)
         self.diff_named_args(sym_old, sym_new)
         self.diff_positional_args(sym_old, sym_new)
+
+    def diff_var_args(self, sym_old, sym_new):
+        sig_old = sym_old.ob.signature
+        sig_new = sym_new.ob.signature
+
+        if sig_old.has_var_positional and not sig_new.has_var_positional:
+            self.RemovedVarArgs(sym_old, sym_new)
+            raise StopDiff
+
+        if sig_old.has_var_keyword and not sig_new.has_var_keyword:
+            self.RemovedVarKeywordArgs(sym_old, sym_new)
+            raise StopDiff
+
+        if not sig_old.has_var_positional and sig_new.has_var_positional:
+            self.AddedVarArgs(sym_old, sym_new)
+
+        if not sig_old.has_var_keyword and sig_new.has_var_keyword:
+            self.AddedVarKeywordArgs(sym_old, sym_new)
 
     def diff_positional_args(self, sym_old, sym_new):
         sig_old = sym_old.ob.signature

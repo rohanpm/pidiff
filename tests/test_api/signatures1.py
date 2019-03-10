@@ -27,3 +27,11 @@ def do_lots_minor1(data, opt1=None):
 
 def do_foo(x, y):
     pass
+
+
+def mult_any(*args):
+    pass
+
+
+def do_anything(**kwargs):
+    pass

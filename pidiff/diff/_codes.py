@@ -57,95 +57,115 @@ class MinorCode(ErrorCode):
 class Codes:
     # Removals of symbols from API
     RemovedSym = MajorCode(
-        "D100",
+        "B100",
         "removed-object",
         "{sym_old.ob.object_type} removed: {sym_old.display_name}",
     )
     RemovedModule = MajorCode(
-        "D110",
+        "B110",
         "removed-module",
         "module removed: {sym_old.display_name}",
     )
     RemovedExternalModule = MajorCode(
-        "D111",
+        "B111",
         "removed-external-module",
         "external module removed: {sym_old.display_name}",
     )
     RemovedFunction = MajorCode(
-        "D120",
+        "B120",
         "removed-function",
         "function removed: {sym_old.display_name}",
     )
     RemovedMethod = MajorCode(
-        "D130",
+        "B130",
         "removed-method",
         "method removed: {sym_old.display_name}",
     )
     RemovedClass = MajorCode(
-        "D140",
+        "B140",
         "removed-class",
         "class removed: {sym_old.display_name}",
     )
 
     # Additions of symbols to API
     AddedSym = MinorCode(
-        "D200",
+        "N200",
         "added-object",
         "{sym_new.ob.object_type} added: {sym_new.display_name}")
     AddedModule = MinorCode(
-        "D210",
+        "N210",
         "added-module",
         "module added: {sym_new.display_name}")
     AddedExternalModule = MinorCode(
-        "D211",
+        "N211",
         "added-external-module",
         "external module added: {sym_new.display_name}")
     AddedFunction = MinorCode(
-        "D220",
+        "N220",
         "added-function",
         "function added: {sym_new.display_name}")
     AddedMethod = MinorCode(
-        "D230",
+        "N230",
         "added-method",
         "method added: {sym_new.display_name}")
     AddedClass = MinorCode(
-        "D240",
+        "N240",
         "added-class",
         "class added: {sym_new.display_name}")
 
     # Backwards-incompatible signature changes
     RemovedArg = MajorCode(
-        "D300",
+        "B300",
         "removed-argument",
         "argument(s) removed from {sym_new.display_name}: {extra[arg_name]}"
     )
     AddedArg = MajorCode(
-        "D310",
+        "B310",
         "added-argument",
         "argument(s) added to {sym_new.display_name}: {extra[arg_name]}"
     )
     MovedArg = MajorCode(
-        "D320",
+        "B320",
         "moved-argument",
         ("argument position changed in {sym_new.display_name}: "
          "{extra[arg_name]} ({extra[old_position]} => {extra[new_position]})")
     )
     UnpositionalArg = MajorCode(
-        "D330",
+        "B330",
         "unpositional-argument",
         ("argument in {sym_new.display_name} can no longer be passed positionally: "
          "{extra[arg_name]} (was position {extra[old_position]})")
     )
+    RemovedVarArgs = MajorCode(
+        "B340",
+        "removed-var-args",
+        "{sym_new.display_name} no longer accepts unlimited positional arguments"
+    )
+    RemovedVarKeywordArgs = MajorCode(
+        "B350",
+        "removed-var-keyword-args",
+        "{sym_new.display_name} no longer accepts unlimited keyword arguments"
+    )
 
     # Backwards-compatible signature changes
     AddedOptionalArg = MinorCode(
-        "D400",
+        "N400",
         "added-optional-argument",
         "optional argument(s) added to {sym_new.display_name}: {extra[arg_name]}"
+    )
+    AddedVarArgs = MinorCode(
+        "N440",
+        "added-var-args",
+        "{sym_new.display_name} now accepts unlimited positional arguments"
+    )
+    AddedVarKeywordArgs = MinorCode(
+        "N450",
+        "added-var-keyword-args",
+        "{sym_new.display_name} now accepts unlimited keyword arguments"
     )
 
     # Other
     NoLongerCallable = MajorCode(
-        "D800",
+        "B800",
         "uncallable",
         "no longer callable: {sym_new.display_name}")
