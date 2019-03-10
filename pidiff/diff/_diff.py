@@ -1,5 +1,6 @@
 import logging
 import functools
+from typing import Optional
 
 import semver  # type: ignore
 
@@ -45,6 +46,12 @@ class CapturedLog:
     @property
     def max_change_type(self):
         return self._handler.max_change_type
+
+
+class DiffOptions:
+    def __init__(self):
+        self.summarize = True
+        self.full_symbol_names = False
 
 
 def semver_parse_tolerant(version: str):
@@ -125,9 +132,10 @@ class Location:
 
 
 class Differ:
-    def __init__(self, api_old, api_new):
+    def __init__(self, api_old, api_new, options):
         self.api_old = api_old
         self.api_new = api_new
+        self.options = options
         self.diffed_children = set()
         self.location_stack_old = []
         self.location_stack_new = []
@@ -251,17 +259,20 @@ class DiffResult:
         return self.max_change_type > self.max_change_allowed
 
 
-def diff(api_old, api_new):
+def diff(api_old, api_new, options: Optional[DiffOptions] = None):
+    options = options or DiffOptions()
+
     schema.validate(api_old)
     schema.validate(api_new)
 
-    api_old = Symbol.from_root(api_old)
-    api_new = Symbol.from_root(api_new)
-    differ = Differ(api_old, api_new)
+    api_old = Symbol.from_root(api_old, options)
+    api_new = Symbol.from_root(api_new, options)
+    differ = Differ(api_old, api_new, options)
 
     with CapturedLog() as log:
         differ.diff_root()
 
-    summarize(differ, log)
+    if options.summarize:
+        summarize(differ, log)
 
     return DiffResult(log.max_change_type, differ.max_change_allowed)

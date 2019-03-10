@@ -20,3 +20,7 @@ def test_signatures(diff_report_tester):
 
 def test_add_external_module(diff_report_tester):
     diff_report_tester('externalmod')
+
+
+def test_builtin(diff_report_tester):
+    diff_report_tester('builtin')

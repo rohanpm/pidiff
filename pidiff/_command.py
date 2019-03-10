@@ -12,7 +12,7 @@ from virtualenvapi.manage import VirtualEnvironment  # type: ignore
 from virtualenvapi.exceptions import PackageInstallationException  # type: ignore
 
 import pidiff
-from pidiff import diff, ChangeType
+from pidiff import diff, DiffOptions, ChangeType
 
 from ._schema import validate
 
@@ -127,6 +127,15 @@ def exitcode_for_result(result):
     return 88
 
 
+def options_from_args(args) -> DiffOptions:
+    out = DiffOptions()
+
+    if args.full_symbol_names:
+        out.full_symbol_names = True
+
+    return out
+
+
 def run_diff(args) -> None:
     with make_workdir(args.workdir) as workdir:
         s1path = os.path.join(workdir.name, 's1')
@@ -154,7 +163,7 @@ def run_diff(args) -> None:
         s1api = s1env.dump_or_exit(args.module_name, args.source1)
         s2api = s2env.dump_or_exit(args.module_name, args.source2)
 
-        result = diff(s1api, s2api)
+        result = diff(s1api, s2api, options_from_args(args))
         sys.exit(exitcode_for_result(result))
 
 
@@ -165,6 +174,9 @@ def main() -> None:
     parser.add_argument('-v', '--verbose',
                         action='store_true',
                         help='verbose execution')
+    parser.add_argument('--full-symbol-names',
+                        action='store_true',
+                        help='use fully qualified names in log messages')
     parser.add_argument('-r', '--recreate',
                         action='store_true',
                         help='force recreation of virtual environments')

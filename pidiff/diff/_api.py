@@ -23,10 +23,11 @@ class Signature:
 
 
 class Symbol:
-    def __init__(self, dump, full_name, object_ref):
+    def __init__(self, dump, full_name, object_ref, diff_options):
         self.dump = dump
         self.full_name = full_name
         self.object_ref = object_ref
+        self.diff_options = diff_options
 
     @property
     def version(self):
@@ -34,10 +35,10 @@ class Symbol:
         return self.dump['root'].get('version')
 
     @classmethod
-    def from_root(cls, dump):
+    def from_root(cls, dump, options):
         root = dump['root']
         full_name = root['name']
-        return cls(dump, full_name, root['ref'])
+        return cls(dump, full_name, root['ref'], options)
 
     @property
     def object_data(self):
@@ -45,7 +46,7 @@ class Symbol:
 
     @property
     def ob(self):
-        return Object(self.dump, self.object_data)
+        return Object(self.dump, self.object_data, self.diff_options)
 
     @property
     def name(self):
@@ -57,7 +58,7 @@ class Symbol:
         for child_raw in self.object_data.get('children') or []:
             child_full_name = '.'.join([self.full_name, child_raw['name']])
             ref = child_raw['ref']
-            out.append(Symbol(self.dump, child_full_name, ref))
+            out.append(Symbol(self.dump, child_full_name, ref, self.diff_options))
         return out
 
     @property
@@ -66,7 +67,9 @@ class Symbol:
 
     @property
     def display_name(self):
-        return self.full_name
+        if self.diff_options.full_symbol_names:
+            return self.full_name
+        return self.name
 
     # These location properties are available on the symbol
     # because they really *should* be defined on the symbol rather
@@ -85,9 +88,10 @@ class Symbol:
 
 
 class Object:
-    def __init__(self, dump, raw):
+    def __init__(self, dump, raw, diff_options):
         self.dump = dump
         self.raw = raw
+        self.diff_options = diff_options
 
     @property
     def file(self):
@@ -116,7 +120,7 @@ class Object:
         full_path = self.file
         if full_path:
             # Make relative to root module
-            root_file = Symbol.from_root(self.dump).file
+            root_file = Symbol.from_root(self.dump, self.diff_options).file
             parent_dir = os.path.dirname(os.path.dirname(root_file))
             if parent_dir in ('', '.'):
                 return full_path

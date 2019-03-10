@@ -1,6 +1,6 @@
 try:
     from .diff._codes import ChangeType
-    from .diff._diff import diff
+    from .diff._diff import diff, DiffOptions
     from .dump._dump import dump_module
 except ModuleNotFoundError:
     # Why: because we're imported by the dump command
@@ -9,4 +9,4 @@ except ModuleNotFoundError:
     # there.
     pass
 
-__all__ = ['diff', 'dump_module', 'ChangeType']
+__all__ = ['diff', 'dump_module', 'DiffOptions', 'ChangeType']
