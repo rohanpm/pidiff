@@ -174,7 +174,7 @@ class Differ:
         old_arg_names = sig_old.named_kwargs
         new_arg_names = sig_new.named_kwargs
 
-        removed_args = ','.join(sorted(list(old_arg_names - new_arg_names)))
+        removed_args = ', '.join(sorted(list(old_arg_names - new_arg_names)))
         if removed_args and not sig_new.has_var_keyword:
             Codes.RemovedArg.log(sym_old, sym_new, arg_name=removed_args)
             raise StopDiff
