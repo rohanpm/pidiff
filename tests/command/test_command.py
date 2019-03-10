@@ -12,14 +12,6 @@ from pidiff import dump_module
 from tests import checklogs
 
 
-@fixture(autouse=True)
-def restore_argv():
-    orig_argv = sys.argv
-    sys.argv = sys.argv[:]
-    yield
-    sys.argv = orig_argv
-
-
 @fixture(scope='session')
 def workdir(tmp_path_factory):
     return str(tmp_path_factory.mktemp('workdir'))
