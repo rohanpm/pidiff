@@ -10,6 +10,9 @@ import pkg_resources
 from .. import schema
 
 
+LOG = logging.getLogger('pidiff.dump')
+
+
 class Dumper:
     def __init__(self, root_name, module):
         self.module = module
@@ -92,9 +95,6 @@ class Dumper:
 
             LOG.debug("Descending to %s.%s %s", name, child_name, id(child))
             self.dump_object(ref=child_ref, name=child_name, ob=child)
-
-
-LOG = logging.getLogger('pidiff')
 
 
 def is_public(name) -> bool:

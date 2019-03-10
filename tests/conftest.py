@@ -8,8 +8,8 @@ from . import checklogs
 
 
 @pytest.fixture
-def assert_logs_ok(request, caplog):
-    yield functools.partial(checklogs, request.node.name, caplog)
+def assert_logs_ok(request, caplog, tmpdir):
+    yield functools.partial(checklogs, request.node.name, caplog, str(tmpdir))
 
 
 @pytest.fixture

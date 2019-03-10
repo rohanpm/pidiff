@@ -1,3 +1,8 @@
+Creating virtualenvs under <tmpdir>
+Installing foopkg==1.0.0 to <tmpdir>/s1
+Installing foopkg==1.1.0 to <tmpdir>/s2
+Inspecting API for foopkg==1.0.0
+Inspecting API for foopkg==1.1.0
 test_api/minorbad2.py:5: N220 function added: new_fn
 
 ---------------------------------------------------------------------
