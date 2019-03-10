@@ -16,3 +16,7 @@ def test_class_without_signature(diff_report_tester):
 
 def test_signatures(diff_report_tester):
     diff_report_tester('signatures')
+
+
+def test_add_external_module(diff_report_tester):
+    diff_report_tester('externalmod')

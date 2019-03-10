@@ -1,0 +1,2 @@
+../../../dev/python3/lib64/python3.7/weakref.py:0: D200 module added: tests.test_api.externalmod2.weakref
+Minor API changes were found; inappropriate for unknown versions
