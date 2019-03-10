@@ -55,7 +55,7 @@ object_schema = {
 
         # For display purposes only
         "object_type": {
-            "enum": ["function", "class", "module", "object"],
+            "enum": ["function", "method", "class", "module", "object"],
         },
 
         # children of this object (e.g. classes within a module,

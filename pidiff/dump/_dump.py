@@ -4,6 +4,7 @@ import inspect
 import logging
 from random import shuffle
 from typing import Optional, Any, Dict
+import types
 import os.path
 import pkg_resources
 
@@ -157,14 +158,16 @@ def get_object_type(value) -> str:
     class Klass:
         pass
 
-    if isinstance(value, type(lambda: None)):
-        return 'function'
+    type_to_string = [
+        (type(Klass), 'class'),
+        (types.FunctionType, 'function'),
+        (types.MethodType, 'method'),
+        (types.ModuleType, 'module'),
+    ]
 
-    if isinstance(value, type(Klass)):
-        return 'class'
-
-    if isinstance(value, type(argparse)):
-        return 'module'
+    for (type_instance, name) in type_to_string:
+        if isinstance(value, type_instance):
+            return name
 
     return 'object'
 
