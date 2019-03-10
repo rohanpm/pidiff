@@ -1,7 +1,7 @@
 import sys
 import json
 
-from ._dump import dump_module
+from .dump import dump_module
 
 EXIT_NO_MODULE = 32
 

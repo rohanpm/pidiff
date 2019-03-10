@@ -1,6 +1,6 @@
 import pytest
 
-from pidiff.dump import dump_module
+from pidiff import dump_module
 
 
 @pytest.mark.parametrize('api_name', [
