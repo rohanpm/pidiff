@@ -20,13 +20,11 @@ class StopDiff(Exception):
 class Interceptor(logging.NullHandler):
     def __init__(self):
         super().__init__()
-        self.max_change_type = None
+        self.max_change_type = ChangeType.NONE
 
     def handle(self, record):
         change_type = getattr(record, 'change_type', None)
-        if self.max_change_type is None:
-            self.max_change_type = change_type
-        elif change_type is not None:
+        if change_type is not None:
             self.max_change_type = max(change_type, self.max_change_type)
 
 
@@ -66,11 +64,11 @@ def semver_parse_tolerant(version: str):
 def summarize(ctx, log):
     LOG.info("\n---------------------------------------------------------------------")
 
-    if log.max_change_type is None:
+    if log.max_change_type == ChangeType.NONE:
         LOG.info("No API changes were found")
         return
 
-    if log.max_change_type == ChangeType.INFO:
+    if log.max_change_type < ChangeType.MINOR:
         LOG.info("No minor or major API changes were found")
         return
 
@@ -199,6 +197,16 @@ class Differ:
             self.diff(old_children[name], new_children[name])
 
 
+class DiffResult:
+    def __init__(self, max_change_type: ChangeType, max_change_allowed: ChangeType):
+        self.max_change_type = max_change_type
+        self.max_change_allowed = max_change_allowed
+
+    @property
+    def failed(self) -> bool:
+        return self.max_change_type > self.max_change_allowed
+
+
 def diff(api_old, api_new):
     schema.validate(api_old)
     schema.validate(api_new)
@@ -211,3 +219,5 @@ def diff(api_old, api_new):
         differ.diff_root()
 
     summarize(differ, log)
+
+    return DiffResult(log.max_change_type, differ.max_change_allowed)

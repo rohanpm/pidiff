@@ -12,7 +12,7 @@ from virtualenvapi.manage import VirtualEnvironment  # type: ignore
 from virtualenvapi.exceptions import PackageInstallationException  # type: ignore
 
 import pidiff
-from pidiff.diff import diff
+from pidiff import diff, ChangeType
 
 from ._schema import validate
 
@@ -117,6 +117,16 @@ def make_workdir(requested) -> Union[TemporaryDirectory, Directory]:
     return out
 
 
+def exitcode_for_result(result):
+    if not result.failed:
+        return 0
+
+    if result.max_change_type == ChangeType.MAJOR:
+        return 99
+
+    return 88
+
+
 def run_diff(args) -> None:
     with make_workdir(args.workdir) as workdir:
         s1path = os.path.join(workdir.name, 's1')
@@ -144,7 +154,8 @@ def run_diff(args) -> None:
         s1api = s1env.dump_or_exit(args.module_name, args.source1)
         s2api = s2env.dump_or_exit(args.module_name, args.source2)
 
-        diff(s1api, s2api)
+        result = diff(s1api, s2api)
+        sys.exit(exitcode_for_result(result))
 
 
 def main() -> None:

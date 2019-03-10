@@ -6,9 +6,10 @@ DIFFLOG = logging.getLogger('pidiff.diff')
 
 class ChangeType(enum.IntEnum):
     # These should be ordered in increasing level of severity
-    INFO = 0
-    MINOR = 1
-    MAJOR = 2
+    NONE = 0
+    INFO = 1
+    MINOR = 2
+    MAJOR = 3
 
 
 class ErrorCode:
