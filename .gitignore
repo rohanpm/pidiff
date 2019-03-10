@@ -7,3 +7,5 @@ htmlcov/
 test-results/
 .mypy_cache/
 .pidiff/
+build/
+dist/
