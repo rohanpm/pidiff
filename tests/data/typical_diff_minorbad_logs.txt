@@ -1,0 +1,5 @@
+test_api/minorbad2.py:5: N220 function added: new_fn
+
+---------------------------------------------------------------------
+Minor API changes were found; inappropriate for 1.0.0 => 1.0.1
+New version should be equal or greater than 1.1.0

@@ -34,8 +34,8 @@ def write_logs(caplog, filename):
         f.writelines(messages)
 
 
-def checklogs(request, caplog):
-    logs_path = data_path(request.node.name + '_logs.txt')
+def checklogs(name, caplog):
+    logs_path = data_path(name + '_logs.txt')
 
     if enforce_match():
         assert_logs_equal(caplog, logs_path)

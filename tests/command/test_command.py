@@ -1,0 +1,100 @@
+import sys
+import logging
+from unittest import mock
+import json
+from subprocess import Popen as real_popen
+
+from pytest import fixture, raises, mark
+
+from pidiff._impl import command
+from pidiff import dump_module
+
+from tests import checklogs
+
+
+@fixture(autouse=True)
+def restore_argv():
+    orig_argv = sys.argv
+    sys.argv = sys.argv[:]
+    yield
+    sys.argv = orig_argv
+
+
+@fixture(scope='session')
+def workdir(tmp_path_factory):
+    return str(tmp_path_factory.mktemp('workdir'))
+
+
+def test_help():
+    """Running command with --help succeeds."""
+
+    sys.argv = ['pidiff', '--help']
+    with raises(SystemExit) as exc:
+        command.main()
+
+    assert exc.value.code == 0
+
+
+def mock_popen_from_dump(root_name, *args, **kwargs):
+    dumped = dump_module(root_name)
+
+    assert 'stdout' in kwargs
+
+    stdout = kwargs.pop('stdout')
+    json.dump(dumped, stdout)
+
+    return real_popen(['/bin/echo', 'intercepted dump of %s' % root_name])
+
+
+def fake_popen(*args, **kwargs):
+    cmd = args[0]
+
+    if cmd[0] == 'virtualenv':
+        return real_popen(*args, **kwargs)
+
+    if cmd[0:3] == ['bin/python', '-m', 'pip']:
+        pip = cmd[3:]
+        if pip == ['-V']:
+            return real_popen(*args, **kwargs)
+
+        if 'install' in pip:
+            cmd = ['/bin/echo'] + cmd
+            return real_popen(cmd, *args[1:], **kwargs)
+
+        if 'freeze' in pip:
+            return real_popen(*args, **kwargs)
+
+    if 'import distutils.sysconfig' in ''.join(cmd):
+        return real_popen(*args, **kwargs)
+
+    if cmd[1:3] == ['-m', 'pidiff._impl.dump.command']:
+        root_name = cmd[3]
+        if '/s1/' in cmd[0]:
+            root_name = root_name + '1'
+        else:
+            root_name = root_name + '2'
+        return mock_popen_from_dump(root_name, *args, **kwargs)
+
+    raise AssertionError("Don't know what to do with command %s" % cmd)
+
+
+@mark.parametrize('testapi,exitcode', [
+    ('nochange', 0),
+    ('minorbad', 88),
+    ('minorgood', 0),
+    ('major', 99),
+])
+def test_typical_diff(workdir, testapi, exitcode, caplog):
+    sys.argv = ['pidiff', '--workdir', workdir,
+                'foopkg==1.0.0', 'foopkg==1.1.0', 'tests.test_api.%s' % testapi]
+
+    caplog.set_level(logging.INFO)
+
+    with mock.patch('subprocess.Popen') as mock_popen:
+        mock_popen.side_effect = fake_popen
+        with raises(SystemExit) as exc:
+            command.main()
+
+    checklogs('typical_diff_%s' % testapi, caplog)
+
+    assert exc.value.code == exitcode
