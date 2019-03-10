@@ -30,9 +30,6 @@ def write_logs(caplog, filename):
     for rec in caplog.records:
         messages.append(rec.message + '\n')
 
-    if not messages:
-        raise AssertionError("No log messages detected")
-
     with open(filename, 'w') as f:
         f.writelines(messages)
 

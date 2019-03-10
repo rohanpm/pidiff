@@ -144,7 +144,11 @@ def get_file(value) -> Optional[str]:
 
 
 def dump_signature(out, subject) -> None:
-    sig = inspect.signature(subject)
+    try:
+        sig = inspect.signature(subject)
+    except ValueError:
+        LOG.debug("Can't get signature for %s", subject, exc_info=True)
+        return
 
     for param in sig.parameters.values():
         elem: Dict[str, Any] = {}

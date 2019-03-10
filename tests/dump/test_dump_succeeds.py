@@ -8,6 +8,8 @@ from pidiff.dump import dump_module
     'tests.test_api.api2',
     'tests.test_api.multiname1',
     'tests.test_api.multiname2',
+    'tests.test_api.exc_ctor1',
+    'tests.test_api.exc_ctor2',
 ])
 def test_dump_succeeds(api_name):
     result = dump_module(api_name)
