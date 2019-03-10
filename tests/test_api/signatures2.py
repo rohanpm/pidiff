@@ -19,3 +19,7 @@ def do_lots(data, someopt=True, newopt=None, otheropt=False, thisopt=None):
     # This change is broken since index of otheropt
     # and thisopt have changed
     pass
+
+
+def do_foo(x, y, z):
+    pass

@@ -225,10 +225,16 @@ class Differ:
 
         added_args = sorted(list(new_arg_names - old_arg_names))
         added_optional = []
+        added_mandatory = []
         for added in added_args:
             if sig_new.has_default_for(added):
                 added_optional.append(added)
                 continue
+            added_mandatory.append(added)
+
+        if added_mandatory:
+            self.AddedArg(sym_old, sym_new, arg_name=', '.join(added_mandatory))
+            raise StopDiff
 
         if added_optional:
             self.AddedOptionalArg(sym_old, sym_new, arg_name=', '.join(added_optional))

@@ -119,6 +119,11 @@ class Codes:
         "removed-argument",
         "argument(s) removed from {sym_new.display_name}: {extra[arg_name]}"
     )
+    AddedArg = MajorCode(
+        "D310",
+        "added-argument",
+        "argument(s) added to {sym_new.display_name}: {extra[arg_name]}"
+    )
 
     # Backwards-compatible signature changes
     AddedOptionalArg = MinorCode(

@@ -15,3 +15,7 @@ def mult_minor2(x, y):
 
 def do_lots(data, someopt=True, otheropt=False, thisopt=None):
     pass
+
+
+def do_foo(x, y):
+    pass
