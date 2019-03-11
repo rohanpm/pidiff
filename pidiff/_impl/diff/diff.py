@@ -77,10 +77,6 @@ def summarize(ctx, log):
         LOG.info("No API changes were found")
         return
 
-    if log.max_change_type < ChangeType.MINOR:
-        LOG.info("No minor or major API changes were found")
-        return
-
     if log.max_change_type == ChangeType.MAJOR:
         change_type_str = 'Major'
         bump_version = semver.bump_major
@@ -158,7 +154,7 @@ class Differ:
         new_vinfo = self.new_version_info
 
         # default applies if any version is unavailable/incomparable
-        out = ChangeType.INFO
+        out = ChangeType.NONE
 
         if new_vinfo and old_vinfo:
             if new_vinfo.major > old_vinfo.major:

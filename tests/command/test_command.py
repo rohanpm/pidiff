@@ -1,5 +1,7 @@
+import os
 import sys
 import logging
+import tempfile
 from unittest import mock
 import json
 from subprocess import Popen as real_popen, CalledProcessError
@@ -15,6 +17,16 @@ from tests import checklogs
 @fixture(scope='session')
 def workdir(tmp_path_factory):
     return str(tmp_path_factory.mktemp('workdir'))
+
+
+@fixture(autouse=True)
+def restore_cwd():
+    original_cwd = os.getcwd()
+    yield
+    new_cwd = os.getcwd()
+
+    if original_cwd != new_cwd:
+        os.chdir(original_cwd)
 
 
 def test_help():
@@ -76,7 +88,7 @@ def fake_popen(*args, **kwargs):
 @mark.parametrize('testapi,exitcode,extra_args', [
     ('nochange', 0, []),
     ('minorbad', 88, ['-v']),
-    ('minorgood', 0, []),
+    ('minorgood', 0, ['--recreate']),
     ('major', 99, ['--full-symbol-names']),
     ('force_error', 64, []),
 ])
@@ -95,3 +107,22 @@ def test_typical_diff(workdir, testapi, exitcode, extra_args, caplog):
     checklogs('typical_diff_%s' % testapi, caplog, workdir)
 
     assert exc.value.code == exitcode
+
+
+def test_make_workdir_requested():
+    assert command.make_workdir('some/path').name == 'some/path'
+
+
+@mark.parametrize('existing_dir', ['.git', '.tox'])
+def test_make_workdir_pidiff(tmpdir, existing_dir):
+    os.chdir(str(tmpdir))
+
+    tmpdir.mkdir(existing_dir)
+
+    assert command.make_workdir(None).name == '.pidiff'
+
+
+def test_make_workdir_tmpdir(tmpdir):
+    os.chdir(str(tmpdir))
+
+    assert isinstance(command.make_workdir(None), tempfile.TemporaryDirectory)

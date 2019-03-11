@@ -1,8 +1,10 @@
 api2/__init__.py:0: B120 function removed: tests.test_api.api1.do_other
 api2/__init__.py:0: B111 external module removed: tests.test_api.api1.re
-api2/__init__.py:12: N240 class added: tests.test_api.api2.DoOther
+api2/__init__.py:10: N240 class added: tests.test_api.api2.DoOther
+api2/__init__.py:0: N200 object added: tests.test_api.api2.do_other_instance
 api2/__init__.py:0: B800 no longer callable: tests.test_api.api2.do_this
-api2/__init__.py:17: B300 argument(s) removed from tests.test_api.api2.mult: c
+api2/__init__.py:22: B300 argument(s) removed from tests.test_api.api2.mult: c
 api2/sub1.py:1: B120 function removed: tests.test_api.api1.sub1.SomeClass.bar
 api2/sub1.py:5: N220 function added: tests.test_api.api2.sub1.SomeClass.baz
-Major API changes were found; inappropriate for unknown versions
+Major API changes were found; inappropriate for 1.0.0.dev0 => 1.0.0.dev0
+New version should be equal or greater than 2.0.0
