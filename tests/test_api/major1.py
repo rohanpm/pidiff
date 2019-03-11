@@ -4,3 +4,6 @@ def fn1():
 
 def fn2():
     pass
+
+
+__version__ = 'whatever'

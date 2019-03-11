@@ -18,3 +18,6 @@ def do_other():
 
 def mult(a, b, c):
     pass
+
+
+__version__ = '1.0.0.dev0'

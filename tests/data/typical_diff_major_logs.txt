@@ -1,4 +1,4 @@
 test_api/major2.py:0: B120 function removed: tests.test_api.major1.fn1
 
 ---------------------------------------------------------------------
-Major API changes were found; inappropriate for unknown versions
+Major API changes were found; inappropriate for whatever => crazy

@@ -23,3 +23,6 @@ do_other_instance = DoOther(1, 2)
 
 def mult(a, b):
     pass
+
+
+__version__ = '1.0.0.dev0'
