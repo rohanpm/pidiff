@@ -1,7 +1,5 @@
 import logging
 
-__all__ = ['sub1']
-
 
 do_this = 'oops not callable now'
 

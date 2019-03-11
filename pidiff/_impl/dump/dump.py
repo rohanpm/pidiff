@@ -165,12 +165,16 @@ def set_location(out, subject) -> None:
 def import_recurse(module_name: str):
     module = importlib.import_module(module_name)
 
-    module_all = getattr(module, '__all__', [])
-    for submodule in module_all:
-        try:
-            import_recurse('.'.join([module_name, submodule]))
-        except ModuleNotFoundError:
-            pass
+    module_file = getattr(module, '__file__') or ''
+    if os.path.basename(module_file) == '__init__.py':
+        module_dir = os.path.dirname(module_file)
+        for filename in os.listdir(module_dir):
+            if not filename.startswith('_'):
+                basename = filename.split('.')[0]
+                try:
+                    import_recurse('.'.join([module_name, basename]))
+                except (PermissionError, ModuleNotFoundError):
+                    pass
 
     return module
 

@@ -1,8 +1,6 @@
 import logging
 import re
 
-__all__ = ['sub1']
-
 
 def do_this(x, y, z):
     pass
