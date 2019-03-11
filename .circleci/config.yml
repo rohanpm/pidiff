@@ -22,6 +22,11 @@ workflows:
         toxenv: static
         filters:
           <<: *ci_filters
+    - python/tox:
+        name: API compatibility check
+        toxenv: pidiff
+        filters:
+          <<: *ci_filters
     - python/coveralls:
         name: Submit coverage results to coveralls
         requires:
