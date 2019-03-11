@@ -61,7 +61,7 @@ class VirtualEnvironmentExt(VirtualEnvironment):
         all_kwargs = {}
         all_kwargs.update(kwargs)
 
-        if os.path.isdir(package):
+        if os.path.isfile(os.path.join(package, 'setup.py')):
             # If pointing at something locally, install in editable mode.
             # (This is an odd API - install will internally split this
             # before passing to pip)

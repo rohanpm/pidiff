@@ -47,6 +47,7 @@ def test_install_uses_editable_for_local(caplog, tmpdir):
     env = VirtualEnvironmentExt()
     env.install = mock.Mock()
 
+    tmpdir.join('setup.py').write('')
     env.install_or_die(str(tmpdir))
 
     # It should have been called with -e for editable.
