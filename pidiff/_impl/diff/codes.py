@@ -7,14 +7,15 @@ DIFFLOG = logging.getLogger('pidiff.diff')
 class ChangeType(enum.IntEnum):
     # These should be ordered in increasing level of severity
     NONE = 0
-    INFO = 1
-    MINOR = 2
-    MAJOR = 3
+    # Reserved for now...
+    # INFO = 100
+    MINOR = 200
+    MAJOR = 300
 
 
 class ErrorCode:
     LEVEL = logging.INFO
-    CHANGE_TYPE = ChangeType.INFO
+    CHANGE_TYPE = ChangeType.MAJOR
 
     def __init__(self, errcode, errname, template):
         self.errcode = errcode
