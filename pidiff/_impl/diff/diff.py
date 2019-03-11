@@ -53,6 +53,11 @@ class DiffOptions:
         self.summarize = True
         self.full_symbol_names = False
 
+    @property
+    def short_names(self):
+        # Just an example...
+        return not self.full_symbol_names
+
 
 def semver_parse_tolerant(version: str):
     if not version:
