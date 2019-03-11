@@ -136,8 +136,6 @@ class Object:
             # Make relative to root module
             root_file = Symbol.from_root(self.dump, self.diff_options).file
             parent_dir = os.path.dirname(os.path.dirname(root_file))
-            if parent_dir in ('', '.'):
-                return full_path
             return os.path.relpath(full_path, parent_dir)
         return ''
 
