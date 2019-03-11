@@ -158,9 +158,7 @@ def set_location(out, subject) -> None:
             (_, lineno) = inspect.getsourcelines(subject)
             if lineno is not None:
                 out['lineno'] = lineno
-        except OSError:
-            pass
-        except TypeError:
+        except (OSError, TypeError):
             pass
 
 
