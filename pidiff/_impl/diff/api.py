@@ -2,10 +2,6 @@ from typing import Set, List
 import os
 
 
-class InternalError(RuntimeError):
-    pass
-
-
 class Signature:
     def __init__(self, raw):
         self._raw = raw
@@ -32,11 +28,13 @@ class Signature:
     def has_var_positional(self) -> bool:
         return any([param['kind'] == 'VAR_POSITIONAL' for param in self._raw])
 
-    def has_default_for(self, name) -> bool:
+    def _param(self, name):
         for param in self._raw:
             if param['name'] == name:
-                return param['has_default']
-        return False
+                return param
+
+    def has_default_for(self, name) -> bool:
+        return self._param(name)['has_default']
 
 
 class Symbol:
@@ -124,8 +122,7 @@ class Object:
 
     @property
     def signature(self):
-        if not self.is_callable:
-            raise InternalError('signature called on non-callable')
+        assert self.is_callable, 'signature called on non-callable'
         return Signature(self.raw.get('signature'))
 
     @property
