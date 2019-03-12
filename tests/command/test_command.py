@@ -53,10 +53,21 @@ def mock_popen_from_dump(root_name, *args, **kwargs):
     return real_popen(['/bin/echo', 'intercepted dump of %s' % root_name])
 
 
+def safe_command(cmd):
+    if cmd[0] == 'virtualenv':
+        return True
+
+    if 'import distutils.sysconfig' in ''.join(cmd):
+        return True
+
+    if 'pkg_resources.get_distribution' in ''.join(cmd):
+        return True
+
+
 def fake_popen(*args, **kwargs):
     cmd = args[0]
 
-    if cmd[0] == 'virtualenv':
+    if safe_command(cmd):
         return real_popen(*args, **kwargs)
 
     if cmd[0:3] == ['bin/python', '-m', 'pip']:
@@ -70,9 +81,6 @@ def fake_popen(*args, **kwargs):
 
         if 'freeze' in pip:
             return real_popen(*args, **kwargs)
-
-    if 'import distutils.sysconfig' in ''.join(cmd):
-        return real_popen(*args, **kwargs)
 
     if cmd[1:3] == ['-m', 'pidiff._impl.dump.command']:
         root_name = cmd[3]
@@ -107,6 +115,18 @@ def test_typical_diff(workdir, testapi, exitcode, extra_args, caplog):
     checklogs('typical_diff_%s' % testapi, caplog, workdir)
 
     assert exc.value.code == exitcode
+
+
+def test_missing_module(workdir):
+    """Command fails if module name is not provided and autodetect fails"""
+    sys.argv = ['pidiff', '--workdir', workdir, 'pkg1', 'pkg2']
+
+    with mock.patch('subprocess.Popen') as mock_popen:
+        mock_popen.side_effect = fake_popen
+        with raises(SystemExit) as exc:
+            command.main()
+
+    assert exc.value.code == 32
 
 
 def test_make_workdir_requested():

@@ -3,9 +3,10 @@ import argparse
 import logging
 import subprocess
 import sys
+import re
 import json
 import shutil
-from typing import Union
+from typing import Union, Optional, NoReturn
 from tempfile import TemporaryDirectory
 
 from virtualenvapi.manage import VirtualEnvironment
@@ -104,6 +105,21 @@ class VirtualEnvironmentExt(VirtualEnvironment):
             LOG.error("Failed to inspect module %s for %s", root, sourcename)
             sys.exit(64)
 
+    def dist_toplevel(self, name) -> Optional[str]:
+        try:
+            return subprocess.check_output([
+                os.path.join(self.path, 'bin/python'),
+                '-c',
+                ('import pkg_resources;'
+                 'import sys;'
+                 'x=pkg_resources.get_distribution(sys.argv[1]).get_metadata("top_level.txt");'
+                 'sys.stdout.write(x)'),
+                name,
+            ], cwd='/', encoding='utf-8').strip()
+        except subprocess.CalledProcessError:
+            LOG.debug("Reading top_level.txt for %s failed", name, exc_info=True)
+            return None
+
 
 def make_workdir(requested) -> Union[TemporaryDirectory, Directory]:
     if requested:
@@ -136,6 +152,55 @@ def options_from_args(args) -> DiffOptions:
     return out
 
 
+def exit_module_unknown() -> NoReturn:
+    LOG.error("Top-level module for the given packages could not be determined. "
+              "Please pass a module_name argument.")
+    sys.exit(32)
+
+
+def get_dist_name(pkg) -> Optional[str]:
+    # --editable case
+    setup_py = os.path.join(pkg, 'setup.py')
+    if os.path.exists(setup_py):
+        out = subprocess.check_output(['python', setup_py, '--name'], encoding='utf-8').strip()
+        LOG.debug("%s resolves to %s via setup.py", pkg, out)
+        return out
+
+    # other case
+    # The idea here is to resolve "foo==1.0.0" to "foo"
+    # Not sure what's the full set of rules for pip arguments, this is a guess
+    matched = re.match(r'[0-9a-zA-Z_\-]+', pkg)
+    if matched:
+        out = matched.group(0)
+        LOG.debug("%s resolves to %s", pkg, out)
+        return out
+
+    return None
+
+
+def detect_module(env1, pkg1, env2, pkg2) -> Union[str, NoReturn]:
+    """Figure out and return the top-level name of a module given on the commandline"""
+    dist_name = get_dist_name(pkg1)
+    if not dist_name:
+        dist_name = get_dist_name(pkg2)
+    if not dist_name:
+        exit_module_unknown()
+
+    toplevel = env1.dist_toplevel(dist_name)
+    if not toplevel:
+        toplevel = env2.dist_toplevel(dist_name)
+    if not toplevel:
+        exit_module_unknown()
+
+    lines = toplevel.splitlines()
+    if len(lines) == 1:
+        LOG.debug("%s top level resolves to %s", dist_name, lines[0])
+        return lines[0]
+
+    LOG.debug("top_level.txt for %s:\n%s", dist_name, toplevel)
+    exit_module_unknown()
+
+
 def run_diff(args) -> None:
     with make_workdir(args.workdir) as workdir:
         s1path = os.path.join(workdir.name, 's1')
@@ -157,11 +222,15 @@ def run_diff(args) -> None:
         LOG.debug("Installing %s to %s", args.source2, s2path)
         s2env.install_or_die(args.source2, upgrade=True)
 
+        module_name = args.module_name
+        if not module_name:
+            module_name = detect_module(s1env, args.source1, s2env, args.source2)
+
         s1env.link_self()
         s2env.link_self()
 
-        s1api = s1env.dump_or_exit(args.module_name, args.source1)
-        s2api = s2env.dump_or_exit(args.module_name, args.source2)
+        s1api = s1env.dump_or_exit(module_name, args.source1)
+        s2api = s2env.dump_or_exit(module_name, args.source2)
 
         result = diff(s1api, s2api, options_from_args(args))
         sys.exit(exitcode_for_result(result))
@@ -182,7 +251,7 @@ def main() -> None:
                         help='force recreation of virtual environments')
     parser.add_argument('source1')
     parser.add_argument('source2')
-    parser.add_argument('module_name')
+    parser.add_argument('module_name', nargs='?')
 
     p = parser.parse_args()
 
