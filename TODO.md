@@ -3,4 +3,4 @@
 - Log also prior location of symbol
 - ini file, command-line options for disabling
 - docs
-- figure out roots automatically from eggs
+- property appears as object, can/should we do better?
