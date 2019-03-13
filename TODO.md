@@ -1,6 +1,0 @@
-- Accurate file:line for plain objects
-- file:line should be based on the symbols and not the objects (i.e. use AST)
-- Log also prior location of symbol
-- ini file, command-line options for disabling
-- docs
-- figure out roots automatically from eggs

@@ -1,4 +1,0 @@
-test_api/externalmod2.py:0: N211 external module added: tests.test_api.externalmod2.weakref
-Warning: 'old' version 2.0.0 appears newer than 'new' version 1.0.0
-Minor API changes were found; inappropriate for 2.0.0 => 1.0.0
-New version should be equal or greater than 2.1.0

@@ -1,3 +1,0 @@
-jsonschema
-virtualenv-api
-semver

@@ -1,4 +1,0 @@
-test_api/minorgood2.py:5: N220 function added: new_fn
-
----------------------------------------------------------------------
-Minor API changes were found; appropriate for 1.0.0 => 1.1.0

@@ -1,1 +1,0 @@
-test_api/exc_ctor2.py:1: B310 argument(s) added to tests.test_api.exc_ctor2.CustomException: x, y
