@@ -17,12 +17,6 @@ appear to violate SemVer.
 
     This documentation was built from pidiff |version|.
 
-.. toctree::
-   :maxdepth: 2
-   :caption: Contents:
-
-   user-guide
-
 
 Quick Start
 -----------
@@ -42,17 +36,22 @@ released to PyPI, and the current version in your local git checkout:
 ::
 
     $ pidiff -r more-executors .
-    more_executors/_executors.py:49: D200 object added: more_executors.Executors.flat_bind
-    more_executors/retry.py:46: D100 object removed: more_executors.retry.ExceptionRetryPolicy.new_default
-    more_executors/retry.py:133: D100 object removed: more_executors.retry.RetryExecutor.new_default
+    more_executors/retry.py:133: N450 RetryExecutor now accepts unlimited keyword arguments
+    more_executors/retry.py:133: B130 method removed: new_default
+    more_executors/_wrap.py:6: N220 function added: flat_bind
 
     ---------------------------------------------------------------------
     Major API changes were found; inappropriate for 1.15.0 => 1.16.0
     New version should be equal or greater than 2.0.0
 
 
-Indices and tables
-==================
+More information
+----------------
+
+.. toctree::
+   :maxdepth: 2
+
+   user-guide
 
 * :ref:`genindex`
 * :ref:`search`

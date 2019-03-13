@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 
 def get_description():
-    return 'Python interface diff'
+    return 'The Python interface diff tool'
 
 
 def get_long_description():
@@ -34,5 +34,8 @@ setup(
         'console_scripts': [
             'pidiff=pidiff._impl.command:main',
         ]
+    },
+    project_urls={
+        "Documentation": "https://rohanpm.github.io/pidiff/",
     }
 )
