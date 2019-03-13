@@ -34,6 +34,15 @@ workflows:
         context: pidiff-secrets
         filters:
           <<: *ci_filters
+    - python/tox:
+        name: Build docs
+        toxenv: docs
+        # For pushing to gh-pages
+        context: pidiff-secrets
+        post-steps:
+        - run: scripts/push-docs
+        filters:
+          <<: *ci_filters
     - python/codeclimate-upload-coverage:
         name: Submit coverage results to codeclimate
         test_reporter_id: b5167e87a147f386af54fb218c710b65bafa6391ceeb2f37f82525f16eb32fc2
