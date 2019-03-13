@@ -46,16 +46,7 @@
 It compares the public API provided by two versions of a pip-installable
 package and produces a report of any changes detected, failing if changes
 appear to violate SemVer.</p>
-<p>This documentation was built from pidiff 0.3.0, revision c55806c.</p>
-<div class="toctree-wrapper compound">
-<p class="caption"><span class="caption-text">Contents:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="user-guide.html">User Guide</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="user-guide.html#command-reference">Command reference</a></li>
-</ul>
-</li>
-</ul>
-</div>
+<p>This documentation was built from pidiff 0.3.0, revision 735fdda.</p>
 <div class="section" id="quick-start">
 <h2>Quick Start<a class="headerlink" href="#quick-start" title="Permalink to this headline">¶</a></h2>
 <p>Install the pidiff command from PyPI:</p>
@@ -67,9 +58,9 @@ appear to violate SemVer.</p>
 would be to check the differences between the latest version of your package
 released to PyPI, and the current version in your local git checkout:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ pidiff -r more-executors .
-more_executors/_executors.py:49: D200 object added: more_executors.Executors.flat_bind
-more_executors/retry.py:46: D100 object removed: more_executors.retry.ExceptionRetryPolicy.new_default
-more_executors/retry.py:133: D100 object removed: more_executors.retry.RetryExecutor.new_default
+more_executors/retry.py:133: N450 RetryExecutor now accepts unlimited keyword arguments
+more_executors/retry.py:133: B130 method removed: new_default
+more_executors/_wrap.py:6: N220 function added: flat_bind
 
 ---------------------------------------------------------------------
 Major API changes were found; inappropriate for 1.15.0 =&gt; 1.16.0
@@ -77,13 +68,23 @@ New version should be equal or greater than 2.0.0
 </pre></div>
 </div>
 </div>
+<div class="section" id="more-information">
+<h2>More information<a class="headerlink" href="#more-information" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="user-guide.html">User Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="user-guide.html#the-pidiff-command">The pidiff command</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user-guide.html#what-is-public-api">What is “public API”?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user-guide.html#caveats-and-limitations">Caveats and limitations</a></li>
+</ul>
+</li>
+</ul>
 </div>
-<div class="section" id="indices-and-tables">
-<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
 <ul class="simple">
 <li><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></li>
 <li><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></li>
 </ul>
+</div>
 </div>
 
 
@@ -107,7 +108,6 @@ New version should be equal or greater than 2.0.0
 
 
 <h3>Navigation</h3>
-<p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="user-guide.html">User Guide</a></li>
 </ul>

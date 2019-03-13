@@ -35,9 +35,10 @@
             
   <div class="section" id="user-guide">
 <h1>User Guide<a class="headerlink" href="#user-guide" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="command-reference">
-<h2>Command reference<a class="headerlink" href="#command-reference" title="Permalink to this headline">¶</a></h2>
-<p>Check for differences between two versions of a Python API, and complain if SemVer is not followed.</p>
+<div class="section" id="the-pidiff-command">
+<h2>The pidiff command<a class="headerlink" href="#the-pidiff-command" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">pidiff</span></code> command compares two versions of a Python package
+and produces a report on API differences.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">pidiff</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">workdir</span> <span class="n">WORKDIR</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">full</span><span class="o">-</span><span class="n">symbol</span><span class="o">-</span><span class="n">names</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">r</span><span class="p">]</span>
               <span class="n">source1</span> <span class="n">source2</span> <span class="p">[</span><span class="n">module_name</span><span class="p">]</span>
 </pre></div>
@@ -79,23 +80,116 @@ including:</p>
 <td>Use this working directory</td></tr>
 <tr><td class="option-group">
 <kbd>-v, --verbose</kbd></td>
-<td><p class="first">Verbose execution</p>
-<p class="last">Default: False</p>
-</td></tr>
+<td>Verbose execution</td></tr>
 <tr><td class="option-group" colspan="2">
 <kbd>--full-symbol-names</kbd></td>
 </tr>
-<tr><td>&#160;</td><td><p class="first">Use fully qualified names in log messages</p>
-<p class="last">Default: False</p>
-</td></tr>
+<tr><td>&#160;</td><td>Use fully qualified names in log messages</td></tr>
 <tr><td class="option-group">
 <kbd>-r, --recreate</kbd></td>
-<td><p class="first">Force recreation of virtual environments</p>
-<p class="last">Default: False</p>
-</td></tr>
+<td>Force recreation of virtual environments</td></tr>
 </tbody>
 </table>
 </div>
+<div class="section" id="output-format">
+<h3>Output format<a class="headerlink" href="#output-format" title="Permalink to this headline">¶</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">pidiff</span></code> command produces output as in the following example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ pidiff more-executors==1.15.0 more-executors==1.16.0
+more_executors/_executors.py:49: N230 method added: flat_bind
+more_executors/retry.py:46: N450 ExceptionRetryPolicy now accepts unlimited keyword arguments
+more_executors/retry.py:46: B330 argument in ExceptionRetryPolicy can no longer be passed positionally: max_attempts (was position 0)
+more_executors/retry.py:133: N450 RetryExecutor now accepts unlimited keyword arguments
+more_executors/retry.py:133: B130 method removed: new_default
+more_executors/_wrap.py:6: N220 function added: flat_bind
+
+---------------------------------------------------------------------
+Major API changes were found; inappropriate for 1.15.0 =&gt; 1.16.0
+New version should be equal or greater than 2.0.0
+</pre></div>
+</div>
+<p>For each change found, a message is produced with:</p>
+<blockquote>
+<div><dl class="docutils">
+<dt><strong>&lt;file&gt;:&lt;line&gt;</strong></dt>
+<dd><p class="first">Approximate location of the added/removed/changed object.</p>
+<p class="last">Note that this is the location where the related object is defined,
+which may not be in the same file where the object is exported as
+public API.</p>
+</dd>
+<dt><strong>error code</strong></dt>
+<dd><p class="first">Each type of error is associated with an error code.
+Error codes are one of:</p>
+<dl class="last docutils">
+<dt><strong>Nxxx</strong></dt>
+<dd><em>New</em> backwards-compatible functionality. New classes,
+objects, functions or arguments are available to clients.
+The package minor version must be increased.</dd>
+<dt><strong>Bxxx</strong></dt>
+<dd><em>Breaking</em> changes. Classes, objects, functions or arguments
+were removed or changed in such a way that clients written against
+the old package version may be broken when used against the new
+version. The package major version must be increased.</dd>
+</dl>
+</dd>
+<dt><strong>summary</strong></dt>
+<dd><p class="first">A summary explaining why the diff passed or failed.</p>
+<p class="last">If the diff fails, a new version number will be suggested for the
+package, where possible.</p>
+</dd>
+</dl>
+</div></blockquote>
+</div>
+<div class="section" id="exit-codes">
+<h3>Exit codes<a class="headerlink" href="#exit-codes" title="Permalink to this headline">¶</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">pidiff</span></code> command uses the following exit codes:</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>0</dt>
+<dd>Either no differences were found, or all differences
+are appropriate for old and new package versions.</dd>
+<dt>99</dt>
+<dd>Breaking API changes were found, and this is
+inappropriate for the old and new package versions;
+the major version should be bumped.</dd>
+<dt>88</dt>
+<dd>New functionality was found, and this is inappropriate
+for the old and new package versions; the minor version
+should be bumped.</dd>
+<dt><em>other non-zero</em></dt>
+<dd>An error occurred.</dd>
+</dl>
+</div></blockquote>
+</div>
+</div>
+<div class="section" id="what-is-public-api">
+<h2>What is “public API”?<a class="headerlink" href="#what-is-public-api" title="Permalink to this headline">¶</a></h2>
+<p>Roughly, the tool’s concept of “public API” is: any object reachable from
+any modules underneath your package’s entry point, with a name not
+beginning with <code class="docutils literal notranslate"><span class="pre">_</span></code>.</p>
+<p>A more complete description of the method used to enumerate public API follows.</p>
+<ul class="simple">
+<li>First, the <code class="docutils literal notranslate"><span class="pre">module_name</span></code> given to the <code class="docutils literal notranslate"><span class="pre">pidiff</span></code> command is imported (or,
+if omitted, the module to import is detected from the package’s top_level.txt
+metadata).</li>
+<li>All submodules of that module are also imported, recursively, ignoring any
+modules whose name begins with <code class="docutils literal notranslate"><span class="pre">_</span></code>.</li>
+<li>All modules imported by the above process are enumerated with <code class="xref py py-meth docutils literal notranslate"><span class="pre">dir()</span></code>
+to find available objects; those objects themselves are enumerated with
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">dir()</span></code> to find child objects; and so on, recursively.  Processing
+stops for any objects whose name begins with <code class="docutils literal notranslate"><span class="pre">_</span></code> or whose location is
+not underneath the directory containing the API entry point.</li>
+</ul>
+</div>
+<div class="section" id="caveats-and-limitations">
+<h2>Caveats and limitations<a class="headerlink" href="#caveats-and-limitations" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Python 2.x is not supported.</li>
+<li>It must be possible to import the API to be checked from within the same
+Python interpreter used for the <code class="docutils literal notranslate"><span class="pre">pidiff</span></code> command.</li>
+<li><code class="docutils literal notranslate"><span class="pre">pidiff</span></code> doesn’t check the return values of functions and methods.</li>
+<li><code class="docutils literal notranslate"><span class="pre">pidiff</span></code> is designed for pure Python modules only and is not expected to
+work for native extensions.</li>
+</ul>
 </div>
 </div>
 
@@ -120,10 +214,11 @@ including:</p>
 
 
 <h3>Navigation</h3>
-<p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">User Guide</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#command-reference">Command reference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#the-pidiff-command">The pidiff command</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#what-is-public-api">What is “public API”?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#caveats-and-limitations">Caveats and limitations</a></li>
 </ul>
 </li>
 </ul>
