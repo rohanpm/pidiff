@@ -236,22 +236,45 @@ def run_diff(args) -> None:
         sys.exit(exitcode_for_result(result))
 
 
-def main() -> None:
-    parser = argparse.ArgumentParser()
+def argparser():
+    parser = argparse.ArgumentParser(
+        description=('Check for differences between two versions of a Python API, '
+                     'and complain if SemVer is not followed.'))
+
     parser.add_argument('--workdir',
                         help="Use this working directory")
+
     parser.add_argument('-v', '--verbose',
                         action='store_true',
-                        help='verbose execution')
+                        help='Verbose execution')
+
     parser.add_argument('--full-symbol-names',
                         action='store_true',
-                        help='use fully qualified names in log messages')
+                        help='Use fully qualified names in log messages')
+
     parser.add_argument('-r', '--recreate',
                         action='store_true',
-                        help='force recreation of virtual environments')
-    parser.add_argument('source1')
-    parser.add_argument('source2')
-    parser.add_argument('module_name', nargs='?')
+                        help='Force recreation of virtual environments')
+
+    parser.add_argument('source1',
+                        help=("Old package for test; a requirement specifier "
+                              "as accepted by the pip command"))
+
+    parser.add_argument('source2',
+                        help="New package for test")
+
+    parser.add_argument('module_name',
+                        nargs='?',
+                        help=("Name of the Python module which serves as the "
+                              "entry point of the API to test. If omitted, "
+                              "the command will attempt to determine this automatically "
+                              "using egg metadata"))
+
+    return parser
+
+
+def main() -> None:
+    parser = argparser()
 
     p = parser.parse_args()
 
