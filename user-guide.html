@@ -40,6 +40,7 @@
 <p>The <code class="docutils literal notranslate"><span class="pre">pidiff</span></code> command compares two versions of a Python package
 and produces a report on API differences.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">pidiff</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">workdir</span> <span class="n">WORKDIR</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">full</span><span class="o">-</span><span class="n">symbol</span><span class="o">-</span><span class="n">names</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">r</span><span class="p">]</span>
+              <span class="p">[</span><span class="o">-</span><span class="n">e</span> <span class="n">ENABLE</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">d</span> <span class="n">DISABLE</span><span class="p">]</span>
               <span class="n">source1</span> <span class="n">source2</span> <span class="p">[</span><span class="n">module_name</span><span class="p">]</span>
 </pre></div>
 </div>
@@ -88,6 +89,12 @@ including:</p>
 <tr><td class="option-group">
 <kbd>-r, --recreate</kbd></td>
 <td>Force recreation of virtual environments</td></tr>
+<tr><td class="option-group">
+<kbd>-e, --enable</kbd></td>
+<td>Enable checks by error code or name. Multiple checks can be provided, comma-separated. Option may be provided multiple times.</td></tr>
+<tr><td class="option-group">
+<kbd>-d, --disable</kbd></td>
+<td>Disable checks by error code or name.</td></tr>
 </tbody>
 </table>
 </div>
