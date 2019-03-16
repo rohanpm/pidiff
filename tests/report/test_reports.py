@@ -18,6 +18,12 @@ def test_signatures(diff_report_tester):
     diff_report_tester('signatures')
 
 
+def test_signatures_with_options(diff_report_tester):
+    diff_report_tester('signatures',
+                       set_disabled=['N400', 'added-var-args', 'added-argument'],
+                       set_enabled=['added-var-args'])
+
+
 def test_add_external_module(diff_report_tester):
     diff_report_tester('externalmod')
 

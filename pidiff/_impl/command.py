@@ -143,11 +143,20 @@ def exitcode_for_result(result):
     return 88
 
 
+def add_checks(arg_values, option_method):
+    for arg_value in (arg_values or []):
+        for check in arg_value.split(','):
+            option_method(check.strip())
+
+
 def options_from_args(args) -> DiffOptions:
     out = DiffOptions()
 
     if args.full_symbol_names:
         out.full_symbol_names = True
+
+    add_checks(args.enable, out.set_enabled)
+    add_checks(args.disable, out.set_disabled)
 
     return out
 
@@ -255,6 +264,16 @@ def argparser():
     parser.add_argument('-r', '--recreate',
                         action='store_true',
                         help='Force recreation of virtual environments')
+
+    parser.add_argument('-e', '--enable',
+                        action='append',
+                        help=('Enable checks by error code or name. Multiple '
+                              'checks can be provided, comma-separated. Option '
+                              'may be provided multiple times.'))
+
+    parser.add_argument('-d', '--disable',
+                        action='append',
+                        help='Disable checks by error code or name.')
 
     parser.add_argument('source1',
                         help=("Old package for test; a requirement specifier "
