@@ -2,6 +2,7 @@ import os
 import sys
 import logging
 import tempfile
+from textwrap import dedent
 from unittest import mock
 import json
 from subprocess import Popen as real_popen, CalledProcessError
@@ -117,6 +118,54 @@ def test_typical_diff(workdir, testapi, testname, exitcode, extra_args, caplog):
     checklogs('typical_diff_%s' % testname, caplog, workdir)
 
     assert exc.value.code == exitcode
+
+
+def test_options_from_ini(workdir, tmpdir, caplog):
+    # top-level dir
+    tmpdir.join('pidiff.ini').write(dedent("""
+        [pidiff]
+        enable=
+            added-var-args
+        disable=
+            N400
+            added-var-args
+            added-argument
+    """))
+
+    # Put reverse config in setup.cfg,
+    # this shows setup.cfg is lower priority
+    tmpdir.join('setup.cfg').write(dedent("""
+        [pidiff]
+        disable=
+            added-var-args
+        enable=
+            N400
+            added-var-args
+            added-argument
+    """))
+
+    tmpdir.mkdir('subdir').join('pidiff.ini').write(dedent("""
+        [something]
+        some=unrelated,config
+    """))
+
+    os.chdir(str(tmpdir.join('subdir')))
+
+    caplog.set_level(logging.INFO)
+
+    sys.argv = ['pidiff', '--workdir', workdir,
+                'testpkg==1.0.0', 'testpkg==1.1.0', 'tests.test_api.signatures']
+
+    caplog.set_level(logging.INFO)
+
+    with mock.patch('subprocess.Popen') as mock_popen:
+        mock_popen.side_effect = fake_popen
+        with raises(SystemExit) as exc:
+            command.main()
+
+    checklogs('diff_signatures_with_options', caplog, workdir)
+
+    assert exc.value.code == 99
 
 
 def test_missing_module(workdir):

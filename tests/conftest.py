@@ -1,5 +1,6 @@
 import functools
 import sys
+import os
 import pytest
 
 from pidiff import dump_module, diff, DiffOptions
@@ -38,3 +39,11 @@ def restore_argv():
     sys.argv = sys.argv[:]
     yield
     sys.argv = orig_argv
+
+
+@pytest.fixture(autouse=True)
+def restore_cwd():
+    orig_cwd = os.getcwd()
+    yield
+    if os.getcwd() != orig_cwd:
+        os.chdir(orig_cwd)

@@ -16,6 +16,7 @@ import pidiff
 from pidiff import diff, DiffOptions, ChangeType
 
 from .schema import validate
+from . import config
 
 LOG = logging.getLogger('pidiff.command')
 
@@ -143,20 +144,16 @@ def exitcode_for_result(result):
     return 88
 
 
-def add_checks(arg_values, option_method):
-    for arg_value in (arg_values or []):
-        for check in arg_value.split(','):
-            option_method(check.strip())
-
-
-def options_from_args(args) -> DiffOptions:
+def get_diff_options(args) -> DiffOptions:
     out = DiffOptions()
 
     if args.full_symbol_names:
         out.full_symbol_names = True
 
-    add_checks(args.enable, out.set_enabled)
-    add_checks(args.disable, out.set_disabled)
+    config.add_checks(args.enable, out.set_enabled)
+    config.add_checks(args.disable, out.set_disabled)
+
+    config.adjust_options_from_ini(out)
 
     return out
 
@@ -241,7 +238,7 @@ def run_diff(args) -> None:
         s1api = s1env.dump_or_exit(module_name, args.source1)
         s2api = s2env.dump_or_exit(module_name, args.source2)
 
-        result = diff(s1api, s2api, options_from_args(args))
+        result = diff(s1api, s2api, get_diff_options(args))
         sys.exit(exitcode_for_result(result))
 
 
