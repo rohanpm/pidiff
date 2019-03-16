@@ -121,7 +121,7 @@ or disabled as in the following example:
     [pidiff]
     # list of checks to enable
     enable=
-        N450
+        added-var-keyword-args
         B330
 
     # list of checks to disable
@@ -130,6 +130,10 @@ or disabled as in the following example:
 
 The ``enable`` setting and command-line argument takes precedence over
 ``disable``.
+
+Checks may be listed using either an error code or a check name.
+To find the name associated with each error code, see the
+:ref:`error-reference` or the :ref:`genindex`.
 
 
 What is "public API"?
