@@ -97,6 +97,41 @@ The ``pidiff`` command uses the following exit codes:
         An error occurred.
 
 
+Configuring checks
+------------------
+
+By default, ``pidiff`` enables all checks.
+
+Individual checks may be explicitly disabled or enabled either using
+the ``--disable``, ``--enable`` command-line options, or using a settings
+file.
+
+``pidiff`` will look for settings in these files, in the current directory
+and any parent directories:
+
+- ``pidiff.ini``
+- ``tox.ini``
+- ``setup.cfg``
+
+Settings should be placed under a ``[pidiff]`` section. Checks may be enabled
+or disabled as in the following example:
+
+::
+
+    [pidiff]
+    # list of checks to enable
+    enable=
+        N450
+        B330
+
+    # list of checks to disable
+    disable=
+        B130
+
+The ``enable`` setting and command-line argument takes precedence over
+``disable``.
+
+
 What is "public API"?
 ---------------------
 
