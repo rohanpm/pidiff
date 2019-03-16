@@ -1,10 +1,10 @@
 import pytest
 
-from pidiff._impl.diff.diff import Differ
+from pidiff._impl.diff.diff import Differ, DiffOptions
 
 
 def test_differ_getattr():
-    differ = Differ(None, None, None)
+    differ = Differ(None, None, DiffOptions())
     differ.location_stack_old.append(('somefile', 0))
     differ.location_stack_new.append(('somefile', 0))
 

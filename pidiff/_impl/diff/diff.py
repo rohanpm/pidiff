@@ -1,6 +1,6 @@
 import logging
 import functools
-from typing import Optional
+from typing import Optional, Set
 
 import semver  # type: ignore
 
@@ -52,6 +52,22 @@ class DiffOptions:
     def __init__(self):
         self.summarize = True
         self.full_symbol_names = False
+        self._enabled = set()
+        self._disabled = set()
+
+    def set_enabled(self, check: str) -> None:
+        self._enabled.add(check)
+
+    def set_disabled(self, check: str) -> None:
+        self._disabled.add(check)
+
+    @property
+    def enabled(self) -> Set[str]:
+        return self._enabled.copy()
+
+    @property
+    def disabled(self) -> Set[str]:
+        return self._disabled.copy()
 
 
 def semver_parse_tolerant(version: str):
@@ -332,13 +348,31 @@ class Differ:
             fn = fns.get(ob_type, self.AddedSym)
         return fn(sym_old, child_new)
 
+    def is_enabled(self, code):
+        enabled = self.options.enabled
+        disabled = self.options.disabled
+
+        for name in (code.errcode, code.errname):
+            if name in enabled:
+                return True
+
+        for name in (code.errcode, code.errname):
+            if name in disabled:
+                return False
+
+        return True
+
     def __getattr__(self, name):
         code_instance = getattr(Codes, name, None)
         if not code_instance:
             raise AttributeError()
-        return functools.partial(code_instance.log,
-                                 old_location=self.location_stack_old[-1],
-                                 new_location=self.location_stack_new[-1])
+
+        if self.is_enabled(code_instance):
+            return functools.partial(code_instance.log,
+                                     old_location=self.location_stack_old[-1],
+                                     new_location=self.location_stack_new[-1])
+
+        return lambda *_args, **_kwargs: None
 
 
 class DiffResult:

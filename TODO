@@ -4,3 +4,10 @@
 - ini file, command-line options for disabling
 - docs
 - property appears as object, can/should we do better?
+- Log also where something was exported from public API?
+   e.g. in here:
+
+    pidiff/_impl/diff/diff.py:61: N220 function added: set_disabled
+    pidiff/_impl/diff/diff.py:58: N220 function added: set_enabled
+
+  ... also produce non-_impl log message
