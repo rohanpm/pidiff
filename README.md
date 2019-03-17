@@ -10,8 +10,6 @@
 - [Source](https://github.com/rohanpm/pidiff)
 - [PyPI](https://pypi.python.org/pypi/pidiff)
 
-**This project is alpha quality and is not yet recommended for use**
-
 `pidiff` is a tool to detect and report on API changes between multiple versions
 of a Python module. It can be used as a testing tool to help a project follow
 the [Semantic Versioning](https://semver.org/) spec.

@@ -1,8 +1,6 @@
 - Accurate file:line for plain objects
 - file:line should be based on the symbols and not the objects (i.e. use AST)
 - Log also prior location of symbol
-- ini file, command-line options for disabling
-- docs
 - property appears as object, can/should we do better?
 - Log also where something was exported from public API?
    e.g. in here:
