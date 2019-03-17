@@ -31,11 +31,6 @@ class ErrorCode:
         if (not new_filename) or new_filename.startswith(('.', '/')):
             (new_filename, new_lineno) = new_location
 
-        # old_filename = sym_old.display_file
-        # old_lineno = sym_old.lineno
-        # if (not old_filename) or old_filename.startswith(('.', '/')):
-        #     (old_filename, old_lineno) = old_location
-
         DIFFLOG.log(self.LEVEL,
                     "%s:%s: %s %s",
                     new_filename,

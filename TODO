@@ -11,3 +11,4 @@
     pidiff/_impl/diff/diff.py:58: N220 function added: set_enabled
 
   ... also produce non-_impl log message
+- missing check for non-callable becoming callable?

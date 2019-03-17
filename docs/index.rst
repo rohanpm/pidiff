@@ -52,6 +52,7 @@ More information
    :maxdepth: 2
 
    user-guide
+   error-reference
 
 * :ref:`genindex`
 * :ref:`search`
