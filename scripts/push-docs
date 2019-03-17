@@ -26,8 +26,7 @@ export GIT_ASKPASS=false
   git fetch origin
   git reset origin/gh-pages
 
-  # Create CNAME file here if needed, e.g.
-  # echo myho.st > CNAME
+  echo -n pidiff.dev > CNAME
 
   git add -A .
   git commit -m "Build documentation at ${rev}"

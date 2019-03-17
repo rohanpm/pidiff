@@ -95,6 +95,10 @@ html_theme_options = dict(
     github_button=False,
     travis_button=False,
     show_powered_by=False,
+    extra_nav_links=dict(
+        Source='https://github.com/rohanpm/pidiff',
+        PyPI='https://pypi.python.org/pypi/pidiff',
+    ),
 )
 
 # Add any paths that contain custom static files (such as style sheets) here,

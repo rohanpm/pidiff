@@ -36,6 +36,6 @@ setup(
         ]
     },
     project_urls={
-        "Documentation": "https://rohanpm.github.io/pidiff/",
+        "Documentation": "https://pidiff.dev/",
     }
 )

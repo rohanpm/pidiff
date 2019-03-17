@@ -1,11 +1,7 @@
 pidiff
 ======
 
-The Python interface diff tool
-
-* `Documentation <https://rohanpm.github.io/pidiff/>`_
-* `Source <https://github.com/rohanpm/pidiff>`_
-* `PyPI <https://pypi.python.org/pypi/pidiff>`_
+The Python interface diff tool.
 
 pidiff is a testing tool to help enforce the usage of
 `Semantic Versioning <https://semver.org/>`_ on your Python projects.
