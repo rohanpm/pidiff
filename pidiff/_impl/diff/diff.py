@@ -49,24 +49,48 @@ class CapturedLog:
 
 
 class DiffOptions:
+    """Options to be used for an interface diff."""
+
     def __init__(self):
         self.summarize = True
+        """boolean: If True, a human-readable summary will be logged at the end
+        of the diff."""
+
         self.full_symbol_names = False
+        """boolean: if True, produced log messages will include fully qualified
+        symbol names (e.g. ``mymodule.submodule.SomeClass``) rather than the
+        default short names (e.g. ``SomeClass``).
+        """
+
         self._enabled = set()
         self._disabled = set()
 
     def set_enabled(self, check: str) -> None:
+        """Add a check to the set of enabled checks.
+
+        Arguments:
+            check:
+                An error code or check name; see :ref:`error-reference`.
+        """
         self._enabled.add(check)
 
     def set_disabled(self, check: str) -> None:
+        """Add a check to the set of disabled checks.
+
+        Arguments:
+            check:
+                An error code or check name; see :ref:`error-reference`.
+        """
         self._disabled.add(check)
 
     @property
     def enabled(self) -> Set[str]:
+        """The set of enabled checks."""
         return self._enabled.copy()
 
     @property
     def disabled(self) -> Set[str]:
+        """The set of disabled checks."""
         return self._disabled.copy()
 
 
@@ -376,16 +400,65 @@ class Differ:
 
 
 class DiffResult:
+    """The result of a diff."""
+
     def __init__(self, max_change_type: ChangeType, max_change_allowed: ChangeType):
         self.max_change_type = max_change_type
+        """The most severe :class:`~pidiff.ChangeType` encountered during this
+        diff.
+        """
+
         self.max_change_allowed = max_change_allowed
+        """The most severe :class:`~pidiff.ChangeType` which should be
+        permitted during this diff, according to the version numbers of the
+        diffed modules and SemVer.
+        """
 
     @property
     def failed(self) -> bool:
+        """True if this diff discovered changes in violation of
+        `the SemVer spec <https://semver.org/>_`.
+        """
         return self.max_change_type > self.max_change_allowed
 
 
-def diff(api_old, api_new, options: Optional[DiffOptions] = None):
+def diff(api_old: dict, api_new: dict, options: Optional[DiffOptions] = None) -> DiffResult:
+    """Perform a diff between two interfaces.
+
+    Arguments:
+
+        api_old (dump):
+            An interface dump as returned by :func:`~pidiff.dump_module`;
+            typically, the dump of an old version of an interface would
+            be provided.
+
+        api_new (dump):
+            A second interface dump.
+
+        options (DiffOptions):
+            Options to adjust the behavior of the diff.
+
+    Returns:
+
+        DiffResult:
+            Result of the diff.
+
+    **Logging**:
+
+        This function returns only an overall result of a diff.
+        If more details are required, the caller should listen for log
+        messages sent to the ``pidiff.diff`` logger.
+
+        Records will be streamed to this logger during the diff,
+        including fields:
+
+        message:
+            Human-oriented message explaining a change
+        extra.change_type:
+            A :class:`~pidiff.ChangeType` representing the severity of
+            this change; or absent, for summary log messages
+    """
+
     options = options or DiffOptions()
 
     schema.validate(api_old)

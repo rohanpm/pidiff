@@ -210,6 +210,28 @@ def get_version(root_name: str, module) -> Optional[str]:
 
 
 def dump_module(root_name: str) -> dict:
+    """Dump a module.
+
+    Arguments:
+
+        root_name:
+            Fully qualified name of the module serving as root of a public API,
+            e.g. ``mypackage.mymodule``.
+
+            This module must be importable (and will be imported) by the current
+            Python interpreter.
+
+    Returns:
+        dump:
+            Information on the module's public API.
+
+            The specific data structure returned is undefined, but is valid for
+            the following uses:
+
+            - serialization and deserialization by JSON or pickling
+            - as an argument to :func:`~pidiff.diff`
+    """
+
     module = import_recurse(root_name)
 
     dumper = Dumper(root_name, module)
