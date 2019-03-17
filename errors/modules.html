@@ -1,0 +1,239 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Removed, Added Modules &#8212; pidiff  documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Removed, Added Objects" href="objects.html" />
+    <link rel="prev" title="Error Reference" href="../error-reference.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="removed-added-modules">
+<h1>Removed, Added Modules<a class="headerlink" href="#removed-added-modules" title="Permalink to this headline">¶</a></h1>
+<p>Errors are produced when modules are added to or removed
+from the namespace of a module within the public API.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">external-module</span></code> errors are used when the added/removed
+module is outside of the public API root.</p>
+<div class="section" id="error-codes">
+<h2>Error codes<a class="headerlink" href="#error-codes" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="docutils" id="index-0">
+<colgroup>
+<col width="14%" />
+<col width="86%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Code</th>
+<th class="head">Name</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>B110</td>
+<td>removed-module</td>
+</tr>
+<tr class="row-odd"><td>B111</td>
+<td>removed-external-module</td>
+</tr>
+<tr class="row-even"><td>N210</td>
+<td>added-module</td>
+</tr>
+<tr class="row-odd"><td>N211</td>
+<td>added-external-module</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="example-adding-internal-module">
+<h2>Example: adding internal module<a class="headerlink" href="#example-adding-internal-module" title="Permalink to this headline">¶</a></h2>
+<p>Initial version of code:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># in kitchen/__init__.py</span>
+<span class="k">def</span> <span class="nf">fry</span><span class="p">(</span><span class="n">eggs</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">FryingPan</span><span class="p">()</span><span class="o">.</span><span class="n">fry</span><span class="p">(</span><span class="n">eggs</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Updated version of code:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">kitchen.containers</span> <span class="kn">import</span> <span class="n">cabinet</span>
+
+<span class="k">def</span> <span class="nf">fry</span><span class="p">(</span><span class="n">eggs</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">cabinet</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">FryingPan</span><span class="p">)</span><span class="o">.</span><span class="n">fry</span><span class="p">(</span><span class="n">eggs</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>As an (internal) module has been added to the namespace,
+an error will be produced:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">kitchen</span><span class="o">/</span><span class="fm">__init__</span><span class="o">.</span><span class="n">py</span><span class="p">:</span><span class="mi">0</span><span class="p">:</span> <span class="n">N210</span> <span class="n">module</span> <span class="n">added</span><span class="p">:</span> <span class="n">cabinet</span>
+</pre></div>
+</div>
+<p>This constitutes a minor API change since new code
+could be written including <code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">kitchen</span> <span class="pre">import</span> <span class="pre">cabinet</span></code>,
+which would not work with the older version of the code.</p>
+</div>
+<div class="section" id="example-removing-external-module">
+<h2>Example: removing external module<a class="headerlink" href="#example-removing-external-module" title="Permalink to this headline">¶</a></h2>
+<p>Initial version of code uses <code class="docutils literal notranslate"><span class="pre">re</span></code> module for regular expressions:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># in haystack/__init__.py</span>
+<span class="kn">import</span> <span class="nn">re</span>
+
+<span class="k">class</span> <span class="nc">Haystack</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">needle</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">needle</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_content</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Updated version of code migrated to <code class="docutils literal notranslate"><span class="pre">regex</span></code> module:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">regex</span>
+
+<span class="k">class</span> <span class="nc">Haystack</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">needle</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">regex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">needle</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_content</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This change will produce an error for the major API change
+of removing a formerly available module (as well as the
+less severe change of adding a new module).  Since <code class="docutils literal notranslate"><span class="pre">re</span></code>
+lives outside of the <code class="docutils literal notranslate"><span class="pre">haystack</span></code> namespace, the module is
+referred to as “external”.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">haystack</span><span class="o">/</span><span class="fm">__init__</span><span class="o">.</span><span class="n">py</span><span class="p">:</span><span class="mi">0</span><span class="p">:</span> <span class="n">B111</span> <span class="n">external</span> <span class="n">module</span> <span class="n">removed</span><span class="p">:</span> <span class="n">re</span>
+<span class="n">haystack</span><span class="o">/</span><span class="fm">__init__</span><span class="o">.</span><span class="n">py</span><span class="p">:</span><span class="mi">0</span><span class="p">:</span> <span class="n">N211</span> <span class="n">external</span> <span class="n">module</span> <span class="n">added</span><span class="p">:</span> <span class="n">regex</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="discussion">
+<h2>Discussion<a class="headerlink" href="#discussion" title="Permalink to this headline">¶</a></h2>
+<p>Adding a module is, of course, often expected when adding new functionality.
+However, it can also happen accidentally as a result of changing
+implementation.</p>
+<p>The first example above shows how this can result in the same module
+becoming available under multiple paths.  In that example, with the
+new version of the code, a client is able to write either of the following:</p>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">kitchen</span> <span class="pre">import</span> <span class="pre">cabinet</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">kitchen.containers</span> <span class="pre">import</span> <span class="pre">cabinet</span></code></li>
+</ul>
+<p>Both appear valid, and there’s no hint to the client that <code class="docutils literal notranslate"><span class="pre">cabinet</span></code> is
+only available from <code class="docutils literal notranslate"><span class="pre">kitchen</span></code> due to implementation details.
+If backwards compatibility is valued, both imports must continue to work
+even as the implementation is further revised, adding to the maintenance
+burden.</p>
+<p>Adding or removing external modules can also cause compatibility issues.
+Consider the second example above. It seems unlikely that a client would
+intentionally write code such as <code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">haystack</span> <span class="pre">import</span> <span class="pre">re</span></code> to access the
+<code class="docutils literal notranslate"><span class="pre">re</span></code> module. On the other hand, it’s quite easy for clients to accidentally
+write code accessing external modules through other modules without realizing
+it, as in example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># &#39;re&#39; imported into this file&#39;s namespace here</span>
+<span class="kn">from</span> <span class="nn">haystack</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="c1"># ...later, some code using re</span>
+<span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">pidiff</a></h1>
+
+
+
+<p class="blurb">The Python interface diff tool</p>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../user-guide.html">User Guide</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../error-reference.html">Error Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Removed, Added Modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objects.html">Removed, Added Objects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="signature.html">Signature changes</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="../error-reference.html">Error Reference</a><ul>
+      <li>Previous: <a href="../error-reference.html" title="previous chapter">Error Reference</a></li>
+      <li>Next: <a href="objects.html" title="next chapter">Removed, Added Objects</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Rohan McGovern.
+      
+      |
+      <a href="../_sources/errors/modules.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+    <a href="https://github.com/rohanpm/pidiff" class="github">
+        <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"  class="github"/>
+    </a>
+    
+
+    
+  </body>
+</html>

@@ -16,6 +16,7 @@
     <script type="text/javascript" src="_static/language_data.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Error Reference" href="error-reference.html" />
     <link rel="prev" title="pidiff" href="index.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
@@ -168,6 +169,38 @@ should be bumped.</dd>
 </div></blockquote>
 </div>
 </div>
+<div class="section" id="configuring-checks">
+<h2>Configuring checks<a class="headerlink" href="#configuring-checks" title="Permalink to this headline">¶</a></h2>
+<p>By default, <code class="docutils literal notranslate"><span class="pre">pidiff</span></code> enables all checks.</p>
+<p>Individual checks may be explicitly disabled or enabled either using
+the <code class="docutils literal notranslate"><span class="pre">--disable</span></code>, <code class="docutils literal notranslate"><span class="pre">--enable</span></code> command-line options, or using a settings
+file.</p>
+<p><code class="docutils literal notranslate"><span class="pre">pidiff</span></code> will look for settings in these files, in the current directory
+and any parent directories:</p>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">pidiff.ini</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">tox.ini</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">setup.cfg</span></code></li>
+</ul>
+<p>Settings should be placed under a <code class="docutils literal notranslate"><span class="pre">[pidiff]</span></code> section. Checks may be enabled
+or disabled as in the following example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">pidiff</span><span class="p">]</span>
+<span class="c1"># list of checks to enable</span>
+<span class="n">enable</span><span class="o">=</span>
+    <span class="n">added</span><span class="o">-</span><span class="n">var</span><span class="o">-</span><span class="n">keyword</span><span class="o">-</span><span class="n">args</span>
+    <span class="n">B330</span>
+
+<span class="c1"># list of checks to disable</span>
+<span class="n">disable</span><span class="o">=</span>
+    <span class="n">B130</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">enable</span></code> setting and command-line argument takes precedence over
+<code class="docutils literal notranslate"><span class="pre">disable</span></code>.</p>
+<p>Checks may be listed using either an error code or a check name.
+To find the name associated with each error code, see the
+<a class="reference internal" href="error-reference.html#error-reference"><span class="std std-ref">Error Reference</span></a> or the <a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a>.</p>
+</div>
 <div class="section" id="what-is-public-api">
 <h2>What is “public API”?<a class="headerlink" href="#what-is-public-api" title="Permalink to this headline">¶</a></h2>
 <p>Roughly, the tool’s concept of “public API” is: any object reachable from
@@ -224,10 +257,12 @@ work for native extensions.</li>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">User Guide</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#the-pidiff-command">The pidiff command</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#configuring-checks">Configuring checks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#what-is-public-api">What is “public API”?</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#caveats-and-limitations">Caveats and limitations</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="error-reference.html">Error Reference</a></li>
 </ul>
 
 <div class="relations">
@@ -235,6 +270,7 @@ work for native extensions.</li>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
       <li>Previous: <a href="index.html" title="previous chapter">pidiff</a></li>
+      <li>Next: <a href="error-reference.html" title="next chapter">Error Reference</a></li>
   </ul></li>
 </ul>
 </div>

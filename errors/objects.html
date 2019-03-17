@@ -1,0 +1,204 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Removed, Added Objects &#8212; pidiff  documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Signature changes" href="signature.html" />
+    <link rel="prev" title="Removed, Added Modules" href="modules.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="removed-added-objects">
+<h1>Removed, Added Objects<a class="headerlink" href="#removed-added-objects" title="Permalink to this headline">¶</a></h1>
+<p>Errors are produced when all kinds of objects - classes, functions, methods
+and other - are removed from or added to public API.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">removed-object</span></code>, <code class="docutils literal notranslate"><span class="pre">added-object</span></code> errors are a generic catch-all
+for all kinds of objects. Where possible, an error is produced with a
+more specific type.</p>
+<div class="section" id="error-codes">
+<h2>Error codes<a class="headerlink" href="#error-codes" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="docutils" id="index-0">
+<colgroup>
+<col width="17%" />
+<col width="83%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Code</th>
+<th class="head">Name</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>B100</td>
+<td>removed-object</td>
+</tr>
+<tr class="row-odd"><td>B120</td>
+<td>removed-function</td>
+</tr>
+<tr class="row-even"><td>B130</td>
+<td>removed-method</td>
+</tr>
+<tr class="row-odd"><td>B140</td>
+<td>removed-class</td>
+</tr>
+<tr class="row-even"><td>N200</td>
+<td>added-object</td>
+</tr>
+<tr class="row-odd"><td>N220</td>
+<td>added-function</td>
+</tr>
+<tr class="row-even"><td>N230</td>
+<td>added-method</td>
+</tr>
+<tr class="row-odd"><td>N240</td>
+<td>added-class</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="example">
+<h2>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
+<p>Initial version of code:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># In cafe/__init__.py</span>
+<span class="k">class</span> <span class="nc">CoffeeMachine</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">make_cappucino</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
+        <span class="o">...</span>
+
+    <span class="k">def</span> <span class="nf">make_latte</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
+        <span class="o">...</span>
+
+    <span class="k">def</span> <span class="nf">make_black_tea</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
+        <span class="o">...</span>
+</pre></div>
+</div>
+<p>Updated version:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Now there&#39;s a default size</span>
+<span class="n">DEFAULT_SIZE</span> <span class="o">=</span> <span class="s1">&#39;large&#39;</span>
+
+<span class="k">class</span> <span class="nc">CoffeeMachine</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">make_cappucino</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
+        <span class="o">...</span>
+
+    <span class="k">def</span> <span class="nf">make_latte</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
+        <span class="o">...</span>
+
+    <span class="c1"># coffee machines don&#39;t make tea...</span>
+    <span class="c1">#def make_black_tea(self, size):</span>
+</pre></div>
+</div>
+<p>This change will produce errors such as:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cafe</span><span class="o">/</span><span class="fm">__init__</span><span class="o">.</span><span class="n">py</span><span class="p">:</span><span class="mi">0</span><span class="p">:</span> <span class="n">N200</span> <span class="nb">object</span> <span class="n">added</span><span class="p">:</span> <span class="n">DEFAULT_SIZE</span>
+<span class="n">cafe</span><span class="o">/</span><span class="fm">__init__</span><span class="o">.</span><span class="n">py</span><span class="p">:</span><span class="mi">3</span><span class="p">:</span> <span class="n">B120</span> <span class="n">function</span> <span class="n">removed</span><span class="p">:</span> <span class="n">make_black_tea</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">pidiff</a></h1>
+
+
+
+<p class="blurb">The Python interface diff tool</p>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../user-guide.html">User Guide</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../error-reference.html">Error Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="modules.html">Removed, Added Modules</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Removed, Added Objects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="signature.html">Signature changes</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="../error-reference.html">Error Reference</a><ul>
+      <li>Previous: <a href="modules.html" title="previous chapter">Removed, Added Modules</a></li>
+      <li>Next: <a href="signature.html" title="next chapter">Signature changes</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Rohan McGovern.
+      
+      |
+      <a href="../_sources/errors/objects.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+    <a href="https://github.com/rohanpm/pidiff" class="github">
+        <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"  class="github"/>
+    </a>
+    
+
+    
+  </body>
+</html>

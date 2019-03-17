@@ -1,0 +1,301 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Signature changes &#8212; pidiff  documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Removed, Added Objects" href="objects.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="signature-changes">
+<h1>Signature changes<a class="headerlink" href="#signature-changes" title="Permalink to this headline">¶</a></h1>
+<p>Various changes to the signature of a callable will produce errors.</p>
+<div class="section" id="error-codes">
+<h2>Error codes<a class="headerlink" href="#error-codes" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="docutils">
+<colgroup>
+<col width="14%" />
+<col width="86%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Code</th>
+<th class="head">Name</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>B300</td>
+<td>removed-argument</td>
+</tr>
+<tr class="row-odd"><td>B310</td>
+<td>added-argument</td>
+</tr>
+<tr class="row-even"><td>B320</td>
+<td>moved-argument</td>
+</tr>
+<tr class="row-odd"><td>B330</td>
+<td>unpositional-argument</td>
+</tr>
+<tr class="row-even"><td>B340</td>
+<td>removed-var-args</td>
+</tr>
+<tr class="row-odd"><td>B350</td>
+<td>removed-var-keyword-args</td>
+</tr>
+<tr class="row-even"><td>B800</td>
+<td>uncallable</td>
+</tr>
+<tr class="row-odd"><td>N400</td>
+<td>added-optional-argument</td>
+</tr>
+<tr class="row-even"><td>N440</td>
+<td>added-var-args</td>
+</tr>
+<tr class="row-odd"><td>N450</td>
+<td>added-var-keyword-args</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><dl class="docutils" id="index-0">
+<dt>B300 removed-argument</dt>
+<dd><div class="first highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-</span><span class="k">def</span> <span class="nf">fn</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span>
+<span class="o">+</span><span class="k">def</span> <span class="nf">fn</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+<span class="c1"># breaks: fn(&#39;x&#39;, &#39;y&#39;, &#39;z&#39;)</span>
+</pre></div>
+</div>
+<p class="last">An argument was removed, breaking any clients who were formerly
+providing the argument.</p>
+</dd>
+</dl>
+<dl class="docutils" id="index-1">
+<dt>B310 added-argument</dt>
+<dd><div class="first highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-</span><span class="k">def</span> <span class="nf">fn</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="o">+</span><span class="k">def</span> <span class="nf">fn</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span>
+
+<span class="c1"># breaks: fn(&#39;x&#39;, &#39;y&#39;)</span>
+</pre></div>
+</div>
+<p class="last">A mandatory argument was added, breaking all clients formerly using
+the function.</p>
+</dd>
+</dl>
+<dl class="docutils" id="index-2">
+<dt>B320 moved-argument</dt>
+<dd><div class="first highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-</span><span class="k">def</span> <span class="nf">scramble_eggs</span><span class="p">(</span><span class="n">with_butter</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">with_milk</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="o">+</span><span class="k">def</span> <span class="nf">scramble_eggs</span><span class="p">(</span><span class="n">with_milk</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">with_butter</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="c1"># breaks: scramble_eggs(True, False)</span>
+</pre></div>
+</div>
+<p class="last">The position of an argument was changed, breaking clients passing
+the relevant argument(s) positionally.  Although, depending on the
+argument types, the call may be able to succeed, it’s likely the
+semantics of the call have changed in a backwards-incompatible manner.</p>
+</dd>
+</dl>
+<dl class="docutils" id="index-3">
+<dt>B330 unpositional-argument</dt>
+<dd><div class="first highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-</span><span class="k">def</span> <span class="nf">scramble_eggs</span><span class="p">(</span><span class="n">with_butter</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="o">+</span><span class="k">def</span> <span class="nf">scramble_eggs</span><span class="p">(</span><span class="o">*</span><span class="n">eggs</span><span class="p">,</span> <span class="n">with_butter</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="c1"># breaks: scramble_eggs(True)</span>
+</pre></div>
+</div>
+<p class="last">An argument could previously be provided positionally, but can now only
+be passed as a keyword argument.</p>
+</dd>
+</dl>
+<dl class="docutils" id="index-4">
+<dt>B340 removed-var-args</dt>
+<dd><div class="first highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-</span><span class="k">def</span> <span class="nf">max</span><span class="p">(</span><span class="o">*</span><span class="n">values</span><span class="p">)</span>
+<span class="o">+</span><span class="k">def</span> <span class="nf">max</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+
+<span class="c1"># breaks: max(10, 3, 7)</span>
+</pre></div>
+</div>
+<p class="last">A function previously accepted an unlimited number of positional
+arguments, and no longer does. This breaks any clients formerly passing
+more arguments than accepted by the new version of the function.</p>
+</dd>
+</dl>
+<dl class="docutils" id="index-5">
+<dt>B350 removed-var-keyword-args</dt>
+<dd><div class="first highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-</span><span class="k">def</span> <span class="nf">scramble_eggs</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+<span class="o">+</span><span class="k">def</span> <span class="nf">scramble_eggs</span><span class="p">(</span><span class="n">with_butter</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">with_milk</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="c1"># breaks: scramble_eggs(with_salt=True)</span>
+</pre></div>
+</div>
+<p class="last">A function previously accepted an unlimited number of keyword
+arguments, and no longer does. This breaks any clients formerly passing
+any keyword arguments other than those supported by the new version of
+the function.</p>
+</dd>
+</dl>
+<dl class="docutils" id="index-6">
+<dt>B800 uncallable</dt>
+<dd><div class="first highlight-default notranslate"><div class="highlight"><pre><span></span> <span class="k">class</span> <span class="nc">EggScrambler</span><span class="p">:</span>
+<span class="o">-</span>  <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="o">...</span>
+<span class="o">+</span>  <span class="k">def</span> <span class="nf">scramble_eggs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="o">...</span>
+ <span class="n">scrambler</span> <span class="o">=</span> <span class="n">EggScrambler</span><span class="p">()</span>
+
+<span class="c1"># breaks: scrambler()</span>
+</pre></div>
+</div>
+<p class="last">An object changed from callable to non-callable. This breaks any clients
+formerly using the object as a callable.</p>
+</dd>
+</dl>
+<dl class="docutils" id="index-7">
+<dt>N400 added-optional-argument</dt>
+<dd><div class="first highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-</span><span class="k">def</span> <span class="nf">scramble_eggs</span><span class="p">(</span><span class="n">with_butter</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="o">+</span><span class="k">def</span> <span class="nf">scramble_eggs</span><span class="p">(</span><span class="n">with_butter</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">with_milk</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># compatible: scramble_eggs(True)</span>
+<span class="c1"># new call:   scramble_eggs(True, True)</span>
+</pre></div>
+</div>
+<p class="last">A named argument was added with a default value. Since a default is supplied,
+this is a backwards-compatible change.</p>
+</dd>
+</dl>
+<dl class="docutils" id="index-8">
+<dt>N440 added-var-args</dt>
+<dd><div class="first highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-</span><span class="k">def</span> <span class="nf">max</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+<span class="o">+</span><span class="k">def</span> <span class="nf">max</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="o">*</span><span class="n">rest</span><span class="p">)</span>
+
+<span class="c1"># compatible: max(10, 3)</span>
+<span class="c1"># new call:   max(10, 3, 7)</span>
+</pre></div>
+</div>
+<p class="last">A function now accepts any number of positional arguments.</p>
+</dd>
+</dl>
+<dl class="docutils" id="index-9">
+<dt>N450 added-var-keyword-args</dt>
+<dd><div class="first highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-</span><span class="k">def</span> <span class="nf">scramble_eggs</span><span class="p">(</span><span class="n">with_butter</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="o">+</span><span class="k">def</span> <span class="nf">scramble_eggs</span><span class="p">(</span><span class="n">with_butter</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+<span class="c1"># compatible: scramble_eggs(True)</span>
+<span class="c1"># new call:   scramble_eggs(True, with_salt=True)</span>
+</pre></div>
+</div>
+<p class="last">A function now accepts any number of named arguments.</p>
+</dd>
+</dl>
+</div></blockquote>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">pidiff</a></h1>
+
+
+
+<p class="blurb">The Python interface diff tool</p>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../user-guide.html">User Guide</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../error-reference.html">Error Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="modules.html">Removed, Added Modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objects.html">Removed, Added Objects</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Signature changes</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="../error-reference.html">Error Reference</a><ul>
+      <li>Previous: <a href="objects.html" title="previous chapter">Removed, Added Objects</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Rohan McGovern.
+      
+      |
+      <a href="../_sources/errors/signature.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+    <a href="https://github.com/rohanpm/pidiff" class="github">
+        <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"  class="github"/>
+    </a>
+    
+
+    
+  </body>
+</html>
