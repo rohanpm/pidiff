@@ -53,6 +53,7 @@ More information
 
    user-guide
    error-reference
+   api-reference
 
 * :ref:`genindex`
 * :ref:`search`
