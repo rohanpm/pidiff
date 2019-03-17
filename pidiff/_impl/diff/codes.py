@@ -5,12 +5,25 @@ DIFFLOG = logging.getLogger('pidiff.diff')
 
 
 class ChangeType(enum.IntEnum):
-    # These should be ordered in increasing level of severity
+    """Enum representing types of API changes.
+
+    This is an integer enum, with values given in increasing
+    level of severity.
+    """
+
     NONE = 0
+    """int: No interface changes."""
+
     # Reserved for now...
     # INFO = 100
+
     MINOR = 200
+    """int: Minor interface changes; new but backwards-compatible functionality."""
+
     MAJOR = 300
+    """int: Major interface changes; functionality was removed or changed in a
+    backwards-incompatible manner.
+    """
 
 
 class ErrorCode:
