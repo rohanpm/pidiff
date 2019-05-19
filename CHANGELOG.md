@@ -7,6 +7,10 @@ from version 1.0.0 onwards.
 
 ## [Unreleased]
 
+- n/a
+
+## [1.1.0] - 2019-05-19
+
 ### Added
 
 - pidiff now parses AST to find more properties on classes
@@ -16,4 +20,5 @@ from version 1.0.0 onwards.
 - Initial supported release
 
 
-[Unreleased]: https://github.com/rohanpm/pidiff/compare/v1.0.0..HEAD
+[Unreleased]: https://github.com/rohanpm/pidiff/compare/v1.1.0..HEAD
+[1.1.0]: https://github.com/rohanpm/pidiff/compare/v1.0.0..v1.1.0
