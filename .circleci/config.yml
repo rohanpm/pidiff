@@ -1,22 +1,28 @@
 version: 2.1
 
 orbs:
-  python: rohanpm/python@1.1.1
+  python: rohanpm/python@1.2.0
 
 workflows:
   version: 2
   ci-cd:
     jobs:
     - python/tox:
-        name: Autotests
+        name: Python 3.6 tests
         toxenv: py36
         executor: python/python36
-        persist_coverage: true
         filters: &ci_filters
           branches:
             ignore: gh-pages
           tags:
             only: /^v.*/
+    - python/tox:
+        name: Python 3.7 tests
+        toxenv: py37
+        executor: python/python37
+        persist_coverage: true
+        filters:
+          <<: *ci_filters
     - python/tox:
         name: Static checks
         toxenv: static
@@ -30,10 +36,14 @@ workflows:
     - python/coveralls:
         name: Submit coverage results to coveralls
         requires:
-        - Autotests
+        - Python 3.7 tests
         context: pidiff-secrets
-        filters:
-          <<: *ci_filters
+        filters: &post_merge_filters
+          branches:
+            only:
+            - master
+          tags:
+            only: /^v.*/
     - python/tox:
         name: Build docs
         toxenv: docs
@@ -42,12 +52,12 @@ workflows:
         post-steps:
         - run: scripts/push-docs
         filters:
-          <<: *ci_filters
+          <<: *post_merge_filters
     - python/codeclimate-upload-coverage:
         name: Submit coverage results to codeclimate
         test_reporter_id: b5167e87a147f386af54fb218c710b65bafa6391ceeb2f37f82525f16eb32fc2
         requires:
-        - Autotests
+        - Python 3.7 tests
         filters:
           <<: *ci_filters
     - python/release:
@@ -56,7 +66,8 @@ workflows:
         context: pidiff-secrets
         # Only release if all tests passed
         requires:
-        - Autotests
+        - Python 3.6 tests
+        - Python 3.7 tests
         - Static checks
         filters:
-          <<: *ci_filters
+          <<: *post_merge_filters
