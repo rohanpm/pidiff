@@ -1,3 +1,4 @@
 jsonschema
 virtualenv-api
 semver
+astroid

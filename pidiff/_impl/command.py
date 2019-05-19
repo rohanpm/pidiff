@@ -48,6 +48,7 @@ class VirtualEnvironmentExt(VirtualEnvironment):
     def link_self(self) -> None:
         # We'll need our own dependencies in the virtualenv too
         self.install_or_die('jsonschema')
+        self.install_or_die('astroid')
 
         sitepackages = self.sitepackages_dir
 

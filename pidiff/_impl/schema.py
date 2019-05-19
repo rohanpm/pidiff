@@ -5,6 +5,10 @@ param_kind_schema = {
              'KEYWORD_ONLY', 'VAR_KEYWORD'],
 }
 
+ref_pattern = "^[0-9a-f\\-]+$"
+
+optional_boolean = {"enum": [True, False, None]}
+
 children_schema = {
     "type": "array",
     "items": {
@@ -13,7 +17,7 @@ children_schema = {
             "name": {"type": "string"},
             "ref": {
                 "type": "string",
-                "regex": "^[0-9]+$",
+                "regex": ref_pattern,
             },
         },
         "required": ["name", "ref"],
@@ -33,10 +37,10 @@ object_schema = {
         "lineno": {"type": "integer"},
 
         # true if object lives outside of any tested roots
-        "is_external": {"type": "boolean"},
+        "is_external": optional_boolean,
 
         # true if object is callable
-        "is_callable": {"type": "boolean"},
+        "is_callable": optional_boolean,
 
         # signature of callable - all parameters, in defined order
         "signature": {
@@ -69,7 +73,7 @@ object_schema = {
 object_db_schema = {
     "type": "object",
     "patternProperties": {
-        "^[0-9]+$": object_schema,
+        ref_pattern: object_schema,
     },
     "additionalProperties": False,
 }
@@ -87,7 +91,7 @@ root_schema = {
         # reference to the module object
         "ref": {
             "type": "string",
-            "regex": "^[0-9]+$",
+            "regex": ref_pattern,
         },
     },
     "required": ["name", "ref"],

@@ -8,6 +8,7 @@ import os.path
 import pkg_resources
 
 from .. import schema
+from .ast_enrich import AstEnricher
 
 
 LOG = logging.getLogger('pidiff.dump')
@@ -35,6 +36,9 @@ class Dumper:
             self.raw['root']['version'] = version
 
         self.dump_object(ref=self.raw['root'], name=self.raw['root']['name'], ob=self.module)
+
+        enrich = AstEnricher()
+        enrich.run(self.raw)
 
     def dump_object(self, ref, name, ob):
         ref_str = str(id(ob))
@@ -165,7 +169,7 @@ def set_location(out, subject) -> None:
 def import_recurse(module_name: str):
     module = importlib.import_module(module_name)
 
-    module_file = getattr(module, '__file__') or ''
+    module_file = getattr(module, '__file__', None) or ''
     if os.path.basename(module_file) == '__init__.py':
         module_dir = os.path.dirname(module_file)
         for filename in os.listdir(module_dir):

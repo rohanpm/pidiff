@@ -1,0 +1,5 @@
+test_api/classprop2.py:22: N200 object added: tests.test_api.classprop2.OuterClass.quux
+test_api/classprop2.py:2: B100 object removed: tests.test_api.classprop1.OuterClass.InnerClass.q
+test_api/classprop2.py:2: N200 object added: tests.test_api.classprop2.OuterClass.InnerClass.set_from_outer
+test_api/classprop2.py:5: N200 object added: tests.test_api.classprop2.OuterClass.InnerClass.z
+Major API changes were found; inappropriate for unknown versions
