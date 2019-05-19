@@ -30,3 +30,7 @@ def test_add_external_module(diff_report_tester):
 
 def test_builtin(diff_report_tester):
     diff_report_tester('builtin')
+
+
+def test_classprop(diff_report_tester):
+    diff_report_tester('classprop')

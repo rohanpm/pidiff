@@ -8,6 +8,7 @@ import os.path
 import pkg_resources
 
 from .. import schema
+from .ast_enrich import AstEnricher
 
 
 LOG = logging.getLogger('pidiff.dump')
@@ -35,6 +36,9 @@ class Dumper:
             self.raw['root']['version'] = version
 
         self.dump_object(ref=self.raw['root'], name=self.raw['root']['name'], ob=self.module)
+
+        enrich = AstEnricher()
+        enrich.run(self.raw)
 
     def dump_object(self, ref, name, ob):
         ref_str = str(id(ob))

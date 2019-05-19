@@ -7,7 +7,9 @@ from version 1.0.0 onwards.
 
 ## [Unreleased]
 
-- n/a
+### Added
+
+- pidiff now parses AST to find more properties on classes
 
 ## 1.0.0 - 2019-03-17
 
