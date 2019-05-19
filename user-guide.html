@@ -1,11 +1,9 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
     <title>User Guide &#8212; pidiff  documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -47,57 +45,47 @@ and produces a report on API differences.</p>
 </div>
 <div class="section" id="Positional Arguments">
 <h3>Positional Arguments<a class="headerlink" href="#Positional Arguments" title="Permalink to this headline">¶</a></h3>
-<table class="docutils option-list" frame="void" rules="none">
-<col class="option" />
-<col class="description" />
-<tbody valign="top">
-<tr><td class="option-group">
-<kbd>source1</kbd></td>
-<td><p class="first">Old package for test; a requirement specifier as accepted by the pip command</p>
+<dl class="option-list">
+<dt><kbd>source1</kbd></dt>
+<dd><p>Old package for test; a requirement specifier as accepted by the pip command</p>
 <p>The most common forms of specifying a pip-installable package are supported,
 including:</p>
-<ul class="last simple">
-<li>latest version: <code class="docutils literal notranslate"><span class="pre">mypkg</span></code></li>
-<li>a specific version or range: <code class="docutils literal notranslate"><span class="pre">mypkg==1.0.0</span></code>, <code class="docutils literal notranslate"><span class="pre">mypkg&lt;2</span></code></li>
-<li>a local directory containing a <code class="docutils literal notranslate"><span class="pre">setup.py</span></code>: <code class="docutils literal notranslate"><span class="pre">~/src/mypkg</span></code></li>
+<ul class="simple">
+<li><p>latest version: <code class="docutils literal notranslate"><span class="pre">mypkg</span></code></p></li>
+<li><p>a specific version or range: <code class="docutils literal notranslate"><span class="pre">mypkg==1.0.0</span></code>, <code class="docutils literal notranslate"><span class="pre">mypkg&lt;2</span></code></p></li>
+<li><p>a local directory containing a <code class="docutils literal notranslate"><span class="pre">setup.py</span></code>: <code class="docutils literal notranslate"><span class="pre">~/src/mypkg</span></code></p></li>
 </ul>
-</td></tr>
-<tr><td class="option-group">
-<kbd>source2</kbd></td>
-<td>New package for test</td></tr>
-<tr><td class="option-group">
-<kbd>module_name</kbd></td>
-<td>Name of the Python module which serves as the entry point of the API to test. If omitted, the command will attempt to determine this automatically using egg metadata</td></tr>
-</tbody>
-</table>
+</dd>
+<dt><kbd>source2</kbd></dt>
+<dd><p>New package for test</p>
+</dd>
+<dt><kbd>module_name</kbd></dt>
+<dd><p>Name of the Python module which serves as the entry point of the API to test. If omitted, the command will attempt to determine this automatically using egg metadata</p>
+</dd>
+</dl>
 </div>
 <div class="section" id="Named Arguments">
 <h3>Named Arguments<a class="headerlink" href="#Named Arguments" title="Permalink to this headline">¶</a></h3>
-<table class="docutils option-list" frame="void" rules="none">
-<col class="option" />
-<col class="description" />
-<tbody valign="top">
-<tr><td class="option-group">
-<kbd>--workdir</kbd></td>
-<td>Use this working directory</td></tr>
-<tr><td class="option-group">
-<kbd>-v, --verbose</kbd></td>
-<td>Verbose execution</td></tr>
-<tr><td class="option-group" colspan="2">
-<kbd>--full-symbol-names</kbd></td>
-</tr>
-<tr><td>&#160;</td><td>Use fully qualified names in log messages</td></tr>
-<tr><td class="option-group">
-<kbd>-r, --recreate</kbd></td>
-<td>Force recreation of virtual environments</td></tr>
-<tr><td class="option-group">
-<kbd>-e, --enable</kbd></td>
-<td>Enable checks by error code or name. Multiple checks can be provided, comma-separated. Option may be provided multiple times.</td></tr>
-<tr><td class="option-group">
-<kbd>-d, --disable</kbd></td>
-<td>Disable checks by error code or name.</td></tr>
-</tbody>
-</table>
+<dl class="option-list">
+<dt><kbd>--workdir</kbd></dt>
+<dd><p>Use this working directory</p>
+</dd>
+<dt><kbd>-v, --verbose</kbd></dt>
+<dd><p>Verbose execution</p>
+</dd>
+<dt><kbd>--full-symbol-names</kbd></dt>
+<dd><p>Use fully qualified names in log messages</p>
+</dd>
+<dt><kbd>-r, --recreate</kbd></dt>
+<dd><p>Force recreation of virtual environments</p>
+</dd>
+<dt><kbd>-e, --enable</kbd></dt>
+<dd><p>Enable checks by error code or name. Multiple checks can be provided, comma-separated. Option may be provided multiple times.</p>
+</dd>
+<dt><kbd>-d, --disable</kbd></dt>
+<dd><p>Disable checks by error code or name.</p>
+</dd>
+</dl>
 </div>
 <div class="section" id="output-format">
 <h3>Output format<a class="headerlink" href="#output-format" title="Permalink to this headline">¶</a></h3>
@@ -117,31 +105,28 @@ New version should be equal or greater than 2.0.0
 </div>
 <p>For each change found, a message is produced with:</p>
 <blockquote>
-<div><dl class="docutils">
-<dt><strong>&lt;file&gt;:&lt;line&gt;</strong></dt>
-<dd><p class="first">Approximate location of the added/removed/changed object.</p>
-<p class="last">Note that this is the location where the related object is defined,
+<div><dl>
+<dt><strong>&lt;file&gt;:&lt;line&gt;</strong></dt><dd><p>Approximate location of the added/removed/changed object.</p>
+<p>Note that this is the location where the related object is defined,
 which may not be in the same file where the object is exported as
 public API.</p>
 </dd>
-<dt><strong>error code</strong></dt>
-<dd><p class="first">Each type of error is associated with an error code.
+<dt><strong>error code</strong></dt><dd><p>Each type of error is associated with an error code.
 Error codes are one of:</p>
-<dl class="last docutils">
-<dt><strong>Nxxx</strong></dt>
-<dd><em>New</em> backwards-compatible functionality. New classes,
+<dl class="simple">
+<dt><strong>Nxxx</strong></dt><dd><p><em>New</em> backwards-compatible functionality. New classes,
 objects, functions or arguments are available to clients.
-The package minor version must be increased.</dd>
-<dt><strong>Bxxx</strong></dt>
-<dd><em>Breaking</em> changes. Classes, objects, functions or arguments
+The package minor version must be increased.</p>
+</dd>
+<dt><strong>Bxxx</strong></dt><dd><p><em>Breaking</em> changes. Classes, objects, functions or arguments
 were removed or changed in such a way that clients written against
 the old package version may be broken when used against the new
-version. The package major version must be increased.</dd>
+version. The package major version must be increased.</p>
+</dd>
 </dl>
 </dd>
-<dt><strong>summary</strong></dt>
-<dd><p class="first">A summary explaining why the diff passed or failed.</p>
-<p class="last">If the diff fails, a new version number will be suggested for the
+<dt><strong>summary</strong></dt><dd><p>A summary explaining why the diff passed or failed.</p>
+<p>If the diff fails, a new version number will be suggested for the
 package, where possible.</p>
 </dd>
 </dl>
@@ -151,20 +136,20 @@ package, where possible.</p>
 <h3>Exit codes<a class="headerlink" href="#exit-codes" title="Permalink to this headline">¶</a></h3>
 <p>The <code class="docutils literal notranslate"><span class="pre">pidiff</span></code> command uses the following exit codes:</p>
 <blockquote>
-<div><dl class="docutils">
-<dt>0</dt>
-<dd>Either no differences were found, or all differences
-are appropriate for old and new package versions.</dd>
-<dt>99</dt>
-<dd>Breaking API changes were found, and this is
+<div><dl class="simple">
+<dt>0</dt><dd><p>Either no differences were found, or all differences
+are appropriate for old and new package versions.</p>
+</dd>
+<dt>99</dt><dd><p>Breaking API changes were found, and this is
 inappropriate for the old and new package versions;
-the major version should be bumped.</dd>
-<dt>88</dt>
-<dd>New functionality was found, and this is inappropriate
+the major version should be bumped.</p>
+</dd>
+<dt>88</dt><dd><p>New functionality was found, and this is inappropriate
 for the old and new package versions; the minor version
-should be bumped.</dd>
-<dt><em>other non-zero</em></dt>
-<dd>An error occurred.</dd>
+should be bumped.</p>
+</dd>
+<dt><em>other non-zero</em></dt><dd><p>An error occurred.</p>
+</dd>
 </dl>
 </div></blockquote>
 </div>
@@ -178,9 +163,9 @@ file.</p>
 <p><code class="docutils literal notranslate"><span class="pre">pidiff</span></code> will look for settings in these files, in the current directory
 and any parent directories:</p>
 <ul class="simple">
-<li><code class="docutils literal notranslate"><span class="pre">pidiff.ini</span></code></li>
-<li><code class="docutils literal notranslate"><span class="pre">tox.ini</span></code></li>
-<li><code class="docutils literal notranslate"><span class="pre">setup.cfg</span></code></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pidiff.ini</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tox.ini</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">setup.cfg</span></code></p></li>
 </ul>
 <p>Settings should be placed under a <code class="docutils literal notranslate"><span class="pre">[pidiff]</span></code> section. Checks may be enabled
 or disabled as in the following example:</p>
@@ -208,27 +193,27 @@ any modules underneath your package’s entry point, with a name not
 beginning with <code class="docutils literal notranslate"><span class="pre">_</span></code>.</p>
 <p>A more complete description of the method used to enumerate public API follows.</p>
 <ul class="simple">
-<li>First, the <code class="docutils literal notranslate"><span class="pre">module_name</span></code> given to the <code class="docutils literal notranslate"><span class="pre">pidiff</span></code> command is imported (or,
+<li><p>First, the <code class="docutils literal notranslate"><span class="pre">module_name</span></code> given to the <code class="docutils literal notranslate"><span class="pre">pidiff</span></code> command is imported (or,
 if omitted, the module to import is detected from the package’s top_level.txt
-metadata).</li>
-<li>All submodules of that module are also imported, recursively, ignoring any
-modules whose name begins with <code class="docutils literal notranslate"><span class="pre">_</span></code>.</li>
-<li>All modules imported by the above process are enumerated with <code class="xref py py-meth docutils literal notranslate"><span class="pre">dir()</span></code>
+metadata).</p></li>
+<li><p>All submodules of that module are also imported, recursively, ignoring any
+modules whose name begins with <code class="docutils literal notranslate"><span class="pre">_</span></code>.</p></li>
+<li><p>All modules imported by the above process are enumerated with <code class="xref py py-meth docutils literal notranslate"><span class="pre">dir()</span></code>
 to find available objects; those objects themselves are enumerated with
 <code class="xref py py-meth docutils literal notranslate"><span class="pre">dir()</span></code> to find child objects; and so on, recursively.  Processing
 stops for any objects whose name begins with <code class="docutils literal notranslate"><span class="pre">_</span></code> or whose location is
-not underneath the directory containing the API entry point.</li>
+not underneath the directory containing the API entry point.</p></li>
 </ul>
 </div>
 <div class="section" id="caveats-and-limitations">
 <h2>Caveats and limitations<a class="headerlink" href="#caveats-and-limitations" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li>Python 2.x is not supported.</li>
-<li>It must be possible to import the API to be checked from within the same
-Python interpreter used for the <code class="docutils literal notranslate"><span class="pre">pidiff</span></code> command.</li>
-<li><code class="docutils literal notranslate"><span class="pre">pidiff</span></code> doesn’t check the return values of functions and methods.</li>
-<li><code class="docutils literal notranslate"><span class="pre">pidiff</span></code> is designed for pure Python modules only and is not expected to
-work for native extensions.</li>
+<li><p>Python 2.x is not supported.</p></li>
+<li><p>It must be possible to import the API to be checked from within the same
+Python interpreter used for the <code class="docutils literal notranslate"><span class="pre">pidiff</span></code> command.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pidiff</span></code> doesn’t check the return values of functions and methods.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pidiff</span></code> is designed for pure Python modules only and is not expected to
+work for native extensions.</p></li>
 </ul>
 </div>
 </div>
@@ -290,8 +275,6 @@ work for native extensions.</li>
     <form class="search" action="search.html" method="get">
       <input type="text" name="q" />
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>

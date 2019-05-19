@@ -1,11 +1,9 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
     <title>API Reference &#8212; pidiff  documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -41,27 +39,23 @@ programmatically.</p>
 <dt id="pidiff.diff">
 <code class="descclassname">pidiff.</code><code class="descname">diff</code><span class="sig-paren">(</span><em>api_old</em>, <em>api_new</em>, <em>options=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pidiff.diff" title="Permalink to this definition">¶</a></dt>
 <dd><p>Perform a diff between two interfaces.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>api_old</strong> (<em>dump</em>) – An interface dump as returned by <a class="reference internal" href="#pidiff.dump_module" title="pidiff.dump_module"><code class="xref py py-func docutils literal notranslate"><span class="pre">dump_module()</span></code></a>;
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>api_old</strong> (<em>dump</em>) – An interface dump as returned by <a class="reference internal" href="#pidiff.dump_module" title="pidiff.dump_module"><code class="xref py py-func docutils literal notranslate"><span class="pre">dump_module()</span></code></a>;
 typically, the dump of an old version of an interface would
-be provided.</li>
-<li><strong>api_new</strong> (<em>dump</em>) – A second interface dump.</li>
-<li><strong>options</strong> (<a class="reference internal" href="#pidiff.DiffOptions" title="pidiff.DiffOptions"><em>DiffOptions</em></a>) – Options to adjust the behavior of the diff.</li>
+be provided.</p></li>
+<li><p><strong>api_new</strong> (<em>dump</em>) – A second interface dump.</p></li>
+<li><p><strong>options</strong> (<a class="reference internal" href="#pidiff.DiffOptions" title="pidiff.DiffOptions"><em>DiffOptions</em></a>) – Options to adjust the behavior of the diff.</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Result of the diff.</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#pidiff.DiffResult" title="pidiff.DiffResult">DiffResult</a></p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Result of the diff.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#pidiff.DiffResult" title="pidiff.DiffResult">DiffResult</a></p>
+</dd>
+</dl>
 <p><strong>Logging</strong>:</p>
 <blockquote>
 <div><p>This function returns only an overall result of a diff.
@@ -69,12 +63,12 @@ If more details are required, the caller should listen for log
 messages sent to the <code class="docutils literal notranslate"><span class="pre">pidiff.diff</span></code> logger.</p>
 <p>Records will be streamed to this logger during the diff,
 including fields:</p>
-<dl class="docutils">
-<dt>message:</dt>
-<dd>Human-oriented message explaining a change</dd>
-<dt>extra.change_type:</dt>
-<dd>A <a class="reference internal" href="#pidiff.ChangeType" title="pidiff.ChangeType"><code class="xref py py-class docutils literal notranslate"><span class="pre">ChangeType</span></code></a> representing the severity of
-this change; or absent, for summary log messages</dd>
+<dl class="simple">
+<dt>message:</dt><dd><p>Human-oriented message explaining a change</p>
+</dd>
+<dt>extra.change_type:</dt><dd><p>A <a class="reference internal" href="#pidiff.ChangeType" title="pidiff.ChangeType"><code class="xref py py-class docutils literal notranslate"><span class="pre">ChangeType</span></code></a> representing the severity of
+this change; or absent, for summary log messages</p>
+</dd>
 </dl>
 </div></blockquote>
 </dd></dl>
@@ -83,28 +77,28 @@ this change; or absent, for summary log messages</dd>
 <dt id="pidiff.dump_module">
 <code class="descclassname">pidiff.</code><code class="descname">dump_module</code><span class="sig-paren">(</span><em>root_name</em><span class="sig-paren">)</span><a class="headerlink" href="#pidiff.dump_module" title="Permalink to this definition">¶</a></dt>
 <dd><p>Dump a module.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>root_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – <p>Fully qualified name of the module serving as root of a public API,
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>root_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – <p>Fully qualified name of the module serving as root of a public API,
 e.g. <code class="docutils literal notranslate"><span class="pre">mypackage.mymodule</span></code>.</p>
 <p>This module must be importable (and will be imported) by the current
 Python interpreter.</p>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Information on the module’s public API.<p>The specific data structure returned is undefined, but is valid for
+</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>Information on the module’s public API.</p>
+<p>The specific data structure returned is undefined, but is valid for
 the following uses:</p>
 <ul class="simple">
-<li>serialization and deserialization by JSON or pickling</li>
-<li>as an argument to <a class="reference internal" href="#pidiff.diff" title="pidiff.diff"><code class="xref py py-func docutils literal notranslate"><span class="pre">diff()</span></code></a></li>
+<li><p>serialization and deserialization by JSON or pickling</p></li>
+<li><p>as an argument to <a class="reference internal" href="#pidiff.diff" title="pidiff.diff"><code class="xref py py-func docutils literal notranslate"><span class="pre">diff()</span></code></a></p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">dump</td>
-</tr>
-</tbody>
-</table>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dump</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="class">
@@ -115,28 +109,22 @@ the following uses:</p>
 <dt id="pidiff.DiffOptions.disabled">
 <code class="descname">disabled</code><a class="headerlink" href="#pidiff.DiffOptions.disabled" title="Permalink to this definition">¶</a></dt>
 <dd><p>The set of disabled checks.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Set" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Set</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>]</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Set" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Set</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>]</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="pidiff.DiffOptions.enabled">
 <code class="descname">enabled</code><a class="headerlink" href="#pidiff.DiffOptions.enabled" title="Permalink to this definition">¶</a></dt>
 <dd><p>The set of enabled checks.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Set" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Set</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>]</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Set" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Set</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>]</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="attribute">
@@ -145,46 +133,39 @@ the following uses:</p>
 <dd><p>if True, produced log messages will include fully qualified
 symbol names (e.g. <code class="docutils literal notranslate"><span class="pre">mymodule.submodule.SomeClass</span></code>) rather than the
 default short names (e.g. <code class="docutils literal notranslate"><span class="pre">SomeClass</span></code>).</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">boolean</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>boolean</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="pidiff.DiffOptions.set_disabled">
 <code class="descname">set_disabled</code><span class="sig-paren">(</span><em>check</em><span class="sig-paren">)</span><a class="headerlink" href="#pidiff.DiffOptions.set_disabled" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a check to the set of disabled checks.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>check</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – An error code or check name; see <a class="reference internal" href="error-reference.html#error-reference"><span class="std std-ref">Error Reference</span></a>.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="docutils literal notranslate"><span class="pre">None</span></code></td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>check</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – An error code or check name; see <a class="reference internal" href="error-reference.html#error-reference"><span class="std std-ref">Error Reference</span></a>.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">None</span></code></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="pidiff.DiffOptions.set_enabled">
 <code class="descname">set_enabled</code><span class="sig-paren">(</span><em>check</em><span class="sig-paren">)</span><a class="headerlink" href="#pidiff.DiffOptions.set_enabled" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a check to the set of enabled checks.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>check</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – An error code or check name; see <a class="reference internal" href="error-reference.html#error-reference"><span class="std std-ref">Error Reference</span></a>.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="docutils literal notranslate"><span class="pre">None</span></code></td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>check</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – An error code or check name; see <a class="reference internal" href="error-reference.html#error-reference"><span class="std std-ref">Error Reference</span></a>.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">None</span></code></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="attribute">
@@ -192,14 +173,11 @@ default short names (e.g. <code class="docutils literal notranslate"><span class
 <code class="descname">summarize</code><em class="property"> = None</em><a class="headerlink" href="#pidiff.DiffOptions.summarize" title="Permalink to this definition">¶</a></dt>
 <dd><p>If True, a human-readable summary will be logged at the end
 of the diff.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">boolean</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>boolean</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -213,14 +191,11 @@ of the diff.</p>
 <code class="descname">failed</code><a class="headerlink" href="#pidiff.DiffResult.failed" title="Permalink to this definition">¶</a></dt>
 <dd><p>True if this diff discovered changes in violation of
 <cite>the SemVer spec &lt;https://semver.org/&gt;_</cite>.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="attribute">
@@ -251,42 +226,33 @@ level of severity.</p>
 <code class="descname">MAJOR</code><em class="property"> = 300</em><a class="headerlink" href="#pidiff.ChangeType.MAJOR" title="Permalink to this definition">¶</a></dt>
 <dd><p>Major interface changes; functionality was removed or changed in a
 backwards-incompatible manner.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)">int</a></td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)">int</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="pidiff.ChangeType.MINOR">
 <code class="descname">MINOR</code><em class="property"> = 200</em><a class="headerlink" href="#pidiff.ChangeType.MINOR" title="Permalink to this definition">¶</a></dt>
 <dd><p>Minor interface changes; new but backwards-compatible functionality.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)">int</a></td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)">int</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="pidiff.ChangeType.NONE">
 <code class="descname">NONE</code><em class="property"> = 0</em><a class="headerlink" href="#pidiff.ChangeType.NONE" title="Permalink to this definition">¶</a></dt>
 <dd><p>No interface changes.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)">int</a></td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)">int</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -343,8 +309,6 @@ backwards-incompatible manner.</p>
     <form class="search" action="search.html" method="get">
       <input type="text" name="q" />
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
