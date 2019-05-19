@@ -165,7 +165,7 @@ def set_location(out, subject) -> None:
 def import_recurse(module_name: str):
     module = importlib.import_module(module_name)
 
-    module_file = getattr(module, '__file__') or ''
+    module_file = getattr(module, '__file__', None) or ''
     if os.path.basename(module_file) == '__init__.py':
         module_dir = os.path.dirname(module_file)
         for filename in os.listdir(module_dir):
