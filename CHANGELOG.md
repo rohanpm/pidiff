@@ -7,6 +7,10 @@ from version 1.0.0 onwards.
 
 ## [Unreleased]
 
+- n/a
+
+## [1.2.0] - 2019-05-25
+
 ### Fixed
 
 - When the target module version of a diff is an initial development version `0.y.z`,
@@ -24,5 +28,6 @@ from version 1.0.0 onwards.
 - Initial supported release
 
 
-[Unreleased]: https://github.com/rohanpm/pidiff/compare/v1.1.0..HEAD
+[Unreleased]: https://github.com/rohanpm/pidiff/compare/v1.2.0..HEAD
+[1.2.0]: https://github.com/rohanpm/pidiff/compare/v1.1.0..v1.2.0
 [1.1.0]: https://github.com/rohanpm/pidiff/compare/v1.0.0..v1.1.0
