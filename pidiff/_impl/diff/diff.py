@@ -197,7 +197,10 @@ class Differ:
         out = ChangeType.NONE
 
         if new_vinfo and old_vinfo:
-            if new_vinfo.major > old_vinfo.major:
+            if new_vinfo.major == 0:
+                # Anything goes for versions 0.y.z
+                out = ChangeType.MAJOR
+            elif new_vinfo.major > old_vinfo.major:
                 out = ChangeType.MAJOR
             elif new_vinfo.major == old_vinfo.major and new_vinfo.minor > old_vinfo.minor:
                 out = ChangeType.MINOR
