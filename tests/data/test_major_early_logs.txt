@@ -1,4 +1,2 @@
 test_api/major_early2.py:6: N220 function added: tests.test_api.major_early2.new_fn
 test_api/major_early2.py:3: B300 argument(s) removed from tests.test_api.major_early2.fn: z
-Major API changes were found; inappropriate for 0.2.0 => 0.2.0
-New version should be equal or greater than 1.0.0

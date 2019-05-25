@@ -7,7 +7,11 @@ from version 1.0.0 onwards.
 
 ## [Unreleased]
 
-- n/a
+### Fixed
+
+- When the target module version of a diff is an initial development version `0.y.z`,
+  pidiff now considers that any and all API changes are appropriate, per item #4
+  in the SemVer spec.
 
 ## [1.1.0] - 2019-05-19
 
