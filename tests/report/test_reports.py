@@ -34,3 +34,7 @@ def test_builtin(diff_report_tester):
 
 def test_classprop(diff_report_tester):
     diff_report_tester('classprop')
+
+
+def test_major_early(diff_report_tester):
+    diff_report_tester('major_early')
