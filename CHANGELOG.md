@@ -7,7 +7,10 @@ from version 1.0.0 onwards.
 
 ## [Unreleased]
 
-- n/a
+### Added
+
+- New check `added-argument-default`: pidiff now reports when an existing argument
+  has a default value introduced
 
 ## [1.2.0] - 2019-05-25
 

@@ -18,6 +18,7 @@ B340   removed-var-args
 B350   removed-var-keyword-args
 B800   uncallable
 N400   added-optional-argument
+N410   added-argument-default
 N440   added-var-args
 N450   added-var-keyword-args
 ====   =========================
@@ -137,6 +138,20 @@ Examples
 
         A named argument was added with a default value. Since a default is supplied,
         this is a backwards-compatible change.
+
+    .. index:: N410, added-argument-default
+
+    N410 added-argument-default
+        ::
+
+            -def scramble_eggs(with_butter)
+            +def scramble_eggs(with_butter=False)
+
+            # compatible: scramble_eggs(True)
+            # new call:   scramble_eggs()
+
+        An argument has a default value introduced. This is a backwards-compatible
+        change which allows a function to be called with fewer arguments.
 
     .. index:: N440, added-var-args
 
