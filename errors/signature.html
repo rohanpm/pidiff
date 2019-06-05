@@ -37,7 +37,7 @@
 <p>Various changes to the signature of a callable will produce errors.</p>
 <div class="section" id="error-codes">
 <h2>Error codes<a class="headerlink" href="#error-codes" title="Permalink to this headline">¶</a></h2>
-<table class="docutils align-center">
+<table class="docutils align-default">
 <colgroup>
 <col style="width: 14%" />
 <col style="width: 86%" />
@@ -72,10 +72,13 @@
 <tr class="row-odd"><td><p>N400</p></td>
 <td><p>added-optional-argument</p></td>
 </tr>
-<tr class="row-even"><td><p>N440</p></td>
+<tr class="row-even"><td><p>N410</p></td>
+<td><p>added-argument-default</p></td>
+</tr>
+<tr class="row-odd"><td><p>N440</p></td>
 <td><p>added-var-args</p></td>
 </tr>
-<tr class="row-odd"><td><p>N450</p></td>
+<tr class="row-even"><td><p>N450</p></td>
 <td><p>added-var-keyword-args</p></td>
 </tr>
 </tbody>
@@ -181,6 +184,18 @@ this is a backwards-compatible change.</p>
 </dd>
 </dl>
 <dl id="index-8">
+<dt>N410 added-argument-default</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-</span><span class="k">def</span> <span class="nf">scramble_eggs</span><span class="p">(</span><span class="n">with_butter</span><span class="p">)</span>
+<span class="o">+</span><span class="k">def</span> <span class="nf">scramble_eggs</span><span class="p">(</span><span class="n">with_butter</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="c1"># compatible: scramble_eggs(True)</span>
+<span class="c1"># new call:   scramble_eggs()</span>
+</pre></div>
+</div>
+<p>An argument has a default value introduced. This is a backwards-compatible
+change which allows a function to be called with fewer arguments.</p>
+</dd>
+</dl>
+<dl id="index-9">
 <dt>N440 added-var-args</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-</span><span class="k">def</span> <span class="nf">max</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
 <span class="o">+</span><span class="k">def</span> <span class="nf">max</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="o">*</span><span class="n">rest</span><span class="p">)</span>
 
@@ -191,7 +206,7 @@ this is a backwards-compatible change.</p>
 <p>A function now accepts any number of positional arguments.</p>
 </dd>
 </dl>
-<dl id="index-9">
+<dl id="index-10">
 <dt>N450 added-var-keyword-args</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-</span><span class="k">def</span> <span class="nf">scramble_eggs</span><span class="p">(</span><span class="n">with_butter</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="o">+</span><span class="k">def</span> <span class="nf">scramble_eggs</span><span class="p">(</span><span class="n">with_butter</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
@@ -259,10 +274,10 @@ this is a backwards-compatible change.</p>
 </ul>
 </div>
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
       <input type="submit" value="Go" />
     </form>
     </div>

@@ -37,7 +37,7 @@
 programmatically.</p>
 <span class="target" id="module-pidiff"></span><dl class="function">
 <dt id="pidiff.diff">
-<code class="descclassname">pidiff.</code><code class="descname">diff</code><span class="sig-paren">(</span><em>api_old</em>, <em>api_new</em>, <em>options=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pidiff.diff" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">pidiff.</code><code class="sig-name descname">diff</code><span class="sig-paren">(</span><em class="sig-param">api_old</em>, <em class="sig-param">api_new</em>, <em class="sig-param">options=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pidiff.diff" title="Permalink to this definition">¶</a></dt>
 <dd><p>Perform a diff between two interfaces.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -75,7 +75,7 @@ this change; or absent, for summary log messages</p>
 
 <dl class="function">
 <dt id="pidiff.dump_module">
-<code class="descclassname">pidiff.</code><code class="descname">dump_module</code><span class="sig-paren">(</span><em>root_name</em><span class="sig-paren">)</span><a class="headerlink" href="#pidiff.dump_module" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">pidiff.</code><code class="sig-name descname">dump_module</code><span class="sig-paren">(</span><em class="sig-param">root_name</em><span class="sig-paren">)</span><a class="headerlink" href="#pidiff.dump_module" title="Permalink to this definition">¶</a></dt>
 <dd><p>Dump a module.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -103,11 +103,11 @@ the following uses:</p>
 
 <dl class="class">
 <dt id="pidiff.DiffOptions">
-<em class="property">class </em><code class="descclassname">pidiff.</code><code class="descname">DiffOptions</code><a class="headerlink" href="#pidiff.DiffOptions" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">pidiff.</code><code class="sig-name descname">DiffOptions</code><a class="headerlink" href="#pidiff.DiffOptions" title="Permalink to this definition">¶</a></dt>
 <dd><p>Options to be used for an interface diff.</p>
-<dl class="attribute">
+<dl class="method">
 <dt id="pidiff.DiffOptions.disabled">
-<code class="descname">disabled</code><a class="headerlink" href="#pidiff.DiffOptions.disabled" title="Permalink to this definition">¶</a></dt>
+<em class="property">property </em><code class="sig-name descname">disabled</code><a class="headerlink" href="#pidiff.DiffOptions.disabled" title="Permalink to this definition">¶</a></dt>
 <dd><p>The set of disabled checks.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
@@ -116,9 +116,9 @@ the following uses:</p>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="method">
 <dt id="pidiff.DiffOptions.enabled">
-<code class="descname">enabled</code><a class="headerlink" href="#pidiff.DiffOptions.enabled" title="Permalink to this definition">¶</a></dt>
+<em class="property">property </em><code class="sig-name descname">enabled</code><a class="headerlink" href="#pidiff.DiffOptions.enabled" title="Permalink to this definition">¶</a></dt>
 <dd><p>The set of enabled checks.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
@@ -129,7 +129,7 @@ the following uses:</p>
 
 <dl class="attribute">
 <dt id="pidiff.DiffOptions.full_symbol_names">
-<code class="descname">full_symbol_names</code><em class="property"> = None</em><a class="headerlink" href="#pidiff.DiffOptions.full_symbol_names" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">full_symbol_names</code><em class="property"> = None</em><a class="headerlink" href="#pidiff.DiffOptions.full_symbol_names" title="Permalink to this definition">¶</a></dt>
 <dd><p>if True, produced log messages will include fully qualified
 symbol names (e.g. <code class="docutils literal notranslate"><span class="pre">mymodule.submodule.SomeClass</span></code>) rather than the
 default short names (e.g. <code class="docutils literal notranslate"><span class="pre">SomeClass</span></code>).</p>
@@ -142,7 +142,7 @@ default short names (e.g. <code class="docutils literal notranslate"><span class
 
 <dl class="method">
 <dt id="pidiff.DiffOptions.set_disabled">
-<code class="descname">set_disabled</code><span class="sig-paren">(</span><em>check</em><span class="sig-paren">)</span><a class="headerlink" href="#pidiff.DiffOptions.set_disabled" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">set_disabled</code><span class="sig-paren">(</span><em class="sig-param">check</em><span class="sig-paren">)</span><a class="headerlink" href="#pidiff.DiffOptions.set_disabled" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a check to the set of disabled checks.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -156,7 +156,7 @@ default short names (e.g. <code class="docutils literal notranslate"><span class
 
 <dl class="method">
 <dt id="pidiff.DiffOptions.set_enabled">
-<code class="descname">set_enabled</code><span class="sig-paren">(</span><em>check</em><span class="sig-paren">)</span><a class="headerlink" href="#pidiff.DiffOptions.set_enabled" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">set_enabled</code><span class="sig-paren">(</span><em class="sig-param">check</em><span class="sig-paren">)</span><a class="headerlink" href="#pidiff.DiffOptions.set_enabled" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a check to the set of enabled checks.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -170,7 +170,7 @@ default short names (e.g. <code class="docutils literal notranslate"><span class
 
 <dl class="attribute">
 <dt id="pidiff.DiffOptions.summarize">
-<code class="descname">summarize</code><em class="property"> = None</em><a class="headerlink" href="#pidiff.DiffOptions.summarize" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">summarize</code><em class="property"> = None</em><a class="headerlink" href="#pidiff.DiffOptions.summarize" title="Permalink to this definition">¶</a></dt>
 <dd><p>If True, a human-readable summary will be logged at the end
 of the diff.</p>
 <dl class="field-list simple">
@@ -184,11 +184,11 @@ of the diff.</p>
 
 <dl class="class">
 <dt id="pidiff.DiffResult">
-<em class="property">class </em><code class="descclassname">pidiff.</code><code class="descname">DiffResult</code><span class="sig-paren">(</span><em>max_change_type</em>, <em>max_change_allowed</em><span class="sig-paren">)</span><a class="headerlink" href="#pidiff.DiffResult" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">pidiff.</code><code class="sig-name descname">DiffResult</code><span class="sig-paren">(</span><em class="sig-param">max_change_type</em>, <em class="sig-param">max_change_allowed</em><span class="sig-paren">)</span><a class="headerlink" href="#pidiff.DiffResult" title="Permalink to this definition">¶</a></dt>
 <dd><p>The result of a diff.</p>
-<dl class="attribute">
+<dl class="method">
 <dt id="pidiff.DiffResult.failed">
-<code class="descname">failed</code><a class="headerlink" href="#pidiff.DiffResult.failed" title="Permalink to this definition">¶</a></dt>
+<em class="property">property </em><code class="sig-name descname">failed</code><a class="headerlink" href="#pidiff.DiffResult.failed" title="Permalink to this definition">¶</a></dt>
 <dd><p>True if this diff discovered changes in violation of
 <cite>the SemVer spec &lt;https://semver.org/&gt;_</cite>.</p>
 <dl class="field-list simple">
@@ -200,7 +200,7 @@ of the diff.</p>
 
 <dl class="attribute">
 <dt id="pidiff.DiffResult.max_change_allowed">
-<code class="descname">max_change_allowed</code><em class="property"> = None</em><a class="headerlink" href="#pidiff.DiffResult.max_change_allowed" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">max_change_allowed</code><em class="property"> = None</em><a class="headerlink" href="#pidiff.DiffResult.max_change_allowed" title="Permalink to this definition">¶</a></dt>
 <dd><p>The most severe <a class="reference internal" href="#pidiff.ChangeType" title="pidiff.ChangeType"><code class="xref py py-class docutils literal notranslate"><span class="pre">ChangeType</span></code></a> which should be
 permitted during this diff, according to the version numbers of the
 diffed modules and SemVer.</p>
@@ -208,7 +208,7 @@ diffed modules and SemVer.</p>
 
 <dl class="attribute">
 <dt id="pidiff.DiffResult.max_change_type">
-<code class="descname">max_change_type</code><em class="property"> = None</em><a class="headerlink" href="#pidiff.DiffResult.max_change_type" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">max_change_type</code><em class="property"> = None</em><a class="headerlink" href="#pidiff.DiffResult.max_change_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>The most severe <a class="reference internal" href="#pidiff.ChangeType" title="pidiff.ChangeType"><code class="xref py py-class docutils literal notranslate"><span class="pre">ChangeType</span></code></a> encountered during this
 diff.</p>
 </dd></dl>
@@ -217,13 +217,13 @@ diff.</p>
 
 <dl class="class">
 <dt id="pidiff.ChangeType">
-<em class="property">class </em><code class="descclassname">pidiff.</code><code class="descname">ChangeType</code><a class="headerlink" href="#pidiff.ChangeType" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">pidiff.</code><code class="sig-name descname">ChangeType</code><a class="headerlink" href="#pidiff.ChangeType" title="Permalink to this definition">¶</a></dt>
 <dd><p>Enum representing types of API changes.</p>
 <p>This is an integer enum, with values given in increasing
 level of severity.</p>
 <dl class="attribute">
 <dt id="pidiff.ChangeType.MAJOR">
-<code class="descname">MAJOR</code><em class="property"> = 300</em><a class="headerlink" href="#pidiff.ChangeType.MAJOR" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">MAJOR</code><em class="property"> = 300</em><a class="headerlink" href="#pidiff.ChangeType.MAJOR" title="Permalink to this definition">¶</a></dt>
 <dd><p>Major interface changes; functionality was removed or changed in a
 backwards-incompatible manner.</p>
 <dl class="field-list simple">
@@ -235,7 +235,7 @@ backwards-incompatible manner.</p>
 
 <dl class="attribute">
 <dt id="pidiff.ChangeType.MINOR">
-<code class="descname">MINOR</code><em class="property"> = 200</em><a class="headerlink" href="#pidiff.ChangeType.MINOR" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">MINOR</code><em class="property"> = 200</em><a class="headerlink" href="#pidiff.ChangeType.MINOR" title="Permalink to this definition">¶</a></dt>
 <dd><p>Minor interface changes; new but backwards-compatible functionality.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -246,7 +246,7 @@ backwards-incompatible manner.</p>
 
 <dl class="attribute">
 <dt id="pidiff.ChangeType.NONE">
-<code class="descname">NONE</code><em class="property"> = 0</em><a class="headerlink" href="#pidiff.ChangeType.NONE" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">NONE</code><em class="property"> = 0</em><a class="headerlink" href="#pidiff.ChangeType.NONE" title="Permalink to this definition">¶</a></dt>
 <dd><p>No interface changes.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -304,10 +304,10 @@ backwards-incompatible manner.</p>
 </ul>
 </div>
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
       <input type="submit" value="Go" />
     </form>
     </div>
