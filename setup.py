@@ -20,7 +20,7 @@ def get_install_requires():
 
 setup(
     name='pidiff',
-    version='1.2.0',
+    version='1.3.0',
     author='Rohan McGovern',
     author_email='rohan@mcgovern.id.au',
     url='https://github.com/rohanpm/pidiff',
