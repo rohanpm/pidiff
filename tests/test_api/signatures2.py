@@ -43,3 +43,7 @@ def mult_any(x, y, z, **kwargs):
 def do_anything(x, y, z, *args):
     # Major break: **kwargs was dropped
     pass
+
+
+def return_something(x, added_default=None):
+    pass

@@ -302,6 +302,11 @@ class Differ:
                               new_position=new_arg_idx)
                 raise StopDiff
 
+            new_arg = new_arg_names[idx]
+            if not sig_old.has_default_for(old_arg) and sig_new.has_default_for(new_arg):
+                self.AddedArgDefault(sym_old, sym_new,
+                                     arg_name=old_arg)
+
     def diff_named_args(self, sym_old, sym_new):
         sig_old = sym_old.ob.signature
         sig_new = sym_new.ob.signature

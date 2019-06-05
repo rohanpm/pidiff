@@ -10,4 +10,5 @@ test_api/signatures2.py:38: B340 tests.test_api.signatures2.mult_any no longer a
 test_api/signatures2.py:13: N440 tests.test_api.signatures2.mult_minor1 now accepts unlimited positional arguments
 test_api/signatures2.py:18: N440 tests.test_api.signatures2.mult_minor2 now accepts unlimited positional arguments
 test_api/signatures2.py:18: N450 tests.test_api.signatures2.mult_minor2 now accepts unlimited keyword arguments
+test_api/signatures2.py:48: N410 default value added to tests.test_api.signatures2.return_something argument: added_default
 Major API changes were found; inappropriate for unknown versions

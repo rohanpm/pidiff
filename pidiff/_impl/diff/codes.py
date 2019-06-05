@@ -162,6 +162,11 @@ class Codes:
         "added-optional-argument",
         "optional argument(s) added to {sym_new.display_name}: {extra[arg_name]}"
     )
+    AddedArgDefault = MinorCode(
+        "N410",
+        "added-argument-default",
+        "default value added to {sym_new.display_name} argument: {extra[arg_name]}"
+    )
     AddedVarArgs = MinorCode(
         "N440",
         "added-var-args",

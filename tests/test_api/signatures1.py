@@ -35,3 +35,7 @@ def mult_any(*args):
 
 def do_anything(**kwargs):
     pass
+
+
+def return_something(x, added_default):
+    pass
