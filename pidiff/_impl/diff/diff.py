@@ -425,7 +425,7 @@ class DiffResult:
     @property
     def failed(self) -> bool:
         """True if this diff discovered changes in violation of
-        `the SemVer spec <https://semver.org/>_`.
+        `the SemVer spec <https://semver.org/>`_.
         """
         return self.max_change_type > self.max_change_allowed
 
