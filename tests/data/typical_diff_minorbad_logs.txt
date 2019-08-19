@@ -1,6 +1,7 @@
-Creating virtualenvs under <tmpdir>
-Installing foopkg==1.0.0 to <tmpdir>/s1
-Installing foopkg==1.1.0 to <tmpdir>/s2
+Creating virtualenv at <tmpdir>/cache1
+Creating virtualenv at <tmpdir>/cache2
+Installing foopkg==1.0.0 to <tmpdir>/cache1
+Installing foopkg==1.1.0 to <tmpdir>/cache2
 Inspecting API for foopkg==1.0.0
 Inspecting API for foopkg==1.1.0
 test_api/minorbad2.py:5: N220 function added: new_fn

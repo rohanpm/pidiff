@@ -7,7 +7,10 @@ from version 1.0.0 onwards.
 
 ## [Unreleased]
 
-- n/a
+### Changed
+
+- The `pidiff` command now stores virtual environments under the
+  `XDG_CACHE_HOME` directory by default, rather than a `.pidiff` directory.
 
 ## [1.3.0] - 2019-06-05
 

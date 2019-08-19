@@ -1,7 +1,6 @@
 import os
 import sys
 import logging
-import tempfile
 from textwrap import dedent
 from unittest import mock
 import json
@@ -28,6 +27,15 @@ def restore_cwd():
 
     if original_cwd != new_cwd:
         os.chdir(original_cwd)
+
+
+@fixture(autouse=True)
+def fake_cachekey():
+    original_cachekey = command.cachekey
+    command.cachekey = mock.Mock()
+    command.cachekey.side_effect = ['cache1', 'cache2']
+    yield
+    command.cachekey = original_cachekey
 
 
 def test_help():
@@ -85,7 +93,7 @@ def fake_popen(*args, **kwargs):
 
     if cmd[1:3] == ['-m', 'pidiff._impl.dump.command']:
         root_name = cmd[3]
-        if '/s1/' in cmd[0]:
+        if '/cache1/' in cmd[0]:
             root_name = root_name + '1'
         else:
             root_name = root_name + '2'
@@ -178,22 +186,3 @@ def test_missing_module(workdir):
             command.main()
 
     assert exc.value.code == 32
-
-
-def test_make_workdir_requested():
-    assert command.make_workdir('some/path').name == 'some/path'
-
-
-@mark.parametrize('existing_dir', ['.git', '.tox'])
-def test_make_workdir_pidiff(tmpdir, existing_dir):
-    os.chdir(str(tmpdir))
-
-    tmpdir.mkdir(existing_dir)
-
-    assert command.make_workdir(None).name == '.pidiff'
-
-
-def test_make_workdir_tmpdir(tmpdir):
-    os.chdir(str(tmpdir))
-
-    assert isinstance(command.make_workdir(None), tempfile.TemporaryDirectory)

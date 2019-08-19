@@ -3,11 +3,13 @@ import argparse
 import logging
 import subprocess
 import sys
+import glob
+import datetime
 import re
+import hashlib
 import json
 import shutil
 from typing import Union, Optional, NoReturn
-from tempfile import TemporaryDirectory
 
 from virtualenvapi.manage import VirtualEnvironment
 from virtualenvapi.exceptions import PackageInstallationException
@@ -18,21 +20,8 @@ from pidiff import diff, DiffOptions, ChangeType
 from .schema import validate
 from . import config
 
-LOG = logging.getLogger('pidiff.command')
-
-
-class Directory:
-    def __init__(self, name):
-        self.name = name
-
-    def __enter__(self):
-        return self
-
-    def __exit__(self, *args, **kwargs):
-        pass
-
-
-AnyDirectory = Union[TemporaryDirectory, Directory]
+LOG = logging.getLogger("pidiff.command")
+CACHE_DAYS = 2
 
 
 class VirtualEnvironmentExt(VirtualEnvironment):
@@ -123,15 +112,74 @@ class VirtualEnvironmentExt(VirtualEnvironment):
             return None
 
 
-def make_workdir(requested) -> Union[TemporaryDirectory, Directory]:
-    if requested:
-        out: Union[TemporaryDirectory, Directory] = Directory(requested)
-    elif os.path.exists('.git') or os.path.exists('.tox'):
-        out = Directory('.pidiff')
+def clean_cache(path: str) -> None:
+    for basename in glob.glob(os.path.join(path, '*')):
+        child_path = os.path.join(path, basename)
+        mtime = datetime.datetime.utcfromtimestamp(os.path.getmtime(child_path))
+        delta = datetime.datetime.utcnow() - mtime
+        if delta.days >= CACHE_DAYS:
+            LOG.debug("Clean %s (%s days old)", child_path, delta.days)
+            shutil.rmtree(child_path, ignore_errors=True)
+
+
+def cachedir() -> str:
+    cache_home = os.environ.get("XDG_CACHE_HOME", os.path.expanduser("~/.cache"))
+    out = os.path.join(cache_home, "pidiff")
+
+    try:
+        clean_cache(out)
+    except OSError:
+        LOG.debug("error during clean of %s", out, exc_info=True)
+
+    return out
+
+
+def cachekey(source: str) -> str:
+    m = hashlib.sha1()
+    m.update(os.getcwd().encode())
+    m.update(source.encode())
+
+    # If source appears to be a local path, mix in any setup.py and requirements.txt
+    # into the cache key. This makes the tool reasonably likely to automatically
+    # rebuild venv when deps change.  This of course is best-effort since there is
+    # no way of knowing exactly how the requirements are generated.
+
+    filenames = [os.path.join(source, 'setup.py'),
+                 os.path.join(source, 'requirements.txt')]
+
+    for filename in filenames:
+        try:
+            with open(filename, 'rb') as f:
+                m.update(f.read())
+            LOG.debug("Used for cache: %s", filename)
+        except OSError as exc:
+            LOG.debug("open %s: %s", filename, exc)
+
+    return m.hexdigest()
+
+
+def ensure_exists(path: str):
+    if not os.path.exists(path):
+        os.makedirs(path)
     else:
-        out = TemporaryDirectory(prefix='pidiff')
-    if not os.path.exists(out.name):
-        os.makedirs(out.name)
+        # Set mtime to now for the sake of cleanup
+        os.utime(path)
+
+
+def make_venv_path(source, args) -> str:
+    if args.workdir:
+        toplevel = args.workdir
+    else:
+        toplevel = cachedir()
+
+    out = os.path.join(toplevel, cachekey(source))
+
+    if args.recreate and os.path.exists(out):
+        LOG.debug("Clean existing virtualenv %s", out)
+        shutil.rmtree(out)
+
+    ensure_exists(out)
+
     return out
 
 
@@ -209,38 +257,33 @@ def detect_module(env1, pkg1, env2, pkg2) -> Union[str, NoReturn]:
 
 
 def run_diff(args) -> None:
-    with make_workdir(args.workdir) as workdir:
-        s1path = os.path.join(workdir.name, 's1')
-        s2path = os.path.join(workdir.name, 's2')
+    s1path = make_venv_path(args.source1, args)
+    s2path = make_venv_path(args.source2, args)
 
-        if args.recreate:
-            for path in (s1path, s2path):
-                if os.path.exists(path):
-                    LOG.debug("Removing %s", path)
-                    shutil.rmtree(path)
+    LOG.debug("Creating virtualenv at %s", s1path)
+    s1env = VirtualEnvironmentExt(s1path)
 
-        LOG.debug("Creating virtualenvs under %s", workdir.name)
-        s1env = VirtualEnvironmentExt(s1path)
-        s2env = VirtualEnvironmentExt(s2path)
+    LOG.debug("Creating virtualenv at %s", s2path)
+    s2env = VirtualEnvironmentExt(s2path)
 
-        LOG.debug("Installing %s to %s", args.source1, s1path)
-        s1env.install_or_die(args.source1, upgrade=True)
+    LOG.debug("Installing %s to %s", args.source1, s1path)
+    s1env.install_or_die(args.source1, upgrade=True)
 
-        LOG.debug("Installing %s to %s", args.source2, s2path)
-        s2env.install_or_die(args.source2, upgrade=True)
+    LOG.debug("Installing %s to %s", args.source2, s2path)
+    s2env.install_or_die(args.source2, upgrade=True)
 
-        module_name = args.module_name
-        if not module_name:
-            module_name = detect_module(s1env, args.source1, s2env, args.source2)
+    module_name = args.module_name
+    if not module_name:
+        module_name = detect_module(s1env, args.source1, s2env, args.source2)
 
-        s1env.link_self()
-        s2env.link_self()
+    s1env.link_self()
+    s2env.link_self()
 
-        s1api = s1env.dump_or_exit(module_name, args.source1)
-        s2api = s2env.dump_or_exit(module_name, args.source2)
+    s1api = s1env.dump_or_exit(module_name, args.source1)
+    s2api = s2env.dump_or_exit(module_name, args.source2)
 
-        result = diff(s1api, s2api, get_diff_options(args))
-        sys.exit(exitcode_for_result(result))
+    result = diff(s1api, s2api, get_diff_options(args))
+    sys.exit(exitcode_for_result(result))
 
 
 def argparser():
