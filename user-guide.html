@@ -40,7 +40,7 @@
 <p>The <code class="docutils literal notranslate"><span class="pre">pidiff</span></code> command compares two versions of a Python package
 and produces a report on API differences.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">pidiff</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">workdir</span> <span class="n">WORKDIR</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">full</span><span class="o">-</span><span class="n">symbol</span><span class="o">-</span><span class="n">names</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">r</span><span class="p">]</span>
-              <span class="p">[</span><span class="o">-</span><span class="n">e</span> <span class="n">ENABLE</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">d</span> <span class="n">DISABLE</span><span class="p">]</span>
+              <span class="p">[</span><span class="o">--</span><span class="n">gen</span><span class="o">-</span><span class="n">version</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">e</span> <span class="n">ENABLE</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">d</span> <span class="n">DISABLE</span><span class="p">]</span>
               <span class="n">source1</span> <span class="n">source2</span> <span class="p">[</span><span class="n">module_name</span><span class="p">]</span>
 </pre></div>
 </div>
@@ -79,6 +79,9 @@ including:</p>
 </dd>
 <dt><kbd>-r, --recreate</kbd></dt>
 <dd><p>Force recreation of virtual environments</p>
+</dd>
+<dt><kbd>--gen-version</kbd></dt>
+<dd><p>Version generator mode: report is written to stderr; proposed new version number is written to stdout; exit code is 0 unless an error occurs.</p>
 </dd>
 <dt><kbd>-e, --enable</kbd></dt>
 <dd><p>Enable checks by error code or name. Multiple checks can be provided, comma-separated. Option may be provided multiple times.</p>
@@ -139,7 +142,10 @@ package, where possible.</p>
 <blockquote>
 <div><dl class="simple">
 <dt>0</dt><dd><p>Either no differences were found, or all differences
-are appropriate for old and new package versions.</p>
+are appropriate for old and new package versions,
+or <code class="docutils literal notranslate"><span class="pre">--gen-version</span></code> is in use and no errors occurred.</p>
+</dd>
+<dt>30</dt><dd><p><code class="docutils literal notranslate"><span class="pre">--gen-version</span></code> is in use and errors occurred.</p>
 </dd>
 <dt>99</dt><dd><p>Breaking API changes were found, and this is
 inappropriate for the old and new package versions;

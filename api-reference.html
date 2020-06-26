@@ -161,7 +161,7 @@ of the diff.</p>
 
 <dl class="py class">
 <dt id="pidiff.DiffResult">
-<em class="property">class </em><code class="sig-prename descclassname">pidiff.</code><code class="sig-name descname">DiffResult</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">max_change_type</span></em>, <em class="sig-param"><span class="n">max_change_allowed</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pidiff.DiffResult" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">pidiff.</code><code class="sig-name descname">DiffResult</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">max_change_type</span></em>, <em class="sig-param"><span class="n">max_change_allowed</span></em>, <em class="sig-param"><span class="n">proposed_version</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pidiff.DiffResult" title="Permalink to this definition">¶</a></dt>
 <dd><p>The result of a diff.</p>
 <dl class="py method">
 <dt id="pidiff.DiffResult.failed">
@@ -188,6 +188,17 @@ diffed modules and SemVer.</p>
 <code class="sig-name descname">max_change_type</code><a class="headerlink" href="#pidiff.DiffResult.max_change_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>The most severe <a class="reference internal" href="#pidiff.ChangeType" title="pidiff.ChangeType"><code class="xref py py-class docutils literal notranslate"><span class="pre">ChangeType</span></code></a> encountered during this
 diff.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="pidiff.DiffResult.proposed_version">
+<code class="sig-name descname">proposed_version</code><a class="headerlink" href="#pidiff.DiffResult.proposed_version" title="Permalink to this definition">¶</a></dt>
+<dd><p>Proposed version number for the new version of the diffed module,
+according to SemVer rules. <code class="docutils literal notranslate"><span class="pre">None</span></code> if the version of the old module
+is unknown.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 1.5.0.</span></p>
+</div>
 </dd></dl>
 
 </dd></dl>
