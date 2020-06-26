@@ -302,7 +302,16 @@ def run_diff(args) -> None:
     s2api = s2env.dump_or_exit(module_name, args.source2)
 
     result = diff(s1api, s2api, get_diff_options(args))
-    sys.exit(exitcode_for_result(result))
+
+    if args.gen_version:
+        if not result.proposed_version:
+            LOG.error("Unable to determine new version!")
+            sys.exit(30)
+
+        print(result.proposed_version)
+        sys.exit(0)
+    else:
+        sys.exit(exitcode_for_result(result))
 
 
 def argparser():
@@ -330,6 +339,16 @@ def argparser():
         "--recreate",
         action="store_true",
         help="Force recreation of virtual environments",
+    )
+
+    parser.add_argument(
+        "--gen-version",
+        action="store_true",
+        help=(
+            "Version generator mode: report is written to stderr; "
+            "proposed new version number is written to stdout; exit code is 0 "
+            "unless an error occurs."
+        ),
     )
 
     parser.add_argument(
@@ -376,7 +395,9 @@ def main() -> None:
 
     p = parser.parse_args()
 
-    logging.basicConfig(level=logging.INFO, format="%(message)s")
+    stream = sys.stderr if p.gen_version else sys.stdout
+
+    logging.basicConfig(level=logging.INFO, format="%(message)s", stream=stream)
     LOG.setLevel(logging.DEBUG if p.verbose else logging.INFO)
 
     return run_diff(p)

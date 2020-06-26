@@ -137,6 +137,33 @@ def test_typical_diff(workdir, testapi, testname, exitcode, extra_args, caplog):
     assert exc.value.code == exitcode
 
 
+@mark.parametrize(
+    "testapi,exitcode,stdout", [("minorbad", 0, "1.1.0\n"), ("minorbad_nover", 30, "")],
+)
+def test_genversion_diff(workdir, testapi, exitcode, stdout, capsys):
+    sys.argv = [
+        "pidiff",
+        "--workdir",
+        workdir,
+        "--gen-version",
+        "foopkg==1.0.0",
+        "foopkg==1.1.0",
+        "tests.test_api.%s" % testapi,
+    ]
+
+    with mock.patch("subprocess.Popen") as mock_popen:
+        mock_popen.side_effect = fake_popen
+        with raises(SystemExit) as exc:
+            command.main()
+
+    assert exc.value.code == exitcode
+
+    (out, _) = capsys.readouterr()
+
+    # It should have output *exactly* the expected stdout
+    assert out == stdout
+
+
 def test_options_from_ini(workdir, tmpdir, caplog):
     # top-level dir
     tmpdir.join("pidiff.ini").write(

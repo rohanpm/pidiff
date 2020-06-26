@@ -1,0 +1,20 @@
+#!/bin/sh
+set -e
+
+# Example script to bump version in setup.py of a project
+# according to SemVer rules.
+
+PROJECT=$(python ./setup.py --name)
+OLD_VERSION=$(python ./setup.py --version)
+NEW_VERSION=$(pidiff --gen-version $PROJECT .)
+
+if test $? -ne 0; then
+  exit 3
+fi
+
+sed -r \
+  -e "s|\"$OLD_VERSION\"|\"$NEW_VERSION\"|" \
+  -e "s|'$OLD_VERSION'|'$NEW_VERSION'|" \
+  -i setup.py
+
+echo "Version bumped: $OLD_VERSION => $NEW_VERSION"
