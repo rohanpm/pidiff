@@ -1,17 +1,18 @@
 
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>API Reference &#8212; pidiff  documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="_static/language_data.js"></script>
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="prev" title="Signature changes" href="errors/signature.html" />
@@ -35,9 +36,165 @@
 <h1>API Reference<a class="headerlink" href="#api-reference" title="Permalink to this headline">¶</a></h1>
 <p><code class="docutils literal notranslate"><span class="pre">pidiff</span></code> includes a public API which may be used to diff interfaces
 programmatically.</p>
-<span class="target" id="module-pidiff"></span><dl class="function">
+<span class="target" id="module-pidiff"></span><dl class="py class">
+<dt id="pidiff.ChangeType">
+<em class="property">class </em><code class="sig-prename descclassname">pidiff.</code><code class="sig-name descname">ChangeType</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">value</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pidiff.ChangeType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enum representing types of API changes.</p>
+<p>This is an integer enum, with values given in increasing
+level of severity.</p>
+<dl class="py attribute">
+<dt id="pidiff.ChangeType.MAJOR">
+<code class="sig-name descname">MAJOR</code><em class="property"> = 300</em><a class="headerlink" href="#pidiff.ChangeType.MAJOR" title="Permalink to this definition">¶</a></dt>
+<dd><p>Major interface changes; functionality was removed or changed in a
+backwards-incompatible manner.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="pidiff.ChangeType.MINOR">
+<code class="sig-name descname">MINOR</code><em class="property"> = 200</em><a class="headerlink" href="#pidiff.ChangeType.MINOR" title="Permalink to this definition">¶</a></dt>
+<dd><p>Minor interface changes; new but backwards-compatible functionality.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="pidiff.ChangeType.NONE">
+<code class="sig-name descname">NONE</code><em class="property"> = 0</em><a class="headerlink" href="#pidiff.ChangeType.NONE" title="Permalink to this definition">¶</a></dt>
+<dd><p>No interface changes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="pidiff.DiffOptions">
+<em class="property">class </em><code class="sig-prename descclassname">pidiff.</code><code class="sig-name descname">DiffOptions</code><a class="headerlink" href="#pidiff.DiffOptions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Options to be used for an interface diff.</p>
+<dl class="py method">
+<dt id="pidiff.DiffOptions.disabled">
+<em class="property">property </em><code class="sig-name descname">disabled</code><a class="headerlink" href="#pidiff.DiffOptions.disabled" title="Permalink to this definition">¶</a></dt>
+<dd><p>The set of disabled checks.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Set" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Set</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pidiff.DiffOptions.enabled">
+<em class="property">property </em><code class="sig-name descname">enabled</code><a class="headerlink" href="#pidiff.DiffOptions.enabled" title="Permalink to this definition">¶</a></dt>
+<dd><p>The set of enabled checks.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Set" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Set</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="pidiff.DiffOptions.full_symbol_names">
+<code class="sig-name descname">full_symbol_names</code><a class="headerlink" href="#pidiff.DiffOptions.full_symbol_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>if True, produced log messages will include fully qualified
+symbol names (e.g. <code class="docutils literal notranslate"><span class="pre">mymodule.submodule.SomeClass</span></code>) rather than the
+default short names (e.g. <code class="docutils literal notranslate"><span class="pre">SomeClass</span></code>).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>boolean</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pidiff.DiffOptions.set_disabled">
+<code class="sig-name descname">set_disabled</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">check</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pidiff.DiffOptions.set_disabled" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a check to the set of disabled checks.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>check</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – An error code or check name; see <a class="reference internal" href="error-reference.html#error-reference"><span class="std std-ref">Error Reference</span></a>.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">None</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pidiff.DiffOptions.set_enabled">
+<code class="sig-name descname">set_enabled</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">check</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pidiff.DiffOptions.set_enabled" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a check to the set of enabled checks.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>check</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – An error code or check name; see <a class="reference internal" href="error-reference.html#error-reference"><span class="std std-ref">Error Reference</span></a>.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">None</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="pidiff.DiffOptions.summarize">
+<code class="sig-name descname">summarize</code><a class="headerlink" href="#pidiff.DiffOptions.summarize" title="Permalink to this definition">¶</a></dt>
+<dd><p>If True, a human-readable summary will be logged at the end
+of the diff.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>boolean</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="pidiff.DiffResult">
+<em class="property">class </em><code class="sig-prename descclassname">pidiff.</code><code class="sig-name descname">DiffResult</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">max_change_type</span></em>, <em class="sig-param"><span class="n">max_change_allowed</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pidiff.DiffResult" title="Permalink to this definition">¶</a></dt>
+<dd><p>The result of a diff.</p>
+<dl class="py method">
+<dt id="pidiff.DiffResult.failed">
+<em class="property">property </em><code class="sig-name descname">failed</code><a class="headerlink" href="#pidiff.DiffResult.failed" title="Permalink to this definition">¶</a></dt>
+<dd><p>True if this diff discovered changes in violation of
+<a class="reference external" href="https://semver.org/">the SemVer spec</a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="pidiff.DiffResult.max_change_allowed">
+<code class="sig-name descname">max_change_allowed</code><a class="headerlink" href="#pidiff.DiffResult.max_change_allowed" title="Permalink to this definition">¶</a></dt>
+<dd><p>The most severe <a class="reference internal" href="#pidiff.ChangeType" title="pidiff.ChangeType"><code class="xref py py-class docutils literal notranslate"><span class="pre">ChangeType</span></code></a> which should be
+permitted during this diff, according to the version numbers of the
+diffed modules and SemVer.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="pidiff.DiffResult.max_change_type">
+<code class="sig-name descname">max_change_type</code><a class="headerlink" href="#pidiff.DiffResult.max_change_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>The most severe <a class="reference internal" href="#pidiff.ChangeType" title="pidiff.ChangeType"><code class="xref py py-class docutils literal notranslate"><span class="pre">ChangeType</span></code></a> encountered during this
+diff.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
 <dt id="pidiff.diff">
-<code class="sig-prename descclassname">pidiff.</code><code class="sig-name descname">diff</code><span class="sig-paren">(</span><em class="sig-param">api_old</em>, <em class="sig-param">api_new</em>, <em class="sig-param">options=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pidiff.diff" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">pidiff.</code><code class="sig-name descname">diff</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">api_old</span></em>, <em class="sig-param"><span class="n">api_new</span></em>, <em class="sig-param"><span class="n">options</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pidiff.diff" title="Permalink to this definition">¶</a></dt>
 <dd><p>Perform a diff between two interfaces.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -73,13 +230,13 @@ this change; or absent, for summary log messages</p>
 </div></blockquote>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="pidiff.dump_module">
-<code class="sig-prename descclassname">pidiff.</code><code class="sig-name descname">dump_module</code><span class="sig-paren">(</span><em class="sig-param">root_name</em><span class="sig-paren">)</span><a class="headerlink" href="#pidiff.dump_module" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">pidiff.</code><code class="sig-name descname">dump_module</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">root_name</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pidiff.dump_module" title="Permalink to this definition">¶</a></dt>
 <dd><p>Dump a module.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>root_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – <p>Fully qualified name of the module serving as root of a public API,
+<dd class="field-odd"><p><strong>root_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – <p>Fully qualified name of the module serving as root of a public API,
 e.g. <code class="docutils literal notranslate"><span class="pre">mypackage.mymodule</span></code>.</p>
 <p>This module must be importable (and will be imported) by the current
 Python interpreter.</p>
@@ -99,162 +256,6 @@ the following uses:</p>
 <dd class="field-odd"><p>dump</p>
 </dd>
 </dl>
-</dd></dl>
-
-<dl class="class">
-<dt id="pidiff.DiffOptions">
-<em class="property">class </em><code class="sig-prename descclassname">pidiff.</code><code class="sig-name descname">DiffOptions</code><a class="headerlink" href="#pidiff.DiffOptions" title="Permalink to this definition">¶</a></dt>
-<dd><p>Options to be used for an interface diff.</p>
-<dl class="method">
-<dt id="pidiff.DiffOptions.disabled">
-<em class="property">property </em><code class="sig-name descname">disabled</code><a class="headerlink" href="#pidiff.DiffOptions.disabled" title="Permalink to this definition">¶</a></dt>
-<dd><p>The set of disabled checks.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Set" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Set</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="pidiff.DiffOptions.enabled">
-<em class="property">property </em><code class="sig-name descname">enabled</code><a class="headerlink" href="#pidiff.DiffOptions.enabled" title="Permalink to this definition">¶</a></dt>
-<dd><p>The set of enabled checks.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Set" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Set</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="pidiff.DiffOptions.full_symbol_names">
-<code class="sig-name descname">full_symbol_names</code><em class="property"> = None</em><a class="headerlink" href="#pidiff.DiffOptions.full_symbol_names" title="Permalink to this definition">¶</a></dt>
-<dd><p>if True, produced log messages will include fully qualified
-symbol names (e.g. <code class="docutils literal notranslate"><span class="pre">mymodule.submodule.SomeClass</span></code>) rather than the
-default short names (e.g. <code class="docutils literal notranslate"><span class="pre">SomeClass</span></code>).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>boolean</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="pidiff.DiffOptions.set_disabled">
-<code class="sig-name descname">set_disabled</code><span class="sig-paren">(</span><em class="sig-param">check</em><span class="sig-paren">)</span><a class="headerlink" href="#pidiff.DiffOptions.set_disabled" title="Permalink to this definition">¶</a></dt>
-<dd><p>Add a check to the set of disabled checks.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>check</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – An error code or check name; see <a class="reference internal" href="error-reference.html#error-reference"><span class="std std-ref">Error Reference</span></a>.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">None</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="pidiff.DiffOptions.set_enabled">
-<code class="sig-name descname">set_enabled</code><span class="sig-paren">(</span><em class="sig-param">check</em><span class="sig-paren">)</span><a class="headerlink" href="#pidiff.DiffOptions.set_enabled" title="Permalink to this definition">¶</a></dt>
-<dd><p>Add a check to the set of enabled checks.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>check</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – An error code or check name; see <a class="reference internal" href="error-reference.html#error-reference"><span class="std std-ref">Error Reference</span></a>.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">None</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="pidiff.DiffOptions.summarize">
-<code class="sig-name descname">summarize</code><em class="property"> = None</em><a class="headerlink" href="#pidiff.DiffOptions.summarize" title="Permalink to this definition">¶</a></dt>
-<dd><p>If True, a human-readable summary will be logged at the end
-of the diff.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>boolean</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="pidiff.DiffResult">
-<em class="property">class </em><code class="sig-prename descclassname">pidiff.</code><code class="sig-name descname">DiffResult</code><span class="sig-paren">(</span><em class="sig-param">max_change_type</em>, <em class="sig-param">max_change_allowed</em><span class="sig-paren">)</span><a class="headerlink" href="#pidiff.DiffResult" title="Permalink to this definition">¶</a></dt>
-<dd><p>The result of a diff.</p>
-<dl class="method">
-<dt id="pidiff.DiffResult.failed">
-<em class="property">property </em><code class="sig-name descname">failed</code><a class="headerlink" href="#pidiff.DiffResult.failed" title="Permalink to this definition">¶</a></dt>
-<dd><p>True if this diff discovered changes in violation of
-<a class="reference external" href="https://semver.org/">the SemVer spec</a>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="pidiff.DiffResult.max_change_allowed">
-<code class="sig-name descname">max_change_allowed</code><em class="property"> = None</em><a class="headerlink" href="#pidiff.DiffResult.max_change_allowed" title="Permalink to this definition">¶</a></dt>
-<dd><p>The most severe <a class="reference internal" href="#pidiff.ChangeType" title="pidiff.ChangeType"><code class="xref py py-class docutils literal notranslate"><span class="pre">ChangeType</span></code></a> which should be
-permitted during this diff, according to the version numbers of the
-diffed modules and SemVer.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="pidiff.DiffResult.max_change_type">
-<code class="sig-name descname">max_change_type</code><em class="property"> = None</em><a class="headerlink" href="#pidiff.DiffResult.max_change_type" title="Permalink to this definition">¶</a></dt>
-<dd><p>The most severe <a class="reference internal" href="#pidiff.ChangeType" title="pidiff.ChangeType"><code class="xref py py-class docutils literal notranslate"><span class="pre">ChangeType</span></code></a> encountered during this
-diff.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="pidiff.ChangeType">
-<em class="property">class </em><code class="sig-prename descclassname">pidiff.</code><code class="sig-name descname">ChangeType</code><a class="headerlink" href="#pidiff.ChangeType" title="Permalink to this definition">¶</a></dt>
-<dd><p>Enum representing types of API changes.</p>
-<p>This is an integer enum, with values given in increasing
-level of severity.</p>
-<dl class="attribute">
-<dt id="pidiff.ChangeType.MAJOR">
-<code class="sig-name descname">MAJOR</code><em class="property"> = 300</em><a class="headerlink" href="#pidiff.ChangeType.MAJOR" title="Permalink to this definition">¶</a></dt>
-<dd><p>Major interface changes; functionality was removed or changed in a
-backwards-incompatible manner.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)">int</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="pidiff.ChangeType.MINOR">
-<code class="sig-name descname">MINOR</code><em class="property"> = 200</em><a class="headerlink" href="#pidiff.ChangeType.MINOR" title="Permalink to this definition">¶</a></dt>
-<dd><p>Minor interface changes; new but backwards-compatible functionality.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)">int</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="pidiff.ChangeType.NONE">
-<code class="sig-name descname">NONE</code><em class="property"> = 0</em><a class="headerlink" href="#pidiff.ChangeType.NONE" title="Permalink to this definition">¶</a></dt>
-<dd><p>No interface changes.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)">int</a></p>
-</dd>
-</dl>
-</dd></dl>
-
 </dd></dl>
 
 </div>
@@ -312,7 +313,7 @@ backwards-incompatible manner.</p>
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
 
 
 
