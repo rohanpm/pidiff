@@ -9,7 +9,7 @@ from .codes import Codes, ChangeType
 from .api import Symbol
 
 
-LOG = logging.getLogger('pidiff')
+LOG = logging.getLogger("pidiff")
 
 
 class StopDiff(Exception):
@@ -25,7 +25,7 @@ class Interceptor(logging.NullHandler):
         self.max_change_type = ChangeType.NONE
 
     def handle(self, record):
-        change_type = getattr(record, 'change_type', None)
+        change_type = getattr(record, "change_type", None)
         if change_type is not None:
             self.max_change_type = max(change_type, self.max_change_type)
 
@@ -36,12 +36,12 @@ class CapturedLog:
 
     def __enter__(self):
         self._handler = Interceptor()
-        logging.getLogger('pidiff.diff').addHandler(self._handler)
+        logging.getLogger("pidiff.diff").addHandler(self._handler)
         return self
 
     def __exit__(self, *args, **kwargs):
         assert self._handler
-        logging.getLogger('pidiff.diff').removeHandler(self._handler)
+        logging.getLogger("pidiff.diff").removeHandler(self._handler)
 
     @property
     def max_change_type(self):
@@ -105,12 +105,12 @@ def semver_parse_tolerant(version: str):
         # This is due to annoying mismatch between semver
         # and PEP440 for dealing with dev/pre-release
         # suffixes and so on.
-        version = '.'.join(version.split('.')[:3])
+        version = ".".join(version.split(".")[:3])
         return semver.parse_version_info(version)
 
 
 def summarize(ctx, log):
-    LOG.info('')
+    LOG.info("")
     LOG.info("---------------------------------------------------------------------")
 
     if log.max_change_type == ChangeType.NONE:
@@ -118,25 +118,41 @@ def summarize(ctx, log):
         return
 
     if log.max_change_type == ChangeType.MAJOR:
-        change_type_str = 'Major'
+        change_type_str = "Major"
         bump_version = semver.bump_major
     else:
-        change_type_str = 'Minor'
+        change_type_str = "Minor"
         bump_version = semver.bump_minor
 
-    if ctx.new_version_info and ctx.old_version_info \
-            and ctx.new_version_info < ctx.old_version_info:
-        LOG.warning("Warning: 'old' version %s appears newer than 'new' version %s",
-                    ctx.api_old.version, ctx.api_new.version)
+    if (
+        ctx.new_version_info
+        and ctx.old_version_info
+        and ctx.new_version_info < ctx.old_version_info
+    ):
+        LOG.warning(
+            "Warning: 'old' version %s appears newer than 'new' version %s",
+            ctx.api_old.version,
+            ctx.api_new.version,
+        )
 
     if log.max_change_type <= ctx.max_change_allowed:
-        LOG.info("%s API changes were found; appropriate for %s", change_type_str, ctx.upgrade_str)
+        LOG.info(
+            "%s API changes were found; appropriate for %s",
+            change_type_str,
+            ctx.upgrade_str,
+        )
         return
 
-    LOG.error("%s API changes were found; inappropriate for %s", change_type_str, ctx.upgrade_str)
+    LOG.error(
+        "%s API changes were found; inappropriate for %s",
+        change_type_str,
+        ctx.upgrade_str,
+    )
     if ctx.old_version_info:
-        LOG.error("New version should be equal or greater than %s",
-                  bump_version(str(ctx.old_version_info)))
+        LOG.error(
+            "New version should be equal or greater than %s",
+            bump_version(str(ctx.old_version_info)),
+        )
 
 
 class Location:
@@ -153,11 +169,11 @@ class Location:
         new_file = self.sym_new.display_file
         new_lineno = self.sym_new.lineno
 
-        if old_file and not old_file.startswith(('.', '/')):
+        if old_file and not old_file.startswith((".", "/")):
             self.differ.location_stack_old.append((old_file, old_lineno))
             self.pushed_old = True
 
-        if new_file and not new_file.startswith(('.', '/')):
+        if new_file and not new_file.startswith((".", "/")):
             self.differ.location_stack_new.append((new_file, new_lineno))
             self.pushed_new = True
 
@@ -202,7 +218,9 @@ class Differ:
                 out = ChangeType.MAJOR
             elif new_vinfo.major > old_vinfo.major:
                 out = ChangeType.MAJOR
-            elif new_vinfo.major == old_vinfo.major and new_vinfo.minor > old_vinfo.minor:
+            elif (
+                new_vinfo.major == old_vinfo.major and new_vinfo.minor > old_vinfo.minor
+            ):
                 out = ChangeType.MINOR
 
         return out
@@ -210,13 +228,13 @@ class Differ:
     @property
     def upgrade_str(self) -> str:
         if not self.api_old.version and not self.api_new.version:
-            return 'unknown versions'
+            return "unknown versions"
 
         versions = []
         for api in (self.api_old, self.api_new):
-            versions.append(api.version or '<unknown version>')
+            versions.append(api.version or "<unknown version>")
 
-        return ' => '.join(versions)
+        return " => ".join(versions)
 
     def _version_info(self, api):
         try:
@@ -289,23 +307,27 @@ class Differ:
                 continue
 
             if old_arg not in new_arg_names:
-                self.UnpositionalArg(sym_old, sym_new,
-                                     arg_name=old_arg,
-                                     old_position=idx)
+                self.UnpositionalArg(
+                    sym_old, sym_new, arg_name=old_arg, old_position=idx
+                )
                 raise StopDiff
 
             new_arg_idx = new_arg_names.index(old_arg)
             if idx != new_arg_idx:
-                self.MovedArg(sym_old, sym_new,
-                              arg_name=old_arg,
-                              old_position=idx,
-                              new_position=new_arg_idx)
+                self.MovedArg(
+                    sym_old,
+                    sym_new,
+                    arg_name=old_arg,
+                    old_position=idx,
+                    new_position=new_arg_idx,
+                )
                 raise StopDiff
 
             new_arg = new_arg_names[idx]
-            if not sig_old.has_default_for(old_arg) and sig_new.has_default_for(new_arg):
-                self.AddedArgDefault(sym_old, sym_new,
-                                     arg_name=old_arg)
+            if not sig_old.has_default_for(old_arg) and sig_new.has_default_for(
+                new_arg
+            ):
+                self.AddedArgDefault(sym_old, sym_new, arg_name=old_arg)
 
     def diff_named_args(self, sym_old, sym_new):
         sig_old = sym_old.ob.signature
@@ -314,7 +336,7 @@ class Differ:
         old_arg_names = sig_old.named_kwargs
         new_arg_names = sig_new.named_kwargs
 
-        removed_args = ', '.join(sorted(list(old_arg_names - new_arg_names)))
+        removed_args = ", ".join(sorted(list(old_arg_names - new_arg_names)))
         if removed_args and not sig_new.has_var_keyword:
             self.RemovedArg(sym_old, sym_new, arg_name=removed_args)
             raise StopDiff
@@ -329,11 +351,11 @@ class Differ:
             added_mandatory.append(added)
 
         if added_mandatory:
-            self.AddedArg(sym_old, sym_new, arg_name=', '.join(added_mandatory))
+            self.AddedArg(sym_old, sym_new, arg_name=", ".join(added_mandatory))
             raise StopDiff
 
         if added_optional:
-            self.AddedOptionalArg(sym_old, sym_new, arg_name=', '.join(added_optional))
+            self.AddedOptionalArg(sym_old, sym_new, arg_name=", ".join(added_optional))
 
     def diff_children(self, sym_old, sym_new):
         old_children = sym_old.children_by_name
@@ -357,26 +379,30 @@ class Differ:
     def removed_child(self, child_old, sym_new):
         ob_type = child_old.ob.object_type
 
-        if ob_type == 'module' and child_old.ob.is_external:
+        if ob_type == "module" and child_old.ob.is_external:
             fn = self.RemovedExternalModule
         else:
-            fns = {'function': self.RemovedFunction,
-                   'module': self.RemovedModule,
-                   'method': self.RemovedMethod,
-                   'class': self.RemovedClass}
+            fns = {
+                "function": self.RemovedFunction,
+                "module": self.RemovedModule,
+                "method": self.RemovedMethod,
+                "class": self.RemovedClass,
+            }
             fn = fns.get(ob_type, self.RemovedSym)
         return fn(child_old, sym_new)
 
     def added_child(self, sym_old, child_new):
         ob_type = child_new.ob.object_type
 
-        if ob_type == 'module' and child_new.ob.is_external:
+        if ob_type == "module" and child_new.ob.is_external:
             fn = self.AddedExternalModule
         else:
-            fns = {'function': self.AddedFunction,
-                   'module': self.AddedModule,
-                   'method': self.AddedMethod,
-                   'class': self.AddedClass}
+            fns = {
+                "function": self.AddedFunction,
+                "module": self.AddedModule,
+                "method": self.AddedMethod,
+                "class": self.AddedClass,
+            }
             fn = fns.get(ob_type, self.AddedSym)
         return fn(sym_old, child_new)
 
@@ -400,9 +426,11 @@ class Differ:
             raise AttributeError()
 
         if self.is_enabled(code_instance):
-            return functools.partial(code_instance.log,
-                                     old_location=self.location_stack_old[-1],
-                                     new_location=self.location_stack_new[-1])
+            return functools.partial(
+                code_instance.log,
+                old_location=self.location_stack_old[-1],
+                new_location=self.location_stack_new[-1],
+            )
 
         return lambda *_args, **_kwargs: None
 
@@ -430,7 +458,9 @@ class DiffResult:
         return self.max_change_type > self.max_change_allowed
 
 
-def diff(api_old: dict, api_new: dict, options: Optional[DiffOptions] = None) -> DiffResult:
+def diff(
+    api_old: dict, api_new: dict, options: Optional[DiffOptions] = None
+) -> DiffResult:
     """Perform a diff between two interfaces.
 
     Arguments:

@@ -10,31 +10,29 @@ class Signature:
     def named_kwargs(self) -> Set[str]:
         out = set()
         for param in self._raw:
-            if param['kind'] in ['POSITIONAL_OR_KEYWORD', 'KEYWORD_ONLY']:
-                out.add(param['name'])
+            if param["kind"] in ["POSITIONAL_OR_KEYWORD", "KEYWORD_ONLY"]:
+                out.add(param["name"])
         return out
 
     @property
     def positional_args(self) -> List[str]:
-        return [p['name']
-                for p in self._raw
-                if p['kind'] == 'POSITIONAL_OR_KEYWORD']
+        return [p["name"] for p in self._raw if p["kind"] == "POSITIONAL_OR_KEYWORD"]
 
     @property
     def has_var_keyword(self) -> bool:
-        return any([param['kind'] == 'VAR_KEYWORD' for param in self._raw])
+        return any([param["kind"] == "VAR_KEYWORD" for param in self._raw])
 
     @property
     def has_var_positional(self) -> bool:
-        return any([param['kind'] == 'VAR_POSITIONAL' for param in self._raw])
+        return any([param["kind"] == "VAR_POSITIONAL" for param in self._raw])
 
     def _param(self, name):
         for param in self._raw:
-            if param['name'] == name:
+            if param["name"] == name:
                 return param
 
     def has_default_for(self, name) -> bool:
-        return self._param(name)['has_default']
+        return self._param(name)["has_default"]
 
 
 class Symbol:
@@ -47,17 +45,17 @@ class Symbol:
     @property
     def version(self):
         # Could support different versions here
-        return self.dump['root'].get('version')
+        return self.dump["root"].get("version")
 
     @classmethod
     def from_root(cls, dump, options):
-        root = dump['root']
-        full_name = root['name']
-        return cls(dump, full_name, root['ref'], options)
+        root = dump["root"]
+        full_name = root["name"]
+        return cls(dump, full_name, root["ref"], options)
 
     @property
     def object_data(self):
-        return self.dump['objects'][self.object_ref]
+        return self.dump["objects"][self.object_ref]
 
     @property
     def ob(self):
@@ -65,14 +63,14 @@ class Symbol:
 
     @property
     def name(self):
-        return self.full_name.split('.')[-1]
+        return self.full_name.split(".")[-1]
 
     @property
     def children(self):
         out = []
-        for child_raw in self.object_data.get('children') or []:
-            child_full_name = '.'.join([self.full_name, child_raw['name']])
-            ref = child_raw['ref']
+        for child_raw in self.object_data.get("children") or []:
+            child_full_name = ".".join([self.full_name, child_raw["name"]])
+            ref = child_raw["ref"]
             out.append(Symbol(self.dump, child_full_name, ref, self.diff_options))
         return out
 
@@ -110,24 +108,24 @@ class Object:
 
     @property
     def file(self):
-        return self.raw.get('file')
+        return self.raw.get("file")
 
     @property
     def is_callable(self):
-        return self.raw['is_callable']
+        return self.raw["is_callable"]
 
     @property
     def is_external(self):
-        return self.raw['is_external']
+        return self.raw["is_external"]
 
     @property
     def signature(self):
-        assert self.is_callable, 'signature called on non-callable'
-        return Signature(self.raw.get('signature'))
+        assert self.is_callable, "signature called on non-callable"
+        return Signature(self.raw.get("signature"))
 
     @property
     def lineno(self):
-        return self.raw.get('lineno') or 0
+        return self.raw.get("lineno") or 0
 
     @property
     def display_file(self):
@@ -137,11 +135,11 @@ class Object:
             root_file = Symbol.from_root(self.dump, self.diff_options).file
             parent_dir = os.path.dirname(os.path.dirname(root_file))
             return os.path.relpath(full_path, parent_dir)
-        return ''
+        return ""
 
     @property
     def object_type(self):
-        return self.raw['object_type']
+        return self.raw["object_type"]
 
     # children comes from symbol and not object
     # @property

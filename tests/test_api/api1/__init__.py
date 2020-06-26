@@ -18,4 +18,4 @@ def mult(a, b, c):
     pass
 
 
-__version__ = '1.0.0.dev0'
+__version__ = "1.0.0.dev0"

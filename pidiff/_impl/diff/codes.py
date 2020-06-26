@@ -1,7 +1,7 @@
 import enum
 import logging
 
-DIFFLOG = logging.getLogger('pidiff.diff')
+DIFFLOG = logging.getLogger("pidiff.diff")
 
 
 class ChangeType(enum.IntEnum):
@@ -36,21 +36,22 @@ class ErrorCode:
         self.template = template
 
     def log(self, sym_old, sym_new, old_location, new_location, **kwargs):
-        message = self.template.format(
-            sym_old=sym_old, sym_new=sym_new, extra=kwargs)
+        message = self.template.format(sym_old=sym_old, sym_new=sym_new, extra=kwargs)
 
         new_filename = sym_new.display_file
         new_lineno = sym_new.lineno
-        if (not new_filename) or new_filename.startswith(('.', '/')):
+        if (not new_filename) or new_filename.startswith((".", "/")):
             (new_filename, new_lineno) = new_location
 
-        DIFFLOG.log(self.LEVEL,
-                    "%s:%s: %s %s",
-                    new_filename,
-                    new_lineno,
-                    self.errcode,
-                    message,
-                    extra=dict(change_type=self.CHANGE_TYPE))
+        DIFFLOG.log(
+            self.LEVEL,
+            "%s:%s: %s %s",
+            new_filename,
+            new_lineno,
+            self.errcode,
+            message,
+            extra=dict(change_type=self.CHANGE_TYPE),
+        )
 
 
 class MajorCode(ErrorCode):
@@ -71,9 +72,7 @@ class Codes:
         "{sym_old.ob.object_type} removed: {sym_old.display_name}",
     )
     RemovedModule = MajorCode(
-        "B110",
-        "removed-module",
-        "module removed: {sym_old.display_name}",
+        "B110", "removed-module", "module removed: {sym_old.display_name}"
     )
     RemovedExternalModule = MajorCode(
         "B111",
@@ -81,105 +80,94 @@ class Codes:
         "external module removed: {sym_old.display_name}",
     )
     RemovedFunction = MajorCode(
-        "B120",
-        "removed-function",
-        "function removed: {sym_old.display_name}",
+        "B120", "removed-function", "function removed: {sym_old.display_name}"
     )
     RemovedMethod = MajorCode(
-        "B130",
-        "removed-method",
-        "method removed: {sym_old.display_name}",
+        "B130", "removed-method", "method removed: {sym_old.display_name}"
     )
     RemovedClass = MajorCode(
-        "B140",
-        "removed-class",
-        "class removed: {sym_old.display_name}",
+        "B140", "removed-class", "class removed: {sym_old.display_name}"
     )
 
     # Additions of symbols to API
     AddedSym = MinorCode(
-        "N200",
-        "added-object",
-        "{sym_new.ob.object_type} added: {sym_new.display_name}")
+        "N200", "added-object", "{sym_new.ob.object_type} added: {sym_new.display_name}"
+    )
     AddedModule = MinorCode(
-        "N210",
-        "added-module",
-        "module added: {sym_new.display_name}")
+        "N210", "added-module", "module added: {sym_new.display_name}"
+    )
     AddedExternalModule = MinorCode(
-        "N211",
-        "added-external-module",
-        "external module added: {sym_new.display_name}")
+        "N211", "added-external-module", "external module added: {sym_new.display_name}"
+    )
     AddedFunction = MinorCode(
-        "N220",
-        "added-function",
-        "function added: {sym_new.display_name}")
+        "N220", "added-function", "function added: {sym_new.display_name}"
+    )
     AddedMethod = MinorCode(
-        "N230",
-        "added-method",
-        "method added: {sym_new.display_name}")
-    AddedClass = MinorCode(
-        "N240",
-        "added-class",
-        "class added: {sym_new.display_name}")
+        "N230", "added-method", "method added: {sym_new.display_name}"
+    )
+    AddedClass = MinorCode("N240", "added-class", "class added: {sym_new.display_name}")
 
     # Backwards-incompatible signature changes
     RemovedArg = MajorCode(
         "B300",
         "removed-argument",
-        "argument(s) removed from {sym_new.display_name}: {extra[arg_name]}"
+        "argument(s) removed from {sym_new.display_name}: {extra[arg_name]}",
     )
     AddedArg = MajorCode(
         "B310",
         "added-argument",
-        "argument(s) added to {sym_new.display_name}: {extra[arg_name]}"
+        "argument(s) added to {sym_new.display_name}: {extra[arg_name]}",
     )
     MovedArg = MajorCode(
         "B320",
         "moved-argument",
-        ("argument position changed in {sym_new.display_name}: "
-         "{extra[arg_name]} ({extra[old_position]} => {extra[new_position]})")
+        (
+            "argument position changed in {sym_new.display_name}: "
+            "{extra[arg_name]} ({extra[old_position]} => {extra[new_position]})"
+        ),
     )
     UnpositionalArg = MajorCode(
         "B330",
         "unpositional-argument",
-        ("argument in {sym_new.display_name} can no longer be passed positionally: "
-         "{extra[arg_name]} (was position {extra[old_position]})")
+        (
+            "argument in {sym_new.display_name} can no longer be passed positionally: "
+            "{extra[arg_name]} (was position {extra[old_position]})"
+        ),
     )
     RemovedVarArgs = MajorCode(
         "B340",
         "removed-var-args",
-        "{sym_new.display_name} no longer accepts unlimited positional arguments"
+        "{sym_new.display_name} no longer accepts unlimited positional arguments",
     )
     RemovedVarKeywordArgs = MajorCode(
         "B350",
         "removed-var-keyword-args",
-        "{sym_new.display_name} no longer accepts unlimited keyword arguments"
+        "{sym_new.display_name} no longer accepts unlimited keyword arguments",
     )
 
     # Backwards-compatible signature changes
     AddedOptionalArg = MinorCode(
         "N400",
         "added-optional-argument",
-        "optional argument(s) added to {sym_new.display_name}: {extra[arg_name]}"
+        "optional argument(s) added to {sym_new.display_name}: {extra[arg_name]}",
     )
     AddedArgDefault = MinorCode(
         "N410",
         "added-argument-default",
-        "default value added to {sym_new.display_name} argument: {extra[arg_name]}"
+        "default value added to {sym_new.display_name} argument: {extra[arg_name]}",
     )
     AddedVarArgs = MinorCode(
         "N440",
         "added-var-args",
-        "{sym_new.display_name} now accepts unlimited positional arguments"
+        "{sym_new.display_name} now accepts unlimited positional arguments",
     )
     AddedVarKeywordArgs = MinorCode(
         "N450",
         "added-var-keyword-args",
-        "{sym_new.display_name} now accepts unlimited keyword arguments"
+        "{sym_new.display_name} now accepts unlimited keyword arguments",
     )
 
     # Other
     NoLongerCallable = MajorCode(
-        "B800",
-        "uncallable",
-        "no longer callable: {sym_new.display_name}")
+        "B800", "uncallable", "no longer callable: {sym_new.display_name}"
+    )

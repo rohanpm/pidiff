@@ -6,7 +6,7 @@ import astroid
 from astroid.nodes import AssignAttr, FunctionDef, ClassDef, Name
 from astroid.node_classes import NodeNG
 
-LOG = logging.getLogger('pidiff.ast')
+LOG = logging.getLogger("pidiff.ast")
 
 
 class AstEnricher:
@@ -34,12 +34,12 @@ class AstEnricher:
         return out
 
     def enrich_object(self, object_dump, o):
-        if o.get('object_type') != 'class':
+        if o.get("object_type") != "class":
             # we only know how to enrich classes at the moment
             return
 
-        file = o.get('file')
-        lineno = o.get('lineno')
+        file = o.get("file")
+        lineno = o.get("lineno")
 
         # if any location info is missing, we can't match up with AST
         if not file or not lineno:
@@ -73,7 +73,7 @@ class AstEnricher:
             if not isinstance(function_def, FunctionDef):
                 continue
 
-            if function_def.name != '__init__':
+            if function_def.name != "__init__":
                 continue
 
             parent_frame = function_def.parent.frame()
@@ -83,26 +83,26 @@ class AstEnricher:
             assign_expr = next_node.expr
             if not isinstance(assign_expr, Name):
                 continue
-            if assign_expr.name != 'self':
+            if assign_expr.name != "self":
                 continue
 
             attr_assigns.append(next_node)
 
         for assign in attr_assigns:
             name = assign.attrname
-            if name.startswith('_'):
+            if name.startswith("_"):
                 continue
 
             ref = str(uuid.uuid4())
             obj = {
-                'object_type': 'object',
-                'file': o['file'],
-                'lineno': assign.lineno,
-                'is_external': None,
-                'is_callable': None,
+                "object_type": "object",
+                "file": o["file"],
+                "lineno": assign.lineno,
+                "is_external": None,
+                "is_callable": None,
             }
             object_dump[ref] = obj
-            o.setdefault('children', []).append({'name': name, 'ref': ref})
+            o.setdefault("children", []).append({"name": name, "ref": ref})
 
     def find_class_def(self, node, lineno) -> Optional[ClassDef]:
         remaining = [node]
@@ -114,7 +114,7 @@ class AstEnricher:
         return None
 
     def run(self, raw_dump: dict):
-        object_dump = raw_dump.get('objects') or {}
+        object_dump = raw_dump.get("objects") or {}
         object_values = [o for o in object_dump.values()]
 
         for o in object_values:

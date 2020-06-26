@@ -9,4 +9,4 @@ except ModuleNotFoundError:  # pragma: no cover
     # there.
     pass
 
-__all__ = ['diff', 'dump_module', 'DiffOptions', 'DiffResult', 'ChangeType']
+__all__ = ["diff", "dump_module", "DiffOptions", "DiffResult", "ChangeType"]
