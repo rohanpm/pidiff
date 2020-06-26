@@ -94,19 +94,19 @@ class DiffOptions:
         return self._disabled.copy()
 
 
-def semver_parse_tolerant(version: str):
+def semver_parse_tolerant(version: str) -> Optional[semver.VersionInfo]:
     if not version:
         return None
 
     try:
-        return semver.parse_version_info(version)
+        return semver.VersionInfo.parse(version)
     except ValueError:
         # Try again with only the first three components.
         # This is due to annoying mismatch between semver
         # and PEP440 for dealing with dev/pre-release
         # suffixes and so on.
         version = ".".join(version.split(".")[:3])
-        return semver.parse_version_info(version)
+        return semver.VersionInfo.parse(version)
 
 
 def summarize(ctx, log, new_version):
@@ -517,15 +517,15 @@ def diff(
     with CapturedLog() as log:
         differ.diff_root()
 
-    if log.max_change_type == ChangeType.MAJOR:
-        bump_version = semver.bump_major
-    elif log.max_change_type == ChangeType.MINOR:
-        bump_version = semver.bump_minor
-    else:
-        bump_version = semver.bump_patch
-
     if differ.old_version_info:
-        new_version = bump_version(str(differ.old_version_info))
+        if log.max_change_type == ChangeType.MAJOR:
+            new_version = differ.old_version_info.bump_major()
+        elif log.max_change_type == ChangeType.MINOR:
+            new_version = differ.old_version_info.bump_minor()
+        else:
+            new_version = differ.old_version_info.bump_patch()
+
+        new_version = str(new_version)
     else:
         new_version = None
 

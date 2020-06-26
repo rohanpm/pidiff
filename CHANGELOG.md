@@ -13,6 +13,10 @@ from version 1.0.0 onwards.
 - ``--gen-version`` option was introduced for programmatic use. This option can be
   used to implement automated version bumps for a project.
 
+### Fixed
+
+- Removed usage of functions deprecated in python-semver 2.10
+
 ## [1.4.0] - 2019-08-19
 
 ### Changed
