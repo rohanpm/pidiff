@@ -109,7 +109,7 @@ def semver_parse_tolerant(version: str):
         return semver.parse_version_info(version)
 
 
-def summarize(ctx, log):
+def summarize(ctx, log, new_version):
     LOG.info("")
     LOG.info("---------------------------------------------------------------------")
 
@@ -119,10 +119,8 @@ def summarize(ctx, log):
 
     if log.max_change_type == ChangeType.MAJOR:
         change_type_str = "Major"
-        bump_version = semver.bump_major
     else:
         change_type_str = "Minor"
-        bump_version = semver.bump_minor
 
     if (
         ctx.new_version_info
@@ -148,11 +146,8 @@ def summarize(ctx, log):
         change_type_str,
         ctx.upgrade_str,
     )
-    if ctx.old_version_info:
-        LOG.error(
-            "New version should be equal or greater than %s",
-            bump_version(str(ctx.old_version_info)),
-        )
+    if new_version:
+        LOG.error("New version should be equal or greater than %s", new_version)
 
 
 class Location:
@@ -438,7 +433,12 @@ class Differ:
 class DiffResult:
     """The result of a diff."""
 
-    def __init__(self, max_change_type: ChangeType, max_change_allowed: ChangeType):
+    def __init__(
+        self,
+        max_change_type: ChangeType,
+        max_change_allowed: ChangeType,
+        proposed_version: str = None,
+    ):
         self.max_change_type = max_change_type
         """The most severe :class:`~pidiff.ChangeType` encountered during this
         diff.
@@ -448,6 +448,14 @@ class DiffResult:
         """The most severe :class:`~pidiff.ChangeType` which should be
         permitted during this diff, according to the version numbers of the
         diffed modules and SemVer.
+        """
+
+        self.proposed_version = proposed_version
+        """Proposed version number for the new version of the diffed module,
+        according to SemVer rules. ``None`` if the version of the old module
+        is unknown.
+
+        .. versionadded:: 1.5.0
         """
 
     @property
@@ -509,7 +517,19 @@ def diff(
     with CapturedLog() as log:
         differ.diff_root()
 
-    if options.summarize:
-        summarize(differ, log)
+    if log.max_change_type == ChangeType.MAJOR:
+        bump_version = semver.bump_major
+    elif log.max_change_type == ChangeType.MINOR:
+        bump_version = semver.bump_minor
+    else:
+        bump_version = semver.bump_patch
 
-    return DiffResult(log.max_change_type, differ.max_change_allowed)
+    if differ.old_version_info:
+        new_version = bump_version(str(differ.old_version_info))
+    else:
+        new_version = None
+
+    if options.summarize:
+        summarize(differ, log, new_version)
+
+    return DiffResult(log.max_change_type, differ.max_change_allowed, new_version)

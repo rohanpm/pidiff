@@ -81,7 +81,11 @@ The ``pidiff`` command uses the following exit codes:
 
     0
         Either no differences were found, or all differences
-        are appropriate for old and new package versions.
+        are appropriate for old and new package versions,
+        or ``--gen-version`` is in use and no errors occurred.
+
+    30
+        ``--gen-version`` is in use and errors occurred.
 
     99
         Breaking API changes were found, and this is
