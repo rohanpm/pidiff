@@ -3,24 +3,26 @@ import difflib
 
 
 def data_path(*args):
-    return os.path.join(os.path.dirname(__file__), 'data', *args)
+    return os.path.join(os.path.dirname(__file__), "data", *args)
 
 
 def enforce_match():
-    value = os.environ.get('UPDATE_BASELINES', '0')
-    return value not in ('true', '1')
+    value = os.environ.get("UPDATE_BASELINES", "0")
+    return value not in ("true", "1")
 
 
 def assert_logs_equal(caplog, filename, tmppath):
     messages = []
     for rec in caplog.records:
-        messages.append(rec.message.replace(tmppath, '<tmpdir>') + '\n')
+        messages.append(rec.message.replace(tmppath, "<tmpdir>") + "\n")
 
     with open(filename) as f:
         lines = f.readlines()
 
-    diff = difflib.unified_diff(lines, messages, fromfile=filename, tofile='<test output>')
-    diff = ''.join(diff)
+    diff = difflib.unified_diff(
+        lines, messages, fromfile=filename, tofile="<test output>"
+    )
+    diff = "".join(diff)
     if diff:
         raise AssertionError("Output differs from expected\n%s" % diff)
 
@@ -28,14 +30,14 @@ def assert_logs_equal(caplog, filename, tmppath):
 def write_logs(caplog, filename, tmppath):
     messages = []
     for rec in caplog.records:
-        messages.append(rec.message.replace(tmppath, '<tmpdir>') + '\n')
+        messages.append(rec.message.replace(tmppath, "<tmpdir>") + "\n")
 
-    with open(filename, 'w') as f:
+    with open(filename, "w") as f:
         f.writelines(messages)
 
 
 def checklogs(name, caplog, tmpdir):
-    logs_path = data_path(name + '_logs.txt')
+    logs_path = data_path(name + "_logs.txt")
 
     if enforce_match():
         assert_logs_equal(caplog, logs_path, str(tmpdir))

@@ -1,3 +1,3 @@
 from .diff import diff
 
-__all__ = ['diff']
+__all__ = ["diff"]

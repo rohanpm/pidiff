@@ -18,5 +18,5 @@ def main():
         sys.exit(EXIT_NO_MODULE)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()  # pragma: no cover

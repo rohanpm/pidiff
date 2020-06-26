@@ -6,4 +6,4 @@ def fn2():
     pass
 
 
-__version__ = 'whatever'
+__version__ = "whatever"

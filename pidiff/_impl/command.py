@@ -27,23 +27,27 @@ CACHE_DAYS = 2
 class VirtualEnvironmentExt(VirtualEnvironment):
     @property
     def sitepackages_dir(self) -> str:
-        return subprocess.check_output([
-            os.path.join(self.path, 'bin/python'),
-            '-c',
-            ('import distutils.sysconfig; '
-             'print(distutils.sysconfig.get_python_lib())')
-        ], cwd='/', encoding='utf-8').strip()
+        return subprocess.check_output(
+            [
+                os.path.join(self.path, "bin/python"),
+                "-c",
+                (
+                    "import distutils.sysconfig; "
+                    "print(distutils.sysconfig.get_python_lib())"
+                ),
+            ],
+            cwd="/",
+            encoding="utf-8",
+        ).strip()
 
     def link_self(self) -> None:
         # We'll need our own dependencies in the virtualenv too
-        self.install_or_die('jsonschema')
-        self.install_or_die('astroid')
+        self.install_or_die("jsonschema")
+        self.install_or_die("astroid")
 
         sitepackages = self.sitepackages_dir
 
-        for dep_name, dep_module in [
-                ('pidiff', pidiff),
-        ]:
+        for dep_name, dep_module in [("pidiff", pidiff)]:
             src = os.path.dirname(dep_module.__file__)
             dst = os.path.join(sitepackages, dep_name)
             if not os.path.exists(dst):
@@ -53,36 +57,38 @@ class VirtualEnvironmentExt(VirtualEnvironment):
         all_kwargs = {}
         all_kwargs.update(kwargs)
 
-        if os.path.isfile(os.path.join(package, 'setup.py')):
+        if os.path.isfile(os.path.join(package, "setup.py")):
             # If pointing at something locally, install in editable mode.
             # (This is an odd API - install will internally split this
             # before passing to pip)
             package = os.path.abspath(package)
-            package = '-e ' + package
+            package = "-e " + package
         try:
             self.install(package, *args, **kwargs)
         except PackageInstallationException:
             # Try to show build log if we can
             try:
-                with open(os.path.join(self.path, 'build.log')) as log_file:
+                with open(os.path.join(self.path, "build.log")) as log_file:
                     LOG.error("%s", log_file.read())
-                with open(os.path.join(self.path, 'build.err')) as log_file:
+                with open(os.path.join(self.path, "build.err")) as log_file:
                     LOG.error("%s", log_file.read())
             except Exception:
-                LOG.exception("An exception was encountered while accessing install logs")
+                LOG.exception(
+                    "An exception was encountered while accessing install logs"
+                )
 
             LOG.error("Failed to install: %s", package)
             sys.exit(16)
 
     def dump(self, root):
-        python = os.path.join(self.path, 'bin/python')
-        command = [python, '-m', 'pidiff._impl.dump.command', root]
-        output_filename = os.path.join(self.path, 'dump.json')
+        python = os.path.join(self.path, "bin/python")
+        command = [python, "-m", "pidiff._impl.dump.command", root]
+        output_filename = os.path.join(self.path, "dump.json")
 
-        with open(output_filename, 'w') as f:
-            subprocess.check_call(command, encoding='utf-8', stdout=f, cwd='/')
+        with open(output_filename, "w") as f:
+            subprocess.check_call(command, encoding="utf-8", stdout=f, cwd="/")
 
-        with open(output_filename, 'r') as f:
+        with open(output_filename, "r") as f:
             dumped = json.load(f)
 
         validate(dumped)
@@ -98,22 +104,29 @@ class VirtualEnvironmentExt(VirtualEnvironment):
 
     def dist_toplevel(self, name) -> Optional[str]:
         try:
-            return subprocess.check_output([
-                os.path.join(self.path, 'bin/python'),
-                '-c',
-                ('import pkg_resources;'
-                 'import sys;'
-                 'x=pkg_resources.get_distribution(sys.argv[1]).get_metadata("top_level.txt");'
-                 'sys.stdout.write(x)'),
-                name,
-            ], cwd='/', encoding='utf-8').strip()
+            return subprocess.check_output(
+                [
+                    os.path.join(self.path, "bin/python"),
+                    "-c",
+                    (
+                        "import pkg_resources;"
+                        "import sys;"
+                        "x=pkg_resources.get_distribution(sys.argv[1])"
+                        '.get_metadata("top_level.txt");'
+                        "sys.stdout.write(x)"
+                    ),
+                    name,
+                ],
+                cwd="/",
+                encoding="utf-8",
+            ).strip()
         except subprocess.CalledProcessError:
             LOG.debug("Reading top_level.txt for %s failed", name, exc_info=True)
             return None
 
 
 def clean_cache(path: str) -> None:
-    for basename in glob.glob(os.path.join(path, '*')):
+    for basename in glob.glob(os.path.join(path, "*")):
         child_path = os.path.join(path, basename)
         mtime = datetime.datetime.utcfromtimestamp(os.path.getmtime(child_path))
         delta = datetime.datetime.utcnow() - mtime
@@ -144,12 +157,14 @@ def cachekey(source: str) -> str:
     # rebuild venv when deps change.  This of course is best-effort since there is
     # no way of knowing exactly how the requirements are generated.
 
-    filenames = [os.path.join(source, 'setup.py'),
-                 os.path.join(source, 'requirements.txt')]
+    filenames = [
+        os.path.join(source, "setup.py"),
+        os.path.join(source, "requirements.txt"),
+    ]
 
     for filename in filenames:
         try:
-            with open(filename, 'rb') as f:
+            with open(filename, "rb") as f:
                 m.update(f.read())
             LOG.debug("Used for cache: %s", filename)
         except OSError as exc:
@@ -208,23 +223,27 @@ def get_diff_options(args) -> DiffOptions:
 
 
 def exit_module_unknown() -> NoReturn:
-    LOG.error("Top-level module for the given packages could not be determined. "
-              "Please pass a module_name argument.")
+    LOG.error(
+        "Top-level module for the given packages could not be determined. "
+        "Please pass a module_name argument."
+    )
     sys.exit(32)
 
 
 def get_dist_name(pkg) -> Optional[str]:
     # --editable case
-    setup_py = os.path.join(pkg, 'setup.py')
+    setup_py = os.path.join(pkg, "setup.py")
     if os.path.exists(setup_py):
-        out = subprocess.check_output(['python', setup_py, '--name'], encoding='utf-8').strip()
+        out = subprocess.check_output(
+            ["python", setup_py, "--name"], encoding="utf-8"
+        ).strip()
         LOG.debug("%s resolves to %s via setup.py", pkg, out)
         return out
 
     # other case
     # The idea here is to resolve "foo==1.0.0" to "foo"
     # Not sure what's the full set of rules for pip arguments, this is a guess
-    matched = re.match(r'[0-9a-zA-Z_\-]+', pkg)
+    matched = re.match(r"[0-9a-zA-Z_\-]+", pkg)
     if matched:
         out = matched.group(0)
         LOG.debug("%s resolves to %s", pkg, out)
@@ -288,47 +307,66 @@ def run_diff(args) -> None:
 
 def argparser():
     parser = argparse.ArgumentParser(
-        description=('Check for differences between two versions of a Python API, '
-                     'and complain if SemVer is not followed.'))
+        description=(
+            "Check for differences between two versions of a Python API, "
+            "and complain if SemVer is not followed."
+        )
+    )
 
-    parser.add_argument('--workdir',
-                        help="Use this working directory")
+    parser.add_argument("--workdir", help="Use this working directory")
 
-    parser.add_argument('-v', '--verbose',
-                        action='store_true',
-                        help='Verbose execution')
+    parser.add_argument(
+        "-v", "--verbose", action="store_true", help="Verbose execution"
+    )
 
-    parser.add_argument('--full-symbol-names',
-                        action='store_true',
-                        help='Use fully qualified names in log messages')
+    parser.add_argument(
+        "--full-symbol-names",
+        action="store_true",
+        help="Use fully qualified names in log messages",
+    )
 
-    parser.add_argument('-r', '--recreate',
-                        action='store_true',
-                        help='Force recreation of virtual environments')
+    parser.add_argument(
+        "-r",
+        "--recreate",
+        action="store_true",
+        help="Force recreation of virtual environments",
+    )
 
-    parser.add_argument('-e', '--enable',
-                        action='append',
-                        help=('Enable checks by error code or name. Multiple '
-                              'checks can be provided, comma-separated. Option '
-                              'may be provided multiple times.'))
+    parser.add_argument(
+        "-e",
+        "--enable",
+        action="append",
+        help=(
+            "Enable checks by error code or name. Multiple "
+            "checks can be provided, comma-separated. Option "
+            "may be provided multiple times."
+        ),
+    )
 
-    parser.add_argument('-d', '--disable',
-                        action='append',
-                        help='Disable checks by error code or name.')
+    parser.add_argument(
+        "-d", "--disable", action="append", help="Disable checks by error code or name."
+    )
 
-    parser.add_argument('source1',
-                        help=("Old package for test; a requirement specifier "
-                              "as accepted by the pip command"))
+    parser.add_argument(
+        "source1",
+        help=(
+            "Old package for test; a requirement specifier "
+            "as accepted by the pip command"
+        ),
+    )
 
-    parser.add_argument('source2',
-                        help="New package for test")
+    parser.add_argument("source2", help="New package for test")
 
-    parser.add_argument('module_name',
-                        nargs='?',
-                        help=("Name of the Python module which serves as the "
-                              "entry point of the API to test. If omitted, "
-                              "the command will attempt to determine this automatically "
-                              "using egg metadata"))
+    parser.add_argument(
+        "module_name",
+        nargs="?",
+        help=(
+            "Name of the Python module which serves as the "
+            "entry point of the API to test. If omitted, "
+            "the command will attempt to determine this automatically "
+            "using egg metadata"
+        ),
+    )
 
     return parser
 
@@ -338,7 +376,7 @@ def main() -> None:
 
     p = parser.parse_args()
 
-    logging.basicConfig(level=logging.INFO, format='%(message)s')
+    logging.basicConfig(level=logging.INFO, format="%(message)s")
     LOG.setLevel(logging.DEBUG if p.verbose else logging.INFO)
 
     return run_diff(p)

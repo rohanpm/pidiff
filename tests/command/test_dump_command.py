@@ -11,7 +11,7 @@ def test_dump_command_notexist(capsys):
     """Dump command gives a specific exit code and message if asked
     to dump a nonexistent module.
     """
-    sys.argv = ['cmd', 'some_nonexist_module']
+    sys.argv = ["cmd", "some_nonexist_module"]
 
     with raises(SystemExit) as exc:
         command.main()
@@ -24,7 +24,7 @@ def test_dump_command_notexist(capsys):
 
 def test_dump_command_typical(capsys):
     """Dump command dumps a module as JSON to stdout"""
-    sys.argv = ['cmd', 'tests.test_api.api1']
+    sys.argv = ["cmd", "tests.test_api.api1"]
 
     command.main()
 

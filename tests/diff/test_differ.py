@@ -5,8 +5,8 @@ from pidiff._impl.diff.diff import Differ, DiffOptions
 
 def test_differ_getattr():
     differ = Differ(None, None, DiffOptions())
-    differ.location_stack_old.append(('somefile', 0))
-    differ.location_stack_new.append(('somefile', 0))
+    differ.location_stack_old.append(("somefile", 0))
+    differ.location_stack_new.append(("somefile", 0))
 
     # Should be able to refer to any of the defined
     # codes by attribute
