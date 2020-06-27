@@ -18,6 +18,7 @@ import pidiff
 from pidiff import diff, DiffOptions, ChangeType
 
 from .schema import validate
+from .pipargs import PipArgs
 from . import config
 
 LOG = logging.getLogger("pidiff.command")
@@ -40,10 +41,10 @@ class VirtualEnvironmentExt(VirtualEnvironment):
             encoding="utf-8",
         ).strip()
 
-    def link_self(self) -> None:
+    def link_self(self, pipargs) -> None:
         # We'll need our own dependencies in the virtualenv too
-        self.install_or_die("jsonschema")
-        self.install_or_die("astroid")
+        self.install_or_die("jsonschema", options=pipargs.excluding_requirements)
+        self.install_or_die("astroid", options=pipargs.excluding_requirements)
 
         sitepackages = self.sitepackages_dir
 
@@ -276,6 +277,8 @@ def detect_module(env1, pkg1, env2, pkg2) -> Union[str, NoReturn]:
 
 
 def run_diff(args) -> None:
+    pipargs = PipArgs(args)
+
     s1path = make_venv_path(args.source1, args)
     s2path = make_venv_path(args.source2, args)
 
@@ -286,17 +289,17 @@ def run_diff(args) -> None:
     s2env = VirtualEnvironmentExt(s2path)
 
     LOG.debug("Installing %s to %s", args.source1, s1path)
-    s1env.install_or_die(args.source1, upgrade=True)
+    s1env.install_or_die(args.source1, upgrade=True, options=pipargs.all)
 
     LOG.debug("Installing %s to %s", args.source2, s2path)
-    s2env.install_or_die(args.source2, upgrade=True)
+    s2env.install_or_die(args.source2, upgrade=True, options=pipargs.all)
 
     module_name = args.module_name
     if not module_name:
         module_name = detect_module(s1env, args.source1, s2env, args.source2)
 
-    s1env.link_self()
-    s2env.link_self()
+    s1env.link_self(pipargs)
+    s2env.link_self(pipargs)
 
     s1api = s1env.dump_or_exit(module_name, args.source1)
     s2api = s2env.dump_or_exit(module_name, args.source2)
@@ -385,6 +388,39 @@ def argparser():
             "the command will attempt to determine this automatically "
             "using egg metadata"
         ),
+    )
+
+    pip = parser.add_argument_group(
+        "pip arguments",
+        "These arguments affect the behavior of ``pip install`` while pidiff "
+        "installs the packages to be diffed. See ``pip install --help`` "
+        "for more info on the behavior of these arguments.",
+    )
+
+    pip.add_argument(
+        "--requirement",
+        action="append",
+        help="Install from the given requirements file.",
+    )
+    pip.add_argument(
+        "--constraint",
+        "-c",
+        action="append",
+        help="Constrain versions using the given constraints file.",
+    )
+    pip.add_argument(
+        "--pre",
+        action="store_true",
+        help="Include pre-release and development versions.",
+    )
+
+    pip.add_argument("--index-url", "-i", help="Base URL of the Python Package Index.")
+    pip.add_argument(
+        "--extra-index-url", action="append", help="Extra URLs of package indexes."
+    )
+
+    pip.add_argument(
+        "--pip-args", help="Additional arguments to pass to the `pip' command."
     )
 
     return parser

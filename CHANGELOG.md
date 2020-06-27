@@ -12,6 +12,8 @@ from version 1.0.0 onwards.
 
 - ``--gen-version`` option was introduced for programmatic use. This option can be
   used to implement automated version bumps for a project.
+- ``--pip-args`` and related options were introduced to support passing
+  additional arguments to pip.
 
 ### Fixed
 
