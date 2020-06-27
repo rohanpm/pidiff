@@ -41,6 +41,9 @@
 and produces a report on API differences.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">pidiff</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">workdir</span> <span class="n">WORKDIR</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">full</span><span class="o">-</span><span class="n">symbol</span><span class="o">-</span><span class="n">names</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">r</span><span class="p">]</span>
               <span class="p">[</span><span class="o">--</span><span class="n">gen</span><span class="o">-</span><span class="n">version</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">e</span> <span class="n">ENABLE</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">d</span> <span class="n">DISABLE</span><span class="p">]</span>
+              <span class="p">[</span><span class="o">--</span><span class="n">requirement</span> <span class="n">REQUIREMENT</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">constraint</span> <span class="n">CONSTRAINT</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">pre</span><span class="p">]</span>
+              <span class="p">[</span><span class="o">--</span><span class="n">index</span><span class="o">-</span><span class="n">url</span> <span class="n">INDEX_URL</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">extra</span><span class="o">-</span><span class="n">index</span><span class="o">-</span><span class="n">url</span> <span class="n">EXTRA_INDEX_URL</span><span class="p">]</span>
+              <span class="p">[</span><span class="o">--</span><span class="n">pip</span><span class="o">-</span><span class="n">args</span> <span class="n">PIP_ARGS</span><span class="p">]</span>
               <span class="n">source1</span> <span class="n">source2</span> <span class="p">[</span><span class="n">module_name</span><span class="p">]</span>
 </pre></div>
 </div>
@@ -88,6 +91,30 @@ including:</p>
 </dd>
 <dt><kbd>-d, --disable</kbd></dt>
 <dd><p>Disable checks by error code or name.</p>
+</dd>
+</dl>
+</div>
+<div class="section" id="pip arguments">
+<h3>pip arguments<a class="headerlink" href="#pip arguments" title="Permalink to this headline">¶</a></h3>
+<p>These arguments affect the behavior of <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span></code> while pidiff installs the packages to be diffed. See <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">--help</span></code> for more info on the behavior of these arguments.</p>
+<dl class="option-list">
+<dt><kbd>--requirement</kbd></dt>
+<dd><p>Install from the given requirements file.</p>
+</dd>
+<dt><kbd>--constraint, -c</kbd></dt>
+<dd><p>Constrain versions using the given constraints file.</p>
+</dd>
+<dt><kbd>--pre</kbd></dt>
+<dd><p>Include pre-release and development versions.</p>
+</dd>
+<dt><kbd>--index-url, -i</kbd></dt>
+<dd><p>Base URL of the Python Package Index.</p>
+</dd>
+<dt><kbd>--extra-index-url</kbd></dt>
+<dd><p>Extra URLs of package indexes.</p>
+</dd>
+<dt><kbd>--pip-args</kbd></dt>
+<dd><p>Additional arguments to pass to the <a href="#id1"><span class="problematic" id="id2">`</span></a>pip’ command.</p>
 </dd>
 </dl>
 </div>
