@@ -5,7 +5,7 @@ from typing import Optional, Set
 import semver  # type: ignore
 
 from .. import schema
-from .codes import Codes, ChangeType
+from .codes import Codes, ChangeType, LoggingContext
 from .api import Symbol
 
 
@@ -240,7 +240,8 @@ class Differ:
 
     def diff_root(self):
         self.diffed_children = set()
-        self.diff(self.api_old, self.api_new)
+        with LoggingContext():
+            self.diff(self.api_old, self.api_new)
 
     def diff(self, sym_old, sym_new):
         try:

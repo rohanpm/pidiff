@@ -1,0 +1,13 @@
+test_api/subclasses2.py:8: N230 method added: tests.test_api.subclasses2.BaseClass.new_classfn
+test_api/subclasses2.py:5: N220 function added: tests.test_api.subclasses2.BaseClass.new_fn
+test_api/subclasses2.py:2: N400 optional argument(s) added to tests.test_api.subclasses2.BaseClass.fn: new_arg
+test_api/subclasses2.py:8: N230 method added: tests.test_api.subclasses2.SubClassA.new_classfn
+test_api/subclasses2.py:5: N220 function added: tests.test_api.subclasses2.SubClassA.new_fn
+test_api/subclasses2.py:2: N400 optional argument(s) added to tests.test_api.subclasses2.SubClassA.fn: new_arg
+test_api/subclasses2.py:8: N230 method added: tests.test_api.subclasses2.SubClassB.new_classfn
+test_api/subclasses2.py:5: N220 function added: tests.test_api.subclasses2.SubClassB.new_fn
+test_api/subclasses2.py:2: N400 optional argument(s) added to tests.test_api.subclasses2.SubClassB.fn: new_arg
+
+---------------------------------------------------------------------
+Minor API changes were found; inappropriate for 1.0.0 => 1.0.1
+New version should be equal or greater than 1.1.0

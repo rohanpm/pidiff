@@ -12,6 +12,16 @@ from version 1.0.0 onwards.
 - Fixed handling of `--requirement`, `--constraint` when relative paths are
   provided
 
+### Changed
+
+- Duplicate log messages are no longer generated when a single API change
+  has been exposed via multiple references (example: adding a method to a class which
+  has been subclassed, meaning the new method is available on both the
+  parent and child class(es)).
+
+  Using `--full-symbol-names` will continue to log all references to an
+  API change.
+
 ## [1.5.0] - 2020-06-27
 
 ### Added

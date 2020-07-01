@@ -108,6 +108,8 @@ def fake_popen(*args, **kwargs):
         ("nochange", None, 0, []),
         ("minorbad", None, 88, ["-v"]),
         ("minorbad", "minorbad_disabled", 0, ["--disable", "N220,B123"]),
+        ("subclasses", None, 88, ["-v"]),
+        ("subclasses", "subclasses_fullsym", 88, ["--full-symbol-names"]),
         ("minorgood", None, 0, ["--recreate"]),
         ("major", None, 99, ["--full-symbol-names"]),
         ("force_error", None, 64, []),
