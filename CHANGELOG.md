@@ -7,7 +7,10 @@ from version 1.0.0 onwards.
 
 ## [Unreleased]
 
-- n/a
+### Fixed
+
+- Fixed handling of `--requirement`, `--constraint` when relative paths are
+  provided
 
 ## [1.5.0] - 2020-06-27
 
