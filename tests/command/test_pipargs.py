@@ -62,3 +62,34 @@ def test_empty_pip_args():
     assert pipargs.excluding_requirements == []
     assert pipargs.all == []
 
+
+def test_files_absolutized(tmpdir):
+    tmpdir.join("req1.txt").write("abc")
+    tmpdir.join("con1.txt").write("abc")
+
+    parsed = PARSER.parse_args(
+        [
+            "--requirement",
+            "req1.txt",
+            "--requirement",
+            "req2.txt",
+            "--constraint",
+            "con1.txt",
+            "src1",
+            "src2",
+        ]
+    )
+
+    pipargs = PipArgs(parsed, workdir=str(tmpdir))
+
+    assert pipargs.all == [
+        "-r",
+        # It should have figured out full path to existing req1.txt
+        str(tmpdir.join("req1.txt")),
+        "-r",
+        # It should have left this one alone since req2.txt doesn't exist
+        "req2.txt",
+        "-c",
+        # Same should work for constraints
+        str(tmpdir.join("con1.txt")),
+    ]
