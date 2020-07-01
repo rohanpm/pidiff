@@ -26,6 +26,28 @@ class ChangeType(enum.IntEnum):
     """
 
 
+class LoggingContext:
+    # A context for log messages produced during a diff which
+    # performs de-duplication.
+
+    def __init__(self):
+        self._logged = set()
+
+    def _filter(self, record):
+        log_key = (record.getMessage(), record.levelname)
+        if log_key not in self._logged:
+            self._logged.add(log_key)
+            return True
+        return 0
+
+    def __enter__(self):
+        DIFFLOG.addFilter(self._filter)
+        return self
+
+    def __exit__(self, *_args, **_kwargs):
+        DIFFLOG.removeFilter(self._filter)
+
+
 class ErrorCode:
     LEVEL = logging.INFO
     CHANGE_TYPE = ChangeType.MAJOR
