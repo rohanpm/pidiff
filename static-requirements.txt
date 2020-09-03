@@ -2,9 +2,9 @@ astroid==2.4.2 \
     --hash=sha256:2f4078c2a41bf377eea06d71c9d2ba4eb8f6b1af2135bec27bbbb7d8f12bb703 \
     --hash=sha256:bc58d83eb610252fd8de6363e39d4f1d0619c894b0ed24603b881c02e64c7386 \
     # via -r ./static-requirements.txt, pylint
-isort==4.3.21 \
-    --hash=sha256:54da7e92468955c4fceacd0c86bd0ec997b0e1ee80d97f67c35a78b719dccab1 \
-    --hash=sha256:6e811fcb295968434526407adb8796944f1988c5b65e8139058f2014cbe100fd \
+isort==5.5.0 \
+    --hash=sha256:8103bc070d9258fe97e82470cb30f0e4b730e94c44ac81ebae32b05d5a6c87ea \
+    --hash=sha256:0906e0e7092e060c05de709ad172e1ec1b26aa27fdd4e8093f257890cd881d18 \
     # via -r ./static-requirements.txt, pylint
 lazy-object-proxy==1.5.0 \
     --hash=sha256:ec6aba217d0c4f71cbe48aea962a382dedcd111f47b55e8b58d4aaca519bd360 \
