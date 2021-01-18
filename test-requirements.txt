@@ -90,9 +90,9 @@ pyparsing==2.4.7 \
 pyrsistent==0.16.0 \
     --hash=sha256:28669905fe725965daa16184933676547c5bb40a5153055a8dee2a4bd7933ad3 \
     # via -r ./test-requirements.txt, jsonschema
-pytest-cov==2.10.0 \
-    --hash=sha256:1a629dc9f48e53512fcbfda6b07de490c374b0c83c55ff7a1720b3fccff0ac87 \
-    --hash=sha256:6e6d18092dce6fad667cd7020deed816f858ad3b49d5b5e2b1cc1c97a4dba65c \
+pytest-cov==2.11.0 \
+    --hash=sha256:626a8a6ab188656c4f84b67d22436d6c494699d917e567e0048dda6e7f59e028 \
+    --hash=sha256:e90e034cde61dacb1394639a33f449725c591025b182d69752c1dd0bfec639a7 \
     # via -r ./test-requirements.txt
 pytest==5.4.3 \
     --hash=sha256:5c0db86b698e8f170ba4582a492248919255fcd4c79b1ee64ace34301fb589a1 \
