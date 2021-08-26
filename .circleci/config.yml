@@ -33,8 +33,12 @@ workflows:
         context: pidiff-secrets
         post-steps:
         - run: scripts/push-docs
-        filters:
-          <<: *post_merge_filters
+        filters: &post_merge_filters
+          branches:
+            only:
+            - master
+          tags:
+            only: /^v.*/
     - python/release:
         name: Release to PyPI
         # For twine credentials
