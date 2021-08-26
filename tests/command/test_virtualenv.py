@@ -6,8 +6,8 @@ from virtualenvapi.exceptions import PackageInstallationException
 from pidiff._impl.command import VirtualEnvironmentExt
 
 
-def test_install_fail_with_missing_logs(caplog):
-    env = VirtualEnvironmentExt()
+def test_install_fail_with_missing_logs(caplog, tmpdir):
+    env = VirtualEnvironmentExt(str(tmpdir))
     env.install = mock.Mock()
     env.install.side_effect = PackageInstallationException("something went wrong")
 
@@ -44,7 +44,9 @@ def test_install_fail_with_logs(caplog, tmpdir):
 
 
 def test_install_uses_editable_for_local(caplog, tmpdir):
-    env = VirtualEnvironmentExt()
+    envdir = tmpdir.mkdir('env')
+
+    env = VirtualEnvironmentExt(str(envdir))
     env.install = mock.Mock()
 
     tmpdir.join("setup.py").write("")
