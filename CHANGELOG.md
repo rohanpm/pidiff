@@ -7,6 +7,10 @@ from version 1.0.0 onwards.
 
 ## [Unreleased]
 
+- n/a
+
+## [1.7.0] - 2021-08-26
+
 ### Fixed
 
 - Version detection of the tested modules is now more accurate in some cases,
@@ -79,7 +83,8 @@ from version 1.0.0 onwards.
 - Initial supported release
 
 
-[Unreleased]: https://github.com/rohanpm/pidiff/compare/v1.6.0..HEAD
+[Unreleased]: https://github.com/rohanpm/pidiff/compare/v1.7.0..HEAD
+[1.7.0]: https://github.com/rohanpm/pidiff/compare/v1.6.0..v1.7.0
 [1.6.0]: https://github.com/rohanpm/pidiff/compare/v1.5.0..v1.6.0
 [1.5.0]: https://github.com/rohanpm/pidiff/compare/v1.4.0..v1.5.0
 [1.4.0]: https://github.com/rohanpm/pidiff/compare/v1.3.0..v1.4.0
