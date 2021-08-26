@@ -26,17 +26,6 @@ workflows:
         toxenv: pidiff
         filters:
           <<: *ci_filters
-    - python/coveralls:
-        name: Submit coverage results to coveralls
-        requires:
-        - Python 3.8 tests
-        context: pidiff-secrets
-        filters: &post_merge_filters
-          branches:
-            only:
-            - master
-          tags:
-            only: /^v.*/
     - python/tox:
         name: Build docs
         toxenv: docs
