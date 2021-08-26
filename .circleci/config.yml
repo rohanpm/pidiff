@@ -1,28 +1,21 @@
 version: 2.1
 
 orbs:
-  python: rohanpm/python@1.2.0
+  python: rohanpm/python@1.3.0
 
 workflows:
   version: 2
   ci-cd:
     jobs:
     - python/tox:
-        name: Python 3.6 tests
-        toxenv: py36
-        executor: python/python36
+        name: Python 3.8 tests
+        toxenv: py38
+        executor: python/python38
         filters: &ci_filters
           branches:
             ignore: gh-pages
           tags:
             only: /^v.*/
-    - python/tox:
-        name: Python 3.7 tests
-        toxenv: py37
-        executor: python/python37
-        persist_coverage: true
-        filters:
-          <<: *ci_filters
     - python/tox:
         name: Static checks
         toxenv: static
@@ -36,7 +29,7 @@ workflows:
     - python/coveralls:
         name: Submit coverage results to coveralls
         requires:
-        - Python 3.7 tests
+        - Python 3.8 tests
         context: pidiff-secrets
         filters: &post_merge_filters
           branches:
@@ -53,21 +46,13 @@ workflows:
         - run: scripts/push-docs
         filters:
           <<: *post_merge_filters
-    - python/codeclimate-upload-coverage:
-        name: Submit coverage results to codeclimate
-        test_reporter_id: b5167e87a147f386af54fb218c710b65bafa6391ceeb2f37f82525f16eb32fc2
-        requires:
-        - Python 3.7 tests
-        filters:
-          <<: *ci_filters
     - python/release:
         name: Release to PyPI
         # For twine credentials
         context: pidiff-secrets
         # Only release if all tests passed
         requires:
-        - Python 3.6 tests
-        - Python 3.7 tests
+        - Python 3.8 tests
         - Static checks
         filters:
           <<: *post_merge_filters
