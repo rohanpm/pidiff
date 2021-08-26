@@ -4,6 +4,7 @@ import logging
 from random import shuffle
 from typing import Optional, Any, Dict
 import types
+from importlib.metadata import files as dist_files, version as dist_version
 import os.path
 import pkg_resources
 
@@ -200,8 +201,27 @@ def egg_for_root(root_name: str):
             LOG.debug("Can't check %s", egg_info, exc_info=True)
 
 
+def get_version_importlib(module) -> Optional[str]:
+    module_file = module.__file__
+    if module_file.endswith('.pyc'):
+        module_file = module_file[:-1]
+
+    for dist in pkg_resources.working_set:  # pylint: disable=not-an-iterable
+        name = dist.project_name
+        for file in (dist_files(name) or []):
+            if str(file.locate()) == module_file:
+                return dist_version(name)
+
+    return None
+
+
 def get_version(root_name: str, module) -> Optional[str]:
-    # PEP 396
+    # importlib.metadata (best)
+    from_importlib = get_version_importlib(module)
+    if from_importlib:
+        return from_importlib
+
+    # PEP 396 (rejected)
     from_module = getattr(module, "__version__", None)
     if from_module:
         return from_module
