@@ -1,9 +1,3 @@
-Creating virtualenv at <tmpdir>/cache1
-Creating virtualenv at <tmpdir>/cache2
-Installing foopkg==1.0.0 to <tmpdir>/cache1
-Installing foopkg==1.1.0 to <tmpdir>/cache2
-Inspecting API for foopkg==1.0.0
-Inspecting API for foopkg==1.1.0
 test_api/subclasses2.py:8: N230 method added: new_classfn
 test_api/subclasses2.py:5: N220 function added: new_fn
 test_api/subclasses2.py:2: N400 optional argument(s) added to fn: new_arg
