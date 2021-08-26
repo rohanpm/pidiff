@@ -7,7 +7,14 @@ from version 1.0.0 onwards.
 
 ## [Unreleased]
 
-- n/a
+### Fixed
+
+- Version detection of the tested modules is now more accurate in some cases,
+  via usage of `importlib.metadata`.
+
+### Changed
+
+- Now requires python 3.8 or later.
 
 ## [1.6.0] - 2020-07-01
 
