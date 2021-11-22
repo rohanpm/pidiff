@@ -30,7 +30,7 @@ setup(
     long_description=get_long_description(),
     long_description_content_type="text/markdown",
     install_requires=get_install_requires(),
-    python_requires='>=3.8',
+    python_requires=">=3.8",
     entry_points={"console_scripts": ["pidiff=pidiff._impl.command:main"]},
     project_urls={
         "Documentation": "https://pidiff.dev/",
