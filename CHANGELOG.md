@@ -9,6 +9,12 @@ from version 1.0.0 onwards.
 
 - n/a
 
+## [1.7.1] - 2023-10-20
+
+### Fixed
+
+- Fixed compatibility with `astroid >= 3.0`.
+
 ## [1.7.0] - 2021-08-26
 
 ### Fixed
@@ -83,7 +89,8 @@ from version 1.0.0 onwards.
 - Initial supported release
 
 
-[Unreleased]: https://github.com/rohanpm/pidiff/compare/v1.7.0..HEAD
+[Unreleased]: https://github.com/rohanpm/pidiff/compare/v1.7.1..HEAD
+[1.7.1]: https://github.com/rohanpm/pidiff/compare/v1.7.0..v1.7.1
 [1.7.0]: https://github.com/rohanpm/pidiff/compare/v1.6.0..v1.7.0
 [1.6.0]: https://github.com/rohanpm/pidiff/compare/v1.5.0..v1.6.0
 [1.5.0]: https://github.com/rohanpm/pidiff/compare/v1.4.0..v1.5.0
