@@ -4,7 +4,13 @@ from typing import Optional
 
 import astroid
 from astroid.nodes import AssignAttr, FunctionDef, ClassDef, Name
-from astroid.node_classes import NodeNG
+
+try:
+    # older astroid
+    from astroid.node_classes import NodeNG  # pragma: no cover
+except ModuleNotFoundError:
+    # newer astroid
+    from astroid.nodes import NodeNG
 
 LOG = logging.getLogger("pidiff.ast")
 
