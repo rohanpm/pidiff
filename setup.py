@@ -33,7 +33,7 @@ setup(
     python_requires=">=3.8",
     entry_points={"console_scripts": ["pidiff=pidiff._impl.command:main"]},
     project_urls={
-        "Documentation": "https://pidiff.dev/",
+        "Documentation": "https://rohanpm.github.io/pidiff/",
         "Changelog": "https://github.com/rohanpm/pidiff/blob/master/CHANGELOG.md",
     },
 )

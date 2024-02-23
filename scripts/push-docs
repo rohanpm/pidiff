@@ -26,8 +26,6 @@ export GIT_ASKPASS=false
   git fetch origin
   git reset origin/gh-pages
 
-  echo -n pidiff.dev > CNAME
-
   git add -A .
   git commit -m "Build documentation at ${rev}"
   git push -q origin HEAD:refs/heads/gh-pages
