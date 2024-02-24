@@ -9,6 +9,12 @@ from version 1.0.0 onwards.
 
 - n/a
 
+## [1.7.2] - 2024-02-24
+
+### Fixed
+
+- Fixed compatibility with python 3.12.
+
 ## [1.7.1] - 2023-10-20
 
 ### Fixed
@@ -89,7 +95,8 @@ from version 1.0.0 onwards.
 - Initial supported release
 
 
-[Unreleased]: https://github.com/rohanpm/pidiff/compare/v1.7.1..HEAD
+[Unreleased]: https://github.com/rohanpm/pidiff/compare/v1.7.2..HEAD
+[1.7.2]: https://github.com/rohanpm/pidiff/compare/v1.7.1..v1.7.2
 [1.7.1]: https://github.com/rohanpm/pidiff/compare/v1.7.0..v1.7.1
 [1.7.0]: https://github.com/rohanpm/pidiff/compare/v1.6.0..v1.7.0
 [1.6.0]: https://github.com/rohanpm/pidiff/compare/v1.5.0..v1.6.0
