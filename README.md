@@ -2,9 +2,6 @@
 
 `pidiff` - the Python interface diff tool
 
-[![Build Status](https://circleci.com/gh/rohanpm/pidiff/tree/master.svg?style=svg)](https://circleci.com/gh/rohanpm/pidiff/tree/master)
-[![Maintainability](https://api.codeclimate.com/v1/badges/64347682bb124ea1e1fb/maintainability)](https://codeclimate.com/github/rohanpm/pidiff/maintainability)
-
 - [Documentation](https://rohanpm.github.io/pidiff/)
 - [Source](https://github.com/rohanpm/pidiff)
 - [PyPI](https://pypi.python.org/pypi/pidiff)
