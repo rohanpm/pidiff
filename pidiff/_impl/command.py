@@ -33,8 +33,8 @@ class VirtualEnvironmentExt(VirtualEnvironment):
                 os.path.join(self.path, "bin/python"),
                 "-c",
                 (
-                    "import distutils.sysconfig; "
-                    "print(distutils.sysconfig.get_python_lib())"
+                    "import sysconfig; "
+                    "print(sysconfig.get_path('purelib'))"
                 ),
             ],
             cwd="/",
@@ -49,6 +49,7 @@ class VirtualEnvironmentExt(VirtualEnvironment):
         sitepackages = self.sitepackages_dir
 
         for dep_name, dep_module in [("pidiff", pidiff)]:
+            assert dep_module.__file__
             src = os.path.dirname(dep_module.__file__)
             dst = os.path.join(sitepackages, dep_name)
             if not os.path.exists(dst):
