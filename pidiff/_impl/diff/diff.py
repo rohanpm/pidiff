@@ -438,7 +438,7 @@ class DiffResult:
         self,
         max_change_type: ChangeType,
         max_change_allowed: ChangeType,
-        proposed_version: str = None,
+        proposed_version: Optional[str] = None,
     ):
         self.max_change_type = max_change_type
         """The most severe :class:`~pidiff.ChangeType` encountered during this

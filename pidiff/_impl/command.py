@@ -49,6 +49,7 @@ class VirtualEnvironmentExt(VirtualEnvironment):
         sitepackages = self.sitepackages_dir
 
         for dep_name, dep_module in [("pidiff", pidiff)]:
+            assert dep_module.__file__
             src = os.path.dirname(dep_module.__file__)
             dst = os.path.join(sitepackages, dep_name)
             if not os.path.exists(dst):
