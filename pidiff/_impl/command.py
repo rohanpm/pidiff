@@ -33,8 +33,8 @@ class VirtualEnvironmentExt(VirtualEnvironment):
                 os.path.join(self.path, "bin/python"),
                 "-c",
                 (
-                    "import distutils.sysconfig; "
-                    "print(distutils.sysconfig.get_python_lib())"
+                    "import sysconfig; "
+                    "print(sysconfig.get_path('purelib'))"
                 ),
             ],
             cwd="/",

@@ -66,7 +66,7 @@ def safe_command(cmd):
     if cmd[0] == "virtualenv":
         return True
 
-    if "import distutils.sysconfig" in "".join(cmd):
+    if "import sysconfig" in "".join(cmd):
         return True
 
     if "pkg_resources.get_distribution" in "".join(cmd):
